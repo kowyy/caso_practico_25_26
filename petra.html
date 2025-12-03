@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Petra - Viajes y Experiencias</title>
+        <link rel="stylesheet" href="../style/main.css">
+    </head>
+
+    <body>
+        <!-- Cabecera -->
+        <header class="site-header">
+            <div class="header-left">
+                <span class="logo-text">WEBSITE</span>
+                
+                <div class="utilities-wrapper">
+                    <div class="search-box">
+                        <svg class="icon-search" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </div>
+
+                    <div class="separator"></div>
+
+                    <div class="lang-wrapper">
+                        <select id="lang-selector" aria-label="Cambiar idioma">
+                            <option value="es">ES</option>
+                            <option value="en">EN</option>
+                        </select>
+                        <svg class="icon-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="header-center">
+                <ul>
+                    <li><a href="#">Destinos destacados</a></li>
+                    <li><a href="#">Experiencias recomendadas</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-right">
+                <a href="#" class="nav-link">FAQ</a>
+                <a href="#" class="nav-link">Help</a>
+                <button id="btn-login" class="btn-text">Inicia sesión</button>
+                <a href="signup.html" class="btn-primary">Regístrate</a>
+            </div>
+        </header>
+
+        <main class="destino-pagina">
+
+            <!-- Carrusel -->
+            <section class="destino-header">
+    
+                <div class="carrusel">
+                    <div class="carrusel-track">
+                        <img src="images/petra.jpeg" alt="Petra">
+                        <img src="images/petra2.jpeg" alt="Petra">
+                        <img src="images/petra3.jpg" alt="Petra">
+                    </div>
+
+                    <!-- Flechas del carrusel -->
+                    <button class="carrusel-btn prev">&#10094;</button>
+                    <button class="carrusel-btn next">&#10095;</button>
+                </div>
+
+                <div class="destino-text">
+                    <h1 class="destino-title">Petra</h1>
+                    <p class="destino-sub">La joya de Jordania — historia, cultura y aventura.</p>
+                </div>
+            </section>
+
+            <div class="destino-layout">
+
+                <!-- Contenido principal -->
+                <section class="destino-info">
+                    <h2>Información del destino</h2>
+                    <p>
+                        Petra, conocida como "la ciudad rosa", es uno de los tesoros arqueológicos más 
+                        impresionantes del mundo. Tallada directamente en la roca, fue la capital del 
+                        antiguo reino nabateo y uno de los enclaves comerciales más importantes de Oriente Medio.
+                    </p>
+
+                    <h3>¿Qué incluye el viaje?</h3>
+                    <ul>
+                        <li>Vuelo ida y vuelta</li>
+                        <li>Hotel de 4 estrellas - 3 noches</li>
+                        <li>Entrada al Tesoro y Monasterio</li>
+                        <li>Guía turístico local</li>
+                    </ul>
+
+                    <h3>Opiniones recientes</h3>
+                    <div id="reviews">
+                        <div class="review-item">
+                            <strong>Laura G.</strong>
+                            <p>“Una experiencia increíble. El amanecer en el Tesoro es inolvidable.”</p>
+                            <span>★★★★★</span>
+                        </div>
+
+                        <div class="review-item">
+                            <strong>Javier M.</strong>
+                            <p>“El guía fue excelente, pero hace bastante calor, id preparados.”</p>
+                            <span>★★★★☆</span>
+                        </div>
+                    </div>
+
+                    <h3>Escribe tu reseña</h3>
+                    <form id="review-form">
+                        <input type="text" id="review-name" placeholder="Tu nombre" required>
+                        <textarea id="review-text" placeholder="Tu experiencia..." required></textarea>
+                        <select id="review-rating">
+                            <option value="5">5 ★</option>
+                            <option value="4">4 ★</option>
+                            <option value="3">3 ★</option>
+                            <option value="2">2 ★</option>
+                            <option value="1">1 ★</option>
+                        </select>
+                        <button class="btn-primary" type="submit">Enviar reseña</button>
+                    </form>
+                </section>
+
+                <!-- Formulario de compra -->
+                <aside class="destino-aside">
+
+                    <div class="aside-box">
+                        <h2>Comprar viaje</h2>
+                        <p class="price">Desde <strong>120€</strong></p>
+
+                        <form id="buy-form">
+
+                            <!-- Datos del titular -->
+                            <label>Nombre y apellidos (titular)</label>
+                            <input type="text" id="fullname" placeholder="Ej: Laura Martínez" required>
+
+                            <label>Correo electrónico</label>
+                            <input type="email" id="email" placeholder="correo@email.com" required>
+
+                            <hr>
+
+                            <!-- Acompañantes -->
+                            <h3>Acompañantes</h3>
+                            <p class="text-sm">Puedes añadir hasta 7 acompañantes (máx. 8 viajeros en la reserva).</p>
+
+                            <div id="companions-list"></div>
+
+                            <button type="button" class="btn-primary" id="add-companion">Añadir acompañante</button>
+
+                            <hr>
+
+                            <!-- Mascotas -->
+                            <h3>Mascota</h3>
+
+                            <label class="mascota-label">
+                                <input type="checkbox" id="mascota-toggle">
+                                Viajaré con mascota
+                            </label>
+
+                            <div id="mascota-fields" style="display:none;">
+                                <label>Tipo de mascota</label>
+                                <select id="pet-type">
+                                    <option value="perro">Perro</option>
+                                    <option value="gato">Gato</option>
+                                    <option value="ave">Ave</option>
+                                    <option value="otro">Otro</option>
+                                </select>
+
+                                <label>Tamaño de la mascota</label>
+                                <select id="pet-size">
+                                    <option value="pequeño">Pequeño</option>
+                                    <option value="mediano">Mediano</option>
+                                    <option value="grande">Grande</option>
+                                </select>
+                            </div>
+
+                            <hr>
+
+                            <!-- Alergias -->
+                            <h3>Alergias o intolerancias</h3>
+
+                            <label class="mascota-label">
+                                <input type="checkbox" id="no-allergies">
+                                Ninguna
+                            </label>
+
+                            <textarea id="allergy-text" placeholder="Describe alergias o intolerancias del grupo..."></textarea>
+
+                            <hr>
+
+                            <!-- Datos de la tarjeta de pago -->
+                            <h3>Datos de pago</h3>
+
+                            <label>Tipo de tarjeta</label>
+                            <select id="card-type" required>
+                                <option value="" disabled selected>Selecciona una tarjeta</option>
+                                <option value="visa">Visa</option>
+                                <option value="mastercard">Mastercard</option>
+                                <option value="amex">American Express</option>
+                            </select>
+
+                            <label>Número de tarjeta</label>
+                            <input type="text" id="card-number" maxlength="19" placeholder="XXXX XXXX XXXX XXXX" required>
+
+                            <label>Fecha de expiración</label>
+                            <div class="card-exp">
+                                <input type="text" id="exp-month" maxlength="2" placeholder="MM" required>
+                                <span>/</span>
+                                <input type="text" id="exp-year" maxlength="2" placeholder="YY" required>
+                            </div>
+
+                            <label>CVV</label>
+                            <input type="text" id="cvv" maxlength="3" placeholder="3 dígitos" required>
+
+                            <button class="btn-primary full-width" type="submit">Confirmar compra</button>
+                        </form>
+                    </div>
+                </aside>
+            </div>
+        </main>
+
+        <!-- Pie de página -->
+        <footer class="site-footer">
+            <div class="footer-content">
+                <div class="footer-col left">
+                    <a href="#">FAQ</a>
+                    <a href="#">Contacto</a>
+                    <a href="#">Mi Perfil</a>
+                </div>
+
+                <div class="footer-col center">
+                    <strong>WEBSITE</strong>
+                </div>
+
+                <div class="footer-col right">
+                    <a href="#">About</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Support</a>
+                </div>
+            </div>
+
+            <div class="legal">
+                <p>&copy; 2010 - 2025 Privacy - Terms</p>
+            </div>
+        </footer>
+
+        <script src="script/carrusel.js"></script>
+        <script src="script/compra.js"></script>
+    </body>
+</html>

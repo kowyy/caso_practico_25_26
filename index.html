@@ -6,8 +6,9 @@
         <title>Viajes y Experiencias</title>
         <link rel="stylesheet" href="../style/main.css">
     </head>
-    <body>
 
+    <body>
+        <!-- Cabecera -->
         <header class="site-header">
             <div class="header-left">
                 <span class="logo-text">WEBSITE</span>
@@ -44,8 +45,8 @@
             <div class="header-right">
                 <a href="#" class="nav-link">FAQ</a>
                 <a href="#" class="nav-link">Help</a>
-                <button id="btn-login" class="btn-text">Login</button>
-                <a href="signup.html" class="btn-primary">Sign Up</a>
+                <button id="btn-login" class="btn-text">Inicia sesión</button>
+                <a href="signup.html" class="btn-primary">Regístrate</a>
             </div>
         </header>
 
@@ -54,6 +55,72 @@
                 <h1>Bienvenido a tu próxima experiencia</h1>
                 <p id="welcome-message">Explora el mundo con nosotros.</p>
             </section>
+
+            <!-- Sección Mejores Destinos -->
+            <section class="mejores-destinos" aria-labelledby="mejores-destinos-title">
+            <header class="md-header">
+                <h2 id="mejores-destinos-title">MEJORES DESTINOS</h2>
+                <p class="md-sub">Los mejores destinos turísticos</p>
+            </header>
+
+            <div class="destinos-grid">
+                <!-- Destino 1: Petra -->
+                <article class="destino-card">
+                <div class="thumb">
+                    <!-- si usas imágenes locales p. ej. images/petra.jpg, sustituye el src -->
+                    <img src="images/petra.jpeg" alt="Entrada tallada en roca - Petra">
+                </div>
+                <div class="card-body">
+                    <h3 class="destino-title">Petra</h3>
+                    <div class="meta-row">
+                    <button class="ver-mas" onclick="location.href='petra.html'">Ver más</button>
+                    <div class="rating" aria-label="Calificación 4.1 de 5 (120 reseñas)">
+                        <span class="rating-value">4,1</span>
+                        <span class="stars" aria-hidden="true">★★★★☆</span>
+                        <span class="reviews">(120 reseñas)</span>
+                    </div>
+                    </div>
+                </div>
+                </article>
+
+                <!-- Destino 2: Las Vegas -->
+                <article class="destino-card">
+                <div class="thumb">
+                    <img src="images/vegas.jpeg" alt="Las Vegas de noche">
+                </div>
+                <div class="card-body">
+                    <h3 class="destino-title">Las Vegas</h3>
+                    <div class="meta-row">
+                    <button class="ver-mas" onclick="location.href='las-vegas.html'">Ver más</button>
+                    <div class="rating" aria-label="Calificación 5.0 de 5 (532 reseñas)">
+                        <span class="rating-value">5,0</span>
+                        <span class="stars" aria-hidden="true">★★★★★</span>
+                        <span class="reviews">(532 reseñas)</span>
+                    </div>
+                    </div>
+                </div>
+                </article>
+
+                <!-- Destino 3: Puerto Rico -->
+                <article class="destino-card">
+                <div class="thumb">
+                    <img src="images/puerto-rico.jpeg" alt="Puerto Rico">
+                </div>
+                <div class="card-body">
+                    <h3 class="destino-title">Puerto Rico</h3>
+                    <div class="meta-row">
+                    <button class="ver-mas" onclick="location.href='puerto-rico.html'">Ver más</button>
+                        <div class="rating" aria-label="Calificación 4.3 de 5 (324 reseñas)">
+                            <span class="rating-value">4,3</span>
+                            <span class="stars" aria-hidden="true">★★★★☆</span>
+                            <span class="reviews">(324 reseñas)</span>
+                        </div>
+                    </div>
+                </div>
+                </article>
+            </div>
+            </section>
+            <!-- TERMINA: Sección Mejores Destinos -->
 
             <dialog id="login-modal" class="custom-modal">
                 <div class="auth-container modal-content">
