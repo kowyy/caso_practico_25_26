@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Viajes y Experiencias</title>
+        <link rel="stylesheet" href="../style/main.css">
+    </head>
+    <body>
+
+        <header class="site-header">
+            <div class="header-left">
+                <span class="logo-text">WEBSITE</span>
+                
+                <div class="utilities-wrapper">
+                    <div class="search-box">
+                        <svg class="icon-search" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </div>
+
+                    <div class="separator"></div>
+
+                    <div class="lang-wrapper">
+                        <select id="lang-selector" aria-label="Cambiar idioma">
+                            <option value="es">ES</option>
+                            <option value="en">EN</option>
+                        </select>
+                        <svg class="icon-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="header-center">
+                <ul>
+                    <li><a href="#">Destinos destacados</a></li>
+                    <li><a href="#">Experiencias recomendadas</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-right">
+                <a href="#" class="nav-link">FAQ</a>
+                <a href="#" class="nav-link">Help</a>
+                <button id="btn-login" class="btn-text">Login</button>
+                <a href="signup.html" class="btn-primary">Sign Up</a>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <section class="hero">
+                <h1>Bienvenido a tu próxima experiencia</h1>
+                <p id="welcome-message">Explora el mundo con nosotros.</p>
+            </section>
+
+            <dialog id="login-modal" class="custom-modal">
+                <div class="auth-container modal-content">
+                    <h2>Iniciar Sesión</h2>
+                    <p class="subtitle">Hola de nuevo</p>
+
+                    <form method="dialog" id="login-form" class="styled-form">
+                        <div class="form-group">
+                            <label for="username">Usuario</label>
+                            <input type="text" id="username" name="username" placeholder="Tu nombre de usuario" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Contraseña</label>
+                            <input type="password" id="password" name="password" placeholder="Tu contraseña" required>
+                        </div>
+
+                        <div class="form-group checkbox-group">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="remember-me"> 
+                                <span class="text-sm">Recordar credenciales</span>
+                            </label>
+                        </div>
+
+                        <div class="form-actions vertical">
+                            <button type="submit" id="confirm-login" class="btn-primary full-width">Entrar</button>
+                            <button type="button" id="close-modal" class="btn-text full-width">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </dialog>
+        </main>
+
+        <footer class="site-footer">
+            <div class="footer-content">
+                <div class="footer-col left">
+                    <a href="#">FAQ</a>
+                    <a href="#">Contacto</a>
+                    <a href="#">Mi Perfil</a>
+                </div>
+
+                <div class="footer-col center">
+                    <strong>WEBSITE</strong>
+                </div>
+
+                <div class="footer-col right">
+                    <a href="#">About</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Support</a>
+                </div>
+            </div>
+
+            <div class="legal">
+                <p>&copy; 2010 - 2025 Privacy - Terms</p>
+            </div>
+        </footer>
+
+        <script src="../script/app.js"></script>
+    </body>
+</html>

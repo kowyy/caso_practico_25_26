@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Registro - Viajes y Experiencias</title>
+        <link rel="stylesheet" href="../style/main.css">
+    </head>
+    <body>
+
+        <header class="site-header">
+            <div class="header-left">
+                <a href="index.html" class="logo-text" style="text-decoration: none; color: inherit;">WEBSITE</a>
+            </div>
+
+            <nav class="header-center">
+            </nav>
+
+            <div class="header-right">
+                <span class="nav-text">¿Ya tienes cuenta?</span>
+                <a href="index.html" class="btn-text">Login</a>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <section class="auth-container">
+                <h2>Crear una cuenta</h2>
+                <p class="subtitle">Únete para descubrir nuevas experiencias</p>
+
+                <form id="signup-form" class="styled-form">
+                    <div class="form-group">
+                        <label for="reg-username">Nombre de usuario</label>
+                        <input type="text" id="reg-username" name="username" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-email">Correo electrónico</label>
+                        <input type="email" id="reg-email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-password">Contraseña</label>
+                        <input type="password" id="reg-password" name="password" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-confirm">Confirmar contraseña</label>
+                        <input type="password" id="reg-confirm" name="confirm-password" required>
+                    </div>
+
+                    <div class="form-actions centered">
+                        <button type="submit" class="btn-primary full-width">Registrarse</button>
+                    </div>
+                </form>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <div class="legal">
+                <p>&copy; 2010 - 2025 Privacy - Terms</p>
+            </div>
+        </footer>
+
+        <script src="../script/app.js"></script>
+    </body>
+</html>
