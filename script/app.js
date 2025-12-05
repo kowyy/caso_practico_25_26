@@ -1,8 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    // Referencias globales
-    const langSelector = document.getElementById('lang-selector');
-
     // Referencias específicas para el sistema de Login (Modal)
     // Usamos chequeos de nulidad para que el script no rompa en la página de registro
     const loginBtn = document.getElementById('btn-login');
@@ -58,23 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Retorno a la landing page
             window.location.href = 'index.html';
-        });
-    }
-
-    // Lógica de internacionalización básica
-    if (langSelector) {
-        const translations = {
-            es: { welcome: "Explora el mundo con nosotros." },
-            en: { welcome: "Explore the world with us." }
-        };
-
-        langSelector.addEventListener('change', (e) => {
-            const lang = e.target.value;
-            const welcomeMsg = document.getElementById('welcome-message');
-            
-            if (welcomeMsg && translations[lang]) {
-                welcomeMsg.textContent = translations[lang].welcome;
-            }
         });
     }
 });

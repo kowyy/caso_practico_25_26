@@ -42,17 +42,21 @@ document.getElementById("mascota-toggle").addEventListener("change", function() 
 });
 
 // Alergias
-const noAllergies = document.getElementById("no-allergies");
+const allergyToggle = document.getElementById("allergy-toggle");
+const allergyFields = document.getElementById("allergy-fields");
 const allergyText = document.getElementById("allergy-text");
 
-noAllergies.addEventListener("change", () => {
-    if (noAllergies.checked) {
-        allergyText.value = "";
-        allergyText.disabled = true;
-    } else {
-        allergyText.disabled = false;
-    }
-});
+// Mostrar / ocultar campo de alergias
+if (allergyToggle) {
+    allergyToggle.addEventListener("change", () => {
+        const show = allergyToggle.checked;
+        allergyFields.style.display = show ? "block" : "none";
+
+        if (!show) {
+            allergyText.value = "";
+        }
+    });
+}
 
 // Estructura del formulario de compra
 document.getElementById("buy-form").addEventListener("submit", function(e) {
@@ -70,12 +74,14 @@ document.getElementById("buy-form").addEventListener("submit", function(e) {
 
     const mascota = document.getElementById("mascota-toggle").checked
         ? {
-            tipo: pet-type.value,
-            tamaño: pet-size.value
+            tipo: document.getElementById("pet-type").value,
+            tamaño: document.getElementById("pet-size").value
         }
         : null;
 
-    const alergias = noAllergies.checked ? "Ninguna" : allergyText.value.trim();
+    const alergias = allergyToggle.checked
+    ? allergyText.value.trim()
+    : "Ninguna";
 
     alert("Reserva realizada correctamente.\n\n" +
           "Titular: " + titulares.nombre + "\n" +

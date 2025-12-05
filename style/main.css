@@ -79,6 +79,50 @@ body {
     gap: 4px;
 }
 
+/* Dropdown idioma */
+.lang-dropdown {
+    position: absolute;
+    top: 28px;
+    right: 0;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    list-style: none;
+    padding: 4px 0;
+    margin: 0;
+    width: 70px;
+    display: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    z-index: 20;
+}
+
+.lang-dropdown li {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.lang-dropdown li:hover {
+    background: #eee;
+}
+
+.lang-wrapper.rotate .icon-chevron {
+    transform: rotate(90deg);
+}
+
+/* Iconos SVG */
+.icon-chevron {
+    pointer-events: auto;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: transform .2s ease;
+}
+
+#lang-selected {
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
 #lang-selector {
     appearance: none;
     -webkit-appearance: none;
@@ -90,16 +134,6 @@ body {
     color: var(--text-primary);
     cursor: pointer;
     padding-right: 5px;
-}
-
-#lang-selector:focus {
-    outline: none;
-}
-
-/* Iconos SVG */
-.icon-chevron {
-    pointer-events: none;
-    color: var(--text-secondary);
 }
 
 /* Navegación Central */
@@ -306,6 +340,463 @@ dialog.custom-modal::backdrop {
     color: #888;
 }
 
+/* Mejores Destinos */
+.md-header {
+  text-align: center;
+  margin: 0 0 28px;
+}
+.md-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+.md-sub {
+  margin-top: 8px;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+/* grid: 3 cols desktop, 2 tablet, 1 mobile */
+.destinos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  align-items: start;
+  max-width: 1200px;
+  margin: 0 auto 48px;
+  padding: 0 1rem;
+}
+
+/* Card */
+.destino-card {
+  background: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+}
+
+/* Thumb */
+.thumb {
+  width: 100%;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  background: #eee;
+}
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .35s ease;
+}
+.destino-card:hover .thumb img { transform: scale(1.03); }
+
+/* Body */
+.card-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.destino-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Meta row */
+.meta-row {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 12px;
+  flex-wrap:wrap;
+}
+.ver-mas {
+    background-color: var(--btn-black);
+    color: var(--btn-white);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+    text-decoration: none;
+    display: inline-block;
+    transition: opacity 0.2s;
+}
+
+/* Rating */
+.rating {
+  display:flex;
+  align-items:center;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+.rating .rating-value {
+  color: var(--btn-black);
+  font-weight: 800;
+}
+.stars {
+  color: #f2b01e; /* dorado */
+  letter-spacing: 1px;
+}
+
+.reviews { color: var(--text-secondary); font-size: 0.9rem; }
+
+/* Página del destino */
+.destino-hero-img {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+}
+
+.destino-title {
+    font-size: 2rem;
+    margin-top: 1rem;
+}
+
+.destino-aside {
+    position: sticky;
+    top: 30px;
+}
+
+.aside-box {
+    background: white;
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.aside-box .price {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.review-item {
+    border-bottom: 1px solid #ddd;
+    padding: 0.8rem 0;
+}
+
+.review-item span {
+    color: #f2b01e;
+}
+
+/* Estilo unificado para inputs y textarea del formulario de reseñas */
+#review-form input,
+#review-form textarea,
+#review-form select {
+    width: 100%;
+    padding: 10px 12px;
+    box-sizing: border-box;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    margin-bottom: 10px;
+    transition: border-color 0.2s;
+}
+
+#review-form textarea {
+    resize: none;
+    min-height: 70px;
+}
+
+#review-form input:focus,
+#review-form textarea:focus,
+#review-form select:focus {
+    border-color: var(--btn-black);
+    outline: none;
+}
+
+.group {
+    background: #fafafa;
+    padding: 12px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 1rem;
+}
+
+.allergy-group select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: #fff;
+}
+
+.allergy-group textarea {
+    margin-top: 8px;
+    border-radius: 6px;
+}
+
+#allergy-fields {
+    margin-top: 10px;
+}
+
+#allergy-fields textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    box-sizing: border-box;
+    resize: none;
+    background: #fff; 
+    margin-top: 8px;
+}
+
+#allergy-fields textarea:focus {
+    border-color: var(--btn-black);
+    outline: none;
+}
+
+/* ------- CARRUSEL -------- */
+
+.destino-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    gap: 1rem;
+}
+
+/* Track con imágenes */
+.carrusel-track {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s ease;
+}
+
+.carrusel-track img {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.carrusel-btn:hover {
+    background: rgba(0,0,0,0.7);
+}
+
+.carrusel-btn.prev {
+    left: 10px;
+}
+
+.carrusel-btn.next {
+    right: 10px;
+}
+
+/* Texto del destino */
+.destino-text {
+    margin-top: 0.5rem;
+}
+
+.destino-title {
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+.destino-sub {
+    color: var(--text-secondary);
+    margin: 0.3rem 0 0;
+}
+
+.text-sm {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+#companions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.companion-box {
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: #fafafa;
+}
+
+.companion-box label {
+    font-weight: 600;
+}
+
+.remove-companion {
+    background: #ccc;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+.remove-companion:hover {
+    background: #bbb;
+}
+
+#mascota-fields select {
+    margin-bottom: 10px;
+}
+
+.destino-layout {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 2.5rem;
+    margin-top: 2rem;
+}
+
+.destino-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.destino-carrusel-wrapper {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.destino-aside {
+    position: sticky;
+    top: 20px;
+    align-self: start;
+}
+
+.aside-box {
+    padding: 1.8rem;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+.aside-box h3 {
+    margin-top: 1.8rem;
+    margin-bottom: 0.6rem;
+    font-size: 1.1rem;
+}
+
+.aside-box hr {
+    margin: 1.4rem 0;
+    opacity: 0.4;
+}
+
+.aside-box label {
+    margin-top: 0.6rem;
+}
+
+.aside-box input,
+.aside-box select,
+.aside-box textarea {
+    margin-bottom: 0.6rem;
+}
+
+.aside-box select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    background-color: #fff;
+    font-size: 0.95rem;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='18' width='18' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 14px;
+}
+
+.aside-box select:focus {
+    border-color: var(--btn-black);
+    outline: none;
+}
+
+.card-exp {
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+    width: 100%;
+}
+
+.card-exp input {
+    width: 80px;     
+    text-align: center;
+    padding: 8px;
+    font-size: 0.95rem;
+}
+
+.destino-reseñas .review-item {
+    background: #fff;
+    border: 1px solid #e2e2e2;
+    padding: 1rem 1.2rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+
+.destino-reseñas strong {
+    font-size: 1rem;
+}
+
+.destino-reseñas span {
+    color: #f2b01e;
+    font-size: 1.1rem;
+}
+
+.destino-reseñas textarea,
+.destino-reseñas input {
+    width: 100%;
+}
+
+.destino-reseñas h3 {
+    margin-top: 2rem;
+}
+
+/* CARRUSEL GRANDE */
+.carrusel {
+    width: 100%;
+    height: 450px;
+    overflow: hidden;
+    position: relative;
+    border-radius: 12px;
+}
+
+/* Botones del carrusel */
+.carrusel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.45);
+    border: none;
+    padding: 12px 16px;
+    color: white;
+    cursor: pointer;
+    font-size: 1.4rem;
+    border-radius: 6px;
+    z-index: 2;
+}
+
+textarea {
+    resize: none;
+    overflow: hidden;
+}
+
 /* Responsive Styles */
 @media (max-width: 900px) {
     .site-header {
@@ -320,4 +811,23 @@ dialog.custom-modal::backdrop {
         flex-direction: column;
         gap: 20px;
     }
+    .destinos-grid { 
+        grid-template-columns: repeat(2, 1fr); gap:20px; 
+    }
+    .destino-layout {
+        grid-template-columns: 1fr;
+    }
+    .destino-aside {
+        position: relative;
+    }
+    .carrusel {
+        width: 100%;
+    }
+}
+
+@media (max-width: 640px) {
+  .destinos-grid { grid-template-columns: 1fr; gap:16px; padding: 0 0.75rem; }
+  .md-header { margin-bottom: 18px; }
+  .card-body { padding: 12px; }
+  .destino-title { font-size: 1rem; }
 }

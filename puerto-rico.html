@@ -4,10 +4,11 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Puerto Rico - Viajes y Experiencias</title>
-        <link rel="stylesheet" href="../style/main.css">
+        <link rel="stylesheet" href="style/main.css">
     </head>
 
-    <body>
+    <body data-destino="puerto-rico">
+
         <!-- Cabecera -->
         <header class="site-header">
             <div class="header-left">
@@ -24,13 +25,17 @@
                     <div class="separator"></div>
 
                     <div class="lang-wrapper">
-                        <select id="lang-selector" aria-label="Cambiar idioma">
-                            <option value="es">ES</option>
-                            <option value="en">EN</option>
-                        </select>
-                        <svg class="icon-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="6 9 12 15 18 9"></polyline>
+                        <span id="lang-selected">ES</span>
+
+                        <svg id="lang-toggle" class="icon-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <polyline points="9 6 15 12 9 18"></polyline>
                         </svg>
+
+                        <ul id="lang-menu" class="lang-dropdown">
+                            <li data-lang="es">ES</li>
+                            <li data-lang="en">EN</li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -50,31 +55,35 @@
             </div>
         </header>
 
-        <main class="destino-pagina">
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="destino-pagina">
 
-            <!-- Carrusel -->
-            <section class="destino-header">
-                <div class="carrusel">
-                    <div class="carrusel-track">
-                        <img src="images/puerto-rico.jpeg" alt="Puerto Rico">
-                        <img src="images/puerto-rico2.jpeg" alt="Puerto Rico">
-                        <img src="images/puerto-rico3.jpeg" alt="Puerto Rico">
+        <div class="destino-layout">
+
+            <!-- COLUMNA IZQUIERDA -->
+            <div class="destino-left">
+
+                <!-- CARRUSEL -->
+                <section class="destino-carrusel-wrapper">
+                    <div class="carrusel">
+                        <div class="carrusel-track">
+                            <img src="images/puerto-rico.jpeg" alt="Puerto Rico">
+                            <img src="images/puerto-rico2.jpeg" alt="Puerto Rico">
+                            <img src="images/puerto-rico3.jpeg" alt="Puerto Rico">
+                        </div>
+
+                        <button class="carrusel-btn prev">&#10094;</button>
+                        <button class="carrusel-btn next">&#10095;</button>
                     </div>
 
-                    <!-- Flechas del carrusel -->
-                    <button class="carrusel-btn prev">&#10094;</button>
-                    <button class="carrusel-btn next">&#10095;</button>
-                </div>
+                    <div class="destino-text">
+                        <h1 class="destino-title">Puerto Rico</h1>
+                        <p class="destino-sub">Playas paradisíacas, gastronomía única y cultura caribeña.</p>
+                    </div>
+                </section>
 
-                <div class="destino-text">
-                    <h1 class="destino-title">Puerto Rico</h1>
-                    <p class="destino-sub">Playas paradisíacas, gastronomía única y cultura caribeña.</p>
-                </div>
-            </section>
 
-            <div class="destino-layout">
-
-                <!-- Contenido principal -->
+                <!-- INFORMACIÓN DEL DESTINO -->
                 <section class="destino-info">
                     <h2>Información del destino</h2>
                     <p>
@@ -90,8 +99,14 @@
                         <li>Excursión por El Yunque</li>
                         <li>Visita al Viejo San Juan</li>
                     </ul>
+                </section>
+
+
+                <!-- SECCIÓN RESEÑAS -->
+                <section class="destino-reseñas">
 
                     <h3>Opiniones recientes</h3>
+
                     <div id="reviews">
                         <div class="review-item">
                             <strong>Sofía L.</strong>
@@ -119,152 +134,152 @@
                         </select>
                         <button class="btn-primary" type="submit">Enviar reseña</button>
                     </form>
+
                 </section>
 
-                <!-- Formulario de compra -->
-                <aside class="destino-aside">
-                    <div class="aside-box">
-                        <h2>Comprar viaje</h2>
-                        <p class="price">Desde <strong>120€</strong></p>
+            </div>
 
-                        <form id="buy-form">
+            <!-- COLUMNA DERECHA: FORMULARIO DE COMPRA -->
+            <aside class="destino-aside">
 
-                            <!-- Datos del titular -->
-                            <label>Nombre y apellidos (titular)</label>
-                            <input type="text" id="fullname" placeholder="Ej: Laura Martínez" required>
+                <div class="aside-box">
+                    <h2>Comprar viaje</h2>
+                    <p class="price">Desde <strong>120€</strong></p>
 
-                            <label>Correo electrónico</label>
-                            <input type="email" id="email" placeholder="correo@email.com" required>
+                    <form id="buy-form">
 
-                            <hr>
+                        <!-- Datos del titular -->
+                        <h3>Datos del titular</h3>
 
-                            <!-- Acompañantes -->
-                            <h3>Acompañantes</h3>
-                            <p class="text-sm">Puedes añadir hasta 7 acompañantes (máx. 8 viajeros en la reserva).</p>
+                        <br>
+                        <label>Nombre y apellidos</label>
+                        <input type="text" id="fullname" placeholder="Ej: Laura Martínez" required>
 
-                            <div id="companions-list"></div>
+                        <br><br>
+                        <label>Correo electrónico</label>
+                        <input type="email" id="email" placeholder="correo@email.com" required>
 
-                            <button type="button" class="btn-primary" id="add-companion">Añadir acompañante</button>
+                        <hr>
 
-                            <hr>
+                        <!-- Acompañantes -->
+                        <h3>Acompañantes</h3>
+                        <p class="text-sm">Puedes añadir hasta 7 acompañantes (máx. 8 viajeros en la reserva).</p>
 
-                            <!-- Mascotas -->
-                            <h3>Mascota</h3>
+                        <div id="companions-list"></div>
 
-                            <label class="mascota-label">
-                                <input type="checkbox" id="mascota-toggle">
-                                Viajaré con mascota
-                            </label>
+                        <button type="button" class="btn-primary" id="add-companion">Añadir acompañante</button>
 
-                            <div id="mascota-fields" style="display:none;">
-                                <label>Tipo de mascota</label>
-                                <select id="pet-type">
-                                    <option value="perro">Perro</option>
-                                    <option value="gato">Gato</option>
-                                    <option value="ave">Ave</option>
-                                    <option value="otro">Otro</option>
-                                </select>
+                        <hr>
 
-                                <label>Tamaño de la mascota</label>
-                                <select id="pet-size">
-                                    <option value="pequeño">Pequeño</option>
-                                    <option value="mediano">Mediano</option>
-                                    <option value="grande">Grande</option>
-                                </select>
+                        <!-- Mascotas -->
+                        <h3>Mascota</h3>
+                            <div class="group">
+                                <label class="mascota-label">
+                                    <input type="checkbox" id="mascota-toggle">
+                                    Viajaré con mascota
+                                </label>
+
+                                <div id="mascota-fields" style="display:none;">
+                                    <br>
+                                    <label>Tipo de mascota</label>
+                                    <select id="pet-type">
+                                        <option value="perro">Perro</option>
+                                        <option value="gato">Gato</option>
+                                        <option value="ave">Ave</option>
+                                        <option value="otro">Otro</option>
+                                    </select>
+
+                                    <label>Tamaño de la mascota</label>
+                                    <select id="pet-size">
+                                        <option value="pequeño">Pequeño</option>
+                                        <option value="mediano">Mediano</option>
+                                        <option value="grande">Grande</option>
+                                    </select>
+                                </div>
                             </div>
 
-                            <hr>
+                        <hr>
 
-                            <!-- Alergias -->
-                            <h3>Alergias o intolerancias</h3>
-
-                            <label class="mascota-label">
-                                <input type="checkbox" id="no-allergies">
-                                Ninguna
+                        <!-- Alergias -->
+                        <h3>Alergias o intolerancias</h3>
+                        <div class="group">
+                            <label class="alergia-label">
+                                <input type="checkbox" id="allergy-toggle">
+                                Tengo alergias / intolerancias
                             </label>
 
-                            <textarea id="allergy-text" placeholder="Describe alergias o intolerancias del grupo..."></textarea>
-
-                            <hr>
-
-                            <!-- Datos de la tarjeta de pago -->
-                            <h3>Datos de pago</h3>
-
-                            <label>Tipo de tarjeta</label>
-                            <select id="card-type" required>
-                                <option value="" disabled selected>Selecciona una tarjeta</option>
-                                <option value="visa">Visa</option>
-                                <option value="mastercard">Mastercard</option>
-                                <option value="amex">American Express</option>
-                            </select>
-
-                            <label>Número de tarjeta</label>
-                            <input type="text" id="card-number" maxlength="19" placeholder="XXXX XXXX XXXX XXXX" required>
-
-                            <label>Fecha de expiración</label>
-                            <div class="card-exp">
-                                <input type="text" id="exp-month" maxlength="2" placeholder="MM" required>
-                                <span>/</span>
-                                <input type="text" id="exp-year" maxlength="2" placeholder="YY" required>
+                            <div id="allergy-fields" style="display:none;">
+                                <textarea id="allergy-text" placeholder="Describe..." ></textarea>
                             </div>
+                        </div>
+                        <hr>
 
-                            <label>CVV</label>
-                            <input type="text" id="cvv" maxlength="3" placeholder="3 dígitos" required>
+                        <!-- Datos de pago -->
+                        <h3>Datos de pago</h3>
 
-                            <button class="btn-primary full-width" type="submit">Confirmar compra</button>
-                        </form>
-                    </div>
-                </aside>
-            </div>
-        </main>
+                        <br>
+                        <label>Tipo de tarjeta</label>
+                        <select id="card-type" required>
+                            <option value="" disabled selected>Selecciona una tarjeta</option>
+                            <option value="visa">Visa</option>
+                            <option value="mastercard">Mastercard</option>
+                            <option value="amex">American Express</option>
+                        </select>
 
-        <!-- Pie de página -->
-        <footer class="site-footer">
-            <div class="footer-content">
-                <div class="footer-col left">
-                    <a href="#">FAQ</a>
-                    <a href="#">Contacto</a>
-                    <a href="#">Mi Perfil</a>
+                        <br><br>
+                        <label>Número de tarjeta</label>
+                        <input type="text" id="card-number" maxlength="19" placeholder="XXXX XXXX XXXX XXXX" required>
+
+                        <br><br>
+                        <label>Fecha de expiración</label>
+                        <div class="card-exp">
+                            <input type="text" id="exp-month" maxlength="2" placeholder="MM" required>
+                            <span>/</span>
+                            <input type="text" id="exp-year" maxlength="2" placeholder="YY" required>
+                        </div>
+
+                        <br>
+                        <label>CVV</label>
+                        <input type="text" id="cvv" maxlength="3" placeholder="CVV" required>
+
+                        <br><br>
+                        <button class="btn-primary full-width" type="submit">Confirmar compra</button>
+                    </form>
                 </div>
+            </aside>
 
-                <div class="footer-col center">
-                    <strong>WEBSITE</strong>
-                </div>
+        </div>
+    </main>
 
-                <div class="footer-col right">
-                    <a href="#">About</a>
-                    <a href="#">Blog</a>
-                    <a href="#">Support</a>
-                </div>
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-col left">
+                <a href="#">FAQ</a>
+                <a href="#">Contacto</a>
+                <a href="#">Mi Perfil</a>
             </div>
 
-            <div class="legal">
-                <p>&copy; 2010 - 2025 Privacy - Terms</p>
+            <div class="footer-col center">
+                <strong>WEBSITE</strong>
             </div>
-        </footer>
 
-        <script>
-            /* Reseñas */
-            document.getElementById("review-form").addEventListener("submit", e => {
-                e.preventDefault();
-                const name = review-name.value;
-                const text = review-text.value;
-                const rating = review-rating.value;
+            <div class="footer-col right">
+                <a href="#">About</a>
+                <a href="#">Blog</a>
+                <a href="#">Support</a>
+            </div>
+        </div>
 
-                const item = document.createElement("div");
-                item.className = "review-item";
-                item.innerHTML = `
-                    <strong>${name}</strong>
-                    <p>${text}</p>
-                    <span>${"★".repeat(rating)}${"☆".repeat(5-rating)}</span>
-                `;
+        <div class="legal">
+            <p>&copy; 2010 - 2025 Privacy - Terms</p>
+        </div>
+    </footer>
 
-                document.getElementById("reviews").appendChild(item);
-                e.target.reset();
-            });
-        </script>
-
-        <script src="script/carrusel.js"></script>
-        <script src="script/compra.js"></script>
-    </body>
+    <!-- SCRIPTS -->
+    <script src="script/carrusel.js"></script>
+    <script src="script/compra.js"></script>
+    <script src="script/reseñas.js"></script>
+    <script src="script/idiomas.js"></script>
+</body>
 </html>
