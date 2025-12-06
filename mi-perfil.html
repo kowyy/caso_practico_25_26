@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Mi Perfil - Viajes y Experiencias</title>
+        <link rel="stylesheet" href="style/main.css">
+    </head>
+
+    <body>
+
+        <header class="site-header">
+            <div class="header-left">
+                <a href="index.html" class="logo-text">WEBSITE</a>
+                
+                <div class="utilities-wrapper">
+                    <div class="separator"></div>
+                    <div class="lang-wrapper">
+                        <span id="lang-selected">ES</span>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="header-center">
+                <ul>
+                    <li><a href="index.html">Destinos destacados</a></li>
+                    <li><a href="#">Experiencias recomendadas</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-right">
+                <a href="#" class="nav-link">Ayuda</a>
+                <button id="btn-login-header" class="btn-text">Mi Cuenta</button>
+            </div>
+        </header>
+
+        <main class="profile-page">
+            <div class="profile-card">
+                
+                <div class="profile-left">
+                    <h1>MI CUENTA</h1>
+                    
+                    <div class="user-info">
+                        <img src="https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff" id="profile-pic" alt="Foto de perfil">
+                        <p id="profile-name">Cargando usuario...</p>
+                    </div>
+
+                    <div class="bio-section">
+                        <h2>BIO</h2>
+                        <textarea id="user-bio" placeholder="Escribe algo sobre ti aquí..."></textarea>
+                        <p class="text-sm hint">Los cambios se guardan automáticamente.</p>
+                    </div>
+                </div>
+
+                <div class="profile-separator"></div>
+
+                <div class="profile-right">
+                    <div class="profile-menu">
+                        <a href="#" class="active">Mi Perfil</a>
+                        <a href="#">Mis Reservas</a>
+                        <a href="#">Mis Reseñas</a>
+                    </div>
+
+                    <div class="profile-bottom">
+                        <a href="#">Configuración</a>
+                        <button id="btn-logout" class="btn-text logout">Cerrar Sesión</button>
+                    </div>
+
+                    <div class="profile-legal">
+                        <p>&copy; 2010 - 2025 Privacy - Terms</p>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+            <div class="footer-content">
+                <div class="footer-col left">
+                    <a href="#">FAQ</a>
+                    <a href="#">Contacto</a>
+                </div>
+                <div class="footer-col center">
+                    <strong>WEBSITE</strong>
+                </div>
+            </div>
+        </footer>
+
+        <script src="script/profile.js"></script>
+    </body>
+</html>
