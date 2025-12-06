@@ -35,6 +35,18 @@ document.addEventListener("DOMContentLoaded", () => {
         "puerto-rico": [
             { name: "Sofía L.", text: "Agua cristalina y comida riquísima. Un paraíso total.", rating: 5 },
             { name: "Carlos F.", text: "Muy bonito, aunque algo húmedo. Ideal para desconectar.", rating: 4 }
+        ],
+        "paris": [
+            { name: "Ana B.", text: "La ciudad más romántica. La torre Eiffel de noche es mágica.", rating: 5 },
+            { name: "Jean P.", text: "Museos increíbles, pero mucha gente en verano.", rating: 4 }
+        ],
+        "kioto": [
+            { name: "Kenji T.", text: "Paz absoluta en los templos. Otoño es la mejor época.", rating: 5 },
+            { name: "Marta S.", text: "Comida espectacular y gente muy amable.", rating: 5 }
+        ],
+        "nueva-york": [
+            { name: "John D.", text: "Energía inagotable. Central Park es un oasis necesario.", rating: 5 },
+            { name: "Sarah Connor", text: "Caro, pero vale la pena cada dólar.", rating: 4 }
         ]
     };
 

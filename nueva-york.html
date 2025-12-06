@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Nueva York - Viajes y Experiencias</title>
+        <link rel="stylesheet" href="style/main.css">
+    </head>
+
+    <body data-destino="nueva-york">
+
+        <header class="site-header">
+            <div class="header-left">
+                <a href="index.html" class="logo-text">WEBSITE</a>
+                
+                <div class="utilities-wrapper">
+
+                    <div class="separator"></div>
+
+                    <div class="lang-wrapper">
+                        <span id="lang-selected">ES</span>
+
+                        <svg id="lang-toggle" class="icon-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <polyline points="9 6 15 12 9 18"></polyline>
+                        </svg>
+
+                        <ul id="lang-menu" class="lang-dropdown">
+                            <li data-lang="es">ES</li>
+                            <li data-lang="en">EN</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="header-center">
+                <ul>
+                    <li><a href="index.html">Destinos destacados</a></li>
+                    <li><a href="#">Experiencias recomendadas</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-right">
+                <a href="#" class="nav-link">FAQ</a>
+                <a href="#" class="nav-link">Ayuda</a>
+                <button id="btn-login" class="btn-text">Inicia sesión</button>
+                <a href="signup.html" class="btn-primary">Regístrate</a>
+            </div>
+        </header>
+
+        <main class="destino-pagina">
+            
+            <section class="destino-carrusel-wrapper">
+                <div class="carrusel">
+                    <div class="carrusel-track">
+                        <img src="https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1200" alt="Nueva York - Skyline">
+                        <img src="https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1200" alt="Nueva York - Central Park">
+                        <img src="https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1200" alt="Nueva York - Times Square">
+                    </div>
+
+                    <button class="carrusel-btn prev" aria-label="Imagen anterior">&#10094;</button>
+                    <button class="carrusel-btn next" aria-label="Siguiente imagen">&#10095;</button>
+                </div>
+
+                <div class="destino-text">
+                    <h1 class="destino-title">Nueva York</h1>
+                    <p class="destino-sub">La ciudad que nunca duerme, rascacielos y energía pura.</p>
+                </div>
+            </section>
+
+            <div class="destino-content">
+                <section class="destino-info">
+                    <h2>Información del destino</h2>
+                    <p>
+                        Nueva York es una metrópolis de arquitectura icónica, parques inmensos como Central Park y una 
+                        escena artística incomparable. Desde Manhattan hasta Brooklyn, la energía urbana no se apaga 
+                        nunca, ofreciendo museos de talla mundial y barrios con carácter propio.
+                    </p>
+
+                    <h3>¿Qué incluye el viaje?</h3>
+                    <ul>
+                        <li>Vuelo directo</li>
+                        <li>Hotel en Manhattan - 4 noches</li>
+                        <li>Entrada al Empire State</li>
+                        <li>Tour en barco Estatua de la Libertad</li>
+                    </ul>
+
+                    <div class="cta-section">
+                        <p class="price-info">Desde <strong>1.100€</strong> por persona</p>
+                        <button class="btn-primary btn-large" onclick="location.href='compra.html?destino=nueva-york'">
+                            Reservar ahora
+                        </button>
+                    </div>
+                </section>
+
+                <section class="destino-reseñas">
+                    <h3>Opiniones recientes</h3>
+                    <div id="reviews">
+                        </div>
+
+                    <h3>Escribe tu reseña</h3>
+                    <form id="review-form">
+                        <input type="text" id="review-name" placeholder="Tu nombre" required>
+                        <textarea id="review-text" placeholder="Tu experiencia..." required></textarea>
+                        <select id="review-rating">
+                            <option value="5">5 ★</option>
+                            <option value="4">4 ★</option>
+                            <option value="3">3 ★</option>
+                            <option value="2">2 ★</option>
+                            <option value="1">1 ★</option>
+                        </select>
+                        <button class="btn-primary" type="submit">Enviar reseña</button>
+                    </form>
+                </section>
+            </div>
+        </main>
+
+        <footer class="site-footer">
+            <div class="footer-content">
+                <div class="footer-col left">
+                    <a href="#">FAQ</a>
+                    <a href="#">Contacto</a>
+                    <a href="#">Mi Perfil</a>
+                </div>
+
+                <div class="footer-col center">
+                    <strong>WEBSITE</strong>
+                </div>
+
+                <div class="footer-col right">
+                    <a href="#">About</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Support</a>
+                </div>
+            </div>
+
+            <div class="legal">
+                <p>&copy; 2010 - 2025 Privacy - Terms</p>
+            </div>
+        </footer>
+
+        <script src="script/carrusel.js"></script>
+        <script src="script/reseñas.js"></script>
+        <script src="script/idiomas.js"></script>
+    </body>
+</html>

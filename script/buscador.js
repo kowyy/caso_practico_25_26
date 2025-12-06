@@ -34,6 +34,33 @@ document.addEventListener("DOMContentLoaded", () => {
             tags: ["playa", "tropical", "caribe", "naturaleza"],
             url: "puerto-rico.html",
             imagen: "images/puerto-rico.jpeg"
+        },
+        {
+            id: "paris",
+            nombre: "París",
+            pais: "Francia",
+            descripcion: "Romance urbano: Sena, bulevares y museos icónicos",
+            tags: ["europa", "romance", "museos", "torre eiffel"],
+            url: "paris.html",
+            imagen: "https://plus.unsplash.com/premium_photo-1661919210043-fd847a58522d?ixlib=rb-4.1.0&auto=format&fit=crop&q=60&w=500"
+        },
+        {
+            id: "kioto",
+            nombre: "Kioto",
+            pais: "Japón",
+            descripcion: "Templos, santuarios y jardines clásicos",
+            tags: ["asia", "templos", "cultura", "jardines"],
+            url: "kioto.html",
+            imagen: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?ixlib=rb-4.1.0&auto=format&fit=crop&q=60&w=500"
+        },
+        {
+            id: "nueva-york",
+            nombre: "Nueva York",
+            pais: "Estados Unidos",
+            descripcion: "Arquitectura icónica, parques y escena artística",
+            tags: ["usa", "rascacielos", "urbano", "central park"],
+            url: "nueva-york.html",
+            imagen: "https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?ixlib=rb-4.1.0&auto=format&fit=crop&q=60&w=500"
         }
     ];
 

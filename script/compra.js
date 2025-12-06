@@ -32,6 +32,39 @@ const destinosData = {
             "Excursión por El Yunque",
             "Visita al Viejo San Juan"
         ]
+    },
+    "paris": {
+        nombre: "París",
+        precio: "950€",
+        imagen: "https://plus.unsplash.com/premium_photo-1661919210043-fd847a58522d?ixlib=rb-4.1.0&auto=format&fit=crop&q=60&w=500",
+        incluye: [
+            "Vuelo ida y vuelta",
+            "Hotel céntrico - 3 noches",
+            "Entrada al Louvre",
+            "Cena en crucero por el Sena"
+        ]
+    },
+    "kioto": {
+        nombre: "Kioto",
+        precio: "1.450€",
+        imagen: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?ixlib=rb-4.1.0&auto=format&fit=crop&q=60&w=500",
+        incluye: [
+            "Vuelo ida y vuelta",
+            "Ryokan tradicional - 5 noches",
+            "Ceremonia del té",
+            "Paseo por Gion y templos"
+        ]
+    },
+    "nueva-york": {
+        nombre: "Nueva York",
+        precio: "1.100€",
+        imagen: "https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?ixlib=rb-4.1.0&auto=format&fit=crop&q=60&w=500",
+        incluye: [
+            "Vuelo directo",
+            "Hotel en Manhattan - 4 noches",
+            "Entrada al Empire State",
+            "Tour en barco estatua libertad"
+        ]
     }
 };
 
