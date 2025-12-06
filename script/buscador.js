@@ -18,6 +18,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             .replace(/-+$/, '');            // Trim - from end of text
     }
 
+    function getStars(value) {
+        const rating = Math.round(value);
+        return "★".repeat(rating) + "☆".repeat(5 - rating);
+    }
+
     // Carga dinámica de datos
     try {
         const response = await fetch('ciudades-del-mundo.json');
@@ -55,9 +60,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     function renderGrid(listaDestinos) {
         destinosGrid.innerHTML = "";
         listaDestinos.forEach(d => {
-            // Generar rating aleatorio para demo
-            const rating = (Math.random() * (5 - 4) + 4).toFixed(1);
+            const rating = (Math.random() * (5 - 3) + 3).toFixed(1); 
             const reviews = Math.floor(Math.random() * 500) + 50;
+            
+            const starsStr = getStars(rating);
 
             const article = document.createElement("article");
             article.className = "destino-card";
@@ -73,7 +79,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         <button class="ver-mas" onclick="location.href='${d.url}'">Ver más</button>
                         <div class="rating" aria-label="Calificación ${rating} de 5 (${reviews} reseñas)">
                             <span class="rating-value">${rating}</span>
-                            <span class="stars" aria-hidden="true">★★★★★</span>
+                            <span class="stars" aria-hidden="true">${starsStr}</span>
                             <span class="reviews">(${reviews} reseñas)</span>
                         </div>
                     </div>
