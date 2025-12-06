@@ -1,68 +1,87 @@
 // Sistema de búsqueda de destinos
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const searchContainer = document.querySelector(".search-container");
     const searchInput = document.getElementById("search-input");
     const searchResults = document.getElementById("search-results");
     const destinosGrid = document.querySelector(".destinos-grid");
 
-    // Base de datos de destinos (fácil de expandir)
-    const destinos = [
-        {
-            id: "petra",
-            nombre: "Petra",
-            pais: "Jordania",
-            descripcion: "La ciudad rosa tallada en roca",
-            tags: ["historia", "arqueología", "desierto", "cultura"],
-            url: "petra.html",
-            imagen: "images/petra.jpeg"
-        },
-        {
-            id: "las-vegas",
-            nombre: "Las Vegas",
-            pais: "Estados Unidos",
-            descripcion: "La ciudad del entretenimiento",
-            tags: ["casinos", "espectáculos", "fiesta", "lujo"],
-            url: "las-vegas.html",
-            imagen: "images/vegas.jpeg"
-        },
-        {
-            id: "puerto-rico",
-            nombre: "Puerto Rico",
-            pais: "Puerto Rico",
-            descripcion: "Paraíso caribeño",
-            tags: ["playa", "tropical", "caribe", "naturaleza"],
-            url: "puerto-rico.html",
-            imagen: "images/puerto-rico.jpeg"
-        },
-        {
-            id: "paris",
-            nombre: "París",
-            pais: "Francia",
-            descripcion: "Romance urbano: Sena, bulevares y museos icónicos",
-            tags: ["europa", "romance", "museos", "torre eiffel"],
-            url: "paris.html",
-            imagen: "https://plus.unsplash.com/premium_photo-1661919210043-fd847a58522d?ixlib=rb-4.1.0&auto=format&fit=crop&q=60&w=500"
-        },
-        {
-            id: "kioto",
-            nombre: "Kioto",
-            pais: "Japón",
-            descripcion: "Templos, santuarios y jardines clásicos",
-            tags: ["asia", "templos", "cultura", "jardines"],
-            url: "kioto.html",
-            imagen: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?ixlib=rb-4.1.0&auto=format&fit=crop&q=60&w=500"
-        },
-        {
-            id: "nueva-york",
-            nombre: "Nueva York",
-            pais: "Estados Unidos",
-            descripcion: "Arquitectura icónica, parques y escena artística",
-            tags: ["usa", "rascacielos", "urbano", "central park"],
-            url: "nueva-york.html",
-            imagen: "https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?ixlib=rb-4.1.0&auto=format&fit=crop&q=60&w=500"
+    let destinos = [];
+
+    // Función auxiliar para crear slugs (IDs)
+    function createSlug(text) {
+        return text.toString().toLowerCase()
+            .replace(/\s+/g, '-')           // Replace spaces with -
+            .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+            .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+            .replace(/^-+/, '')             // Trim - from start of text
+            .replace(/-+$/, '');            // Trim - from end of text
+    }
+
+    // Carga dinámica de datos
+    try {
+        const response = await fetch('ciudades-del-mundo.json');
+        const data = await response.json();
+        
+        data.continents.forEach(cont => {
+            cont.countries.forEach(pais => {
+                pais.cities.forEach(ciudad => {
+                    destinos.push({
+                        id: createSlug(ciudad.name),
+                        nombre: ciudad.name,
+                        pais: pais.name,
+                        descripcion: ciudad.description,
+                        imagen: ciudad.image.url,
+                        tags: [cont.name.toLowerCase(), pais.name.toLowerCase(), "turismo", "viaje"],
+                        url: `destino-template.html?id=${createSlug(ciudad.name)}`
+                    });
+                });
+            });
+        });
+
+        // Renderizar grid inicial con todos los destinos
+        if(destinosGrid) {
+            renderGrid(destinos);
         }
-    ];
+
+    } catch (error) {
+        console.error("Error cargando los destinos:", error);
+        if(destinosGrid) {
+            destinosGrid.innerHTML = "<p>Error cargando destinos. Por favor intenta más tarde.</p>";
+        }
+    }
+
+    // Función para renderizar el grid
+    function renderGrid(listaDestinos) {
+        destinosGrid.innerHTML = "";
+        listaDestinos.forEach(d => {
+            // Generar rating aleatorio para demo
+            const rating = (Math.random() * (5 - 4) + 4).toFixed(1);
+            const reviews = Math.floor(Math.random() * 500) + 50;
+
+            const article = document.createElement("article");
+            article.className = "destino-card";
+            article.setAttribute("data-destino", d.id);
+            
+            article.innerHTML = `
+                <div class="thumb">
+                    <img src="${d.imagen}" alt="${d.nombre}" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <h3 class="destino-title">${d.nombre}</h3>
+                    <div class="meta-row">
+                        <button class="ver-mas" onclick="location.href='${d.url}'">Ver más</button>
+                        <div class="rating" aria-label="Calificación ${rating} de 5 (${reviews} reseñas)">
+                            <span class="rating-value">${rating}</span>
+                            <span class="stars" aria-hidden="true">★★★★★</span>
+                            <span class="reviews">(${reviews} reseñas)</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            destinosGrid.appendChild(article);
+        });
+    }
 
     if (searchInput && searchResults) {
         // Búsqueda en tiempo real
@@ -155,51 +174,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Filtrar tarjetas en el grid
     function filtrarDestinosEnGrid(resultados) {
-        const cards = destinosGrid.querySelectorAll(".destino-card");
-        
-        cards.forEach(card => {
-            const titulo = card.querySelector(".destino-title").textContent.toLowerCase();
-            const encontrado = resultados.some(r => 
-                r.nombre.toLowerCase() === titulo
-            );
-
-            card.style.display = encontrado ? "flex" : "none";
-        });
-
-        // Mensaje si no hay resultados visibles
-        const destinosVisibles = Array.from(cards).filter(
-            card => card.style.display !== "none"
-        );
-
-        let noResultsMsg = document.getElementById("no-results-message");
-        
-        if (destinosVisibles.length === 0) {
-            if (!noResultsMsg) {
-                noResultsMsg = document.createElement("div");
-                noResultsMsg.id = "no-results-message";
+        if(destinosGrid) {
+            renderGrid(resultados);
+            
+            if (resultados.length === 0) {
+                const noResultsMsg = document.createElement("div");
                 noResultsMsg.className = "no-results-grid";
-                noResultsMsg.innerHTML = `
-                    <p>No se encontraron destinos que coincidan con tu búsqueda.</p>
-                `;
-                destinosGrid.parentNode.insertBefore(noResultsMsg, destinosGrid.nextSibling);
-            }
-        } else {
-            if (noResultsMsg) {
-                noResultsMsg.remove();
+                noResultsMsg.innerHTML = `<p>No se encontraron destinos que coincidan con tu búsqueda.</p>`;
+                destinosGrid.appendChild(noResultsMsg);
             }
         }
     }
 
     // Mostrar todos los destinos
     function mostrarTodosLosDestinos() {
-        const cards = destinosGrid.querySelectorAll(".destino-card");
-        cards.forEach(card => {
-            card.style.display = "flex";
-        });
-
-        const noResultsMsg = document.getElementById("no-results-message");
-        if (noResultsMsg) {
-            noResultsMsg.remove();
-        }
+        if(destinosGrid) renderGrid(destinos);
     }
 });

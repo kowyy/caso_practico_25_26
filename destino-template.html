@@ -3,28 +3,23 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Las Vegas - Viajes y Experiencias</title>
+        <title>Detalle Destino - Viajes y Experiencias</title>
         <link rel="stylesheet" href="style/main.css">
     </head>
 
-    <body data-destino="las-vegas">
+    <body data-destino="">
 
         <header class="site-header">
             <div class="header-left">
                 <a href="index.html" class="logo-text">WEBSITE</a>
                 
                 <div class="utilities-wrapper">
-
                     <div class="separator"></div>
-
                     <div class="lang-wrapper">
                         <span id="lang-selected">ES</span>
-
-                        <svg id="lang-toggle" class="icon-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2">
+                        <svg id="lang-toggle" class="icon-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polyline points="9 6 15 12 9 18"></polyline>
                         </svg>
-
                         <ul id="lang-menu" class="lang-dropdown">
                             <li data-lang="es">ES</li>
                             <li data-lang="en">EN</li>
@@ -52,10 +47,7 @@
             
             <section class="destino-carrusel-wrapper">
                 <div class="carrusel">
-                    <div class="carrusel-track">
-                        <img src="images/vegas.jpeg" alt="Las Vegas - Strip">
-                        <img src="images/vegas2.jpeg" alt="Las Vegas - Noche">
-                        <img src="images/vegas3.jpg" alt="Las Vegas - Panorámica">
+                    <div class="carrusel-track" id="dynamic-carrusel">
                     </div>
 
                     <button class="carrusel-btn prev" aria-label="Imagen anterior">&#10094;</button>
@@ -63,31 +55,23 @@
                 </div>
 
                 <div class="destino-text">
-                    <h1 class="destino-title">Las Vegas</h1>
-                    <p class="destino-sub">La ciudad del entretenimiento — luces, espectáculos y vida sin pausa.</p>
+                    <h1 class="destino-title" id="page-title">Cargando...</h1>
+                    <p class="destino-sub" id="page-country">...</p>
                 </div>
             </section>
 
             <div class="destino-content">
                 <section class="destino-info">
                     <h2>Información del destino</h2>
-                    <p>
-                        Las Vegas es mundialmente famosa por sus casinos, espectáculos, hoteles temáticos y
-                        su vibrante vida nocturna. Una ciudad que nunca duerme y donde siempre hay algo nuevo para descubrir,
-                        desde el Gran Cañón cercano hasta las fuentes del Bellagio.
-                    </p>
+                    <p id="page-description">Cargando información del destino...</p>
 
                     <h3>¿Qué incluye el viaje?</h3>
-                    <ul>
-                        <li>Vuelo ida y vuelta</li>
-                        <li>Hotel 5 estrellas - 4 noches</li>
-                        <li>Entradas a espectáculos seleccionados</li>
-                        <li>Paseo nocturno por el Strip</li>
-                    </ul>
+                    <ul id="page-includes">
+                        </ul>
 
                     <div class="cta-section">
-                        <p class="price-info">Desde <strong>1.250€</strong> por persona</p>
-                        <button class="btn-primary btn-large" onclick="location.href='compra.html?destino=las-vegas'">
+                        <p class="price-info">Desde <strong id="page-price">---€</strong> por persona</p>
+                        <button class="btn-primary btn-large" id="btn-reservar">
                             Reservar ahora
                         </button>
                     </div>
@@ -95,8 +79,7 @@
 
                 <section class="destino-reseñas">
                     <h3>Opiniones recientes</h3>
-                    <div id="reviews">
-                        </div>
+                    <div id="reviews"></div>
 
                     <h3>Escribe tu reseña</h3>
                     <form id="review-form">
@@ -122,18 +105,15 @@
                     <a href="#">Contacto</a>
                     <a href="#">Mi Perfil</a>
                 </div>
-
                 <div class="footer-col center">
                     <strong>WEBSITE</strong>
                 </div>
-
                 <div class="footer-col right">
                     <a href="#">About</a>
                     <a href="#">Blog</a>
                     <a href="#">Support</a>
                 </div>
             </div>
-
             <div class="legal">
                 <p>&copy; 2010 - 2025 Privacy - Terms</p>
             </div>
@@ -142,5 +122,6 @@
         <script src="script/carrusel.js"></script>
         <script src="script/reseñas.js"></script>
         <script src="script/idiomas.js"></script>
+        <script src="script/detalle-destino.js"></script>
     </body>
 </html>

@@ -1,24 +1,64 @@
-// Carrusel de imágenes simple
+// Lógica del carrusel de imágenes
+// Se envuelve en una función para poder inicializarlo dinámicamente
 
-const track = document.querySelector(".carrusel-track");
-const slides = Array.from(track.children);
-let index = 0;
+window.initCarrusel = function() {
+    const track = document.getElementById('dynamic-carrusel');
+    
+    // Si no hay track o no tiene imágenes, no hacemos nada
+    if (!track || track.children.length === 0) {
+        console.log("Carrusel no inicializado: faltan elementos.");
+        return;
+    }
 
-// Mostrar la slide en el índice dado
-function showSlide(i) {
-    index = (i + slides.length) % slides.length;
-    track.style.transform = `translateX(${-index * 100}%)`;
-}
+    const slides = Array.from(track.children);
+    const nextButton = document.querySelector('.carrusel-btn.next');
+    const prevButton = document.querySelector('.carrusel-btn.prev');
 
-// Botón anterior
-document.querySelector(".carrusel-btn.prev").addEventListener("click", () => {
-    showSlide(index - 1);
+    if (!nextButton || !prevButton) return;
+
+    // Resetear estado si se recarga
+    let currentSlideIndex = 0;
+
+    const updateSlidePosition = () => {
+        // Asumiendo que todas las imágenes tienen el mismo ancho que el contenedor
+        const slideWidth = slides[0].getBoundingClientRect().width;
+        track.style.transform = 'translateX(-' + (slideWidth * currentSlideIndex) + 'px)';
+    };
+
+    // Asegurarse de que la posición es correcta al inicio y al redimensionar
+    updateSlidePosition();
+    window.addEventListener('resize', updateSlidePosition);
+
+    // Event Listeners para los botones
+    const newNextBtn = nextButton.cloneNode(true);
+    nextButton.parentNode.replaceChild(newNextBtn, nextButton);
+    
+    const newPrevBtn = prevButton.cloneNode(true);
+    prevButton.parentNode.replaceChild(newPrevBtn, prevButton);
+
+
+    newNextBtn.addEventListener('click', () => {
+        currentSlideIndex++;
+        if (currentSlideIndex >= slides.length) {
+            currentSlideIndex = 0; // Loop al principio
+        }
+        updateSlidePosition();
+    });
+
+    newPrevBtn.addEventListener('click', () => {
+        currentSlideIndex--;
+        if (currentSlideIndex < 0) {
+            currentSlideIndex = slides.length - 1; // Loop al final
+        }
+        updateSlidePosition();
+    });
+
+    console.log("Carrusel inicializado correctamente con " + slides.length + " imágenes.");
+};
+
+// Intentar inicializar al cargar por si acaso (para contenido estático)
+document.addEventListener('DOMContentLoaded', () => {
+     if(document.getElementById('dynamic-carrusel').children.length > 0) {
+         window.initCarrusel();
+     }
 });
-
-// Botón siguiente
-document.querySelector(".carrusel-btn.next").addEventListener("click", () => {
-    showSlide(index + 1);
-});
-
-// Auto-avance cada 5 segundos
-setInterval(() => showSlide(index + 1), 5000);
