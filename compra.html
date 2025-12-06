@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Reservar viaje - Viajes y Experiencias</title>
+        <link rel="stylesheet" href="style/main.css">
+    </head>
+
+    <body>
+
+        <!-- Cabecera -->
+        <header class="site-header">
+            <div class="header-left">
+                <a href="index.html" class="logo-text">WEBSITE</a>
+                
+                <div class="utilities-wrapper">
+                    <div class="search-box">
+                        <svg class="icon-search" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </div>
+
+                    <div class="separator"></div>
+
+                    <div class="lang-wrapper">
+                        <span id="lang-selected">ES</span>
+
+                        <svg id="lang-toggle" class="icon-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <polyline points="9 6 15 12 9 18"></polyline>
+                        </svg>
+
+                        <ul id="lang-menu" class="lang-dropdown">
+                            <li data-lang="es">ES</li>
+                            <li data-lang="en">EN</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="header-center">
+                <ul>
+                    <li><a href="index.html">Destinos destacados</a></li>
+                    <li><a href="#">Experiencias recomendadas</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-right">
+                <a href="#" class="nav-link">FAQ</a>
+                <a href="#" class="nav-link">Ayuda</a>
+                <button id="btn-login" class="btn-text">Inicia sesión</button>
+                <a href="signup.html" class="btn-primary">Regístrate</a>
+            </div>
+        </header>
+
+        <!-- Contenido principal -->
+        <main class="compra-page">
+            <div class="compra-container">
+                
+                <!-- Resumen del destino -->
+                <aside class="compra-resumen">
+                    <div class="resumen-card">
+                        <img id="destino-img" src="" alt="Destino">
+                        <h2 id="destino-nombre">Cargando...</h2>
+                        <p class="price">Desde <strong id="destino-precio">120€</strong></p>
+                        <ul id="destino-incluye">
+                            <!-- Se carga dinámicamente -->
+                        </ul>
+                    </div>
+                </aside>
+
+                <!-- Formulario de compra -->
+                <section class="compra-formulario">
+                    <h1>Completa tu reserva</h1>
+
+                    <form id="buy-form">
+
+                        <!-- Datos del titular -->
+                        <div class="form-section">
+                            <h3>Datos del titular</h3>
+
+                            <div class="form-group">
+                                <label for="fullname">Nombre y apellidos</label>
+                                <input type="text" id="fullname" placeholder="Ej: Laura Martínez" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">Correo electrónico</label>
+                                <input type="email" id="email" placeholder="correo@email.com" required>
+                            </div>
+                        </div>
+
+                        <!-- Acompañantes -->
+                        <div class="form-section">
+                            <h3>Acompañantes</h3>
+                            <p class="text-sm">Puedes añadir hasta 7 acompañantes (máx. 8 viajeros en la reserva).</p>
+
+                            <div id="companions-list"></div>
+
+                            <button type="button" class="btn-secondary" id="add-companion">
+                                + Añadir acompañante
+                            </button>
+                        </div>
+
+                        <!-- Mascotas -->
+                        <div class="form-section">
+                            <h3>Mascota</h3>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="mascota-toggle">
+                                <span>Viajaré con mascota</span>
+                            </label>
+
+                            <div id="mascota-fields" style="display:none;">
+                                <div class="form-group">
+                                    <label for="pet-type">Tipo de mascota</label>
+                                    <select id="pet-type">
+                                        <option value="perro">Perro</option>
+                                        <option value="gato">Gato</option>
+                                        <option value="ave">Ave</option>
+                                        <option value="otro">Otro</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="pet-size">Tamaño de la mascota</label>
+                                    <select id="pet-size">
+                                        <option value="pequeño">Pequeño</option>
+                                        <option value="mediano">Mediano</option>
+                                        <option value="grande">Grande</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Alergias -->
+                        <div class="form-section">
+                            <h3>Alergias o intolerancias</h3>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="allergy-toggle">
+                                <span>Tengo alergias / intolerancias</span>
+                            </label>
+
+                            <div id="allergy-fields" style="display:none;">
+                                <textarea id="allergy-text" placeholder="Describe tus alergias o intolerancias..."></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Datos de pago -->
+                        <div class="form-section">
+                            <h3>Datos de pago</h3>
+
+                            <div class="form-group">
+                                <label for="card-type">Tipo de tarjeta</label>
+                                <select id="card-type" required>
+                                    <option value="" disabled selected>Selecciona una tarjeta</option>
+                                    <option value="visa">Visa</option>
+                                    <option value="mastercard">Mastercard</option>
+                                    <option value="amex">American Express</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="card-number">Número de tarjeta</label>
+                                <input type="text" id="card-number" maxlength="19" placeholder="XXXX XXXX XXXX XXXX" required>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="exp-month">Fecha de expiración</label>
+                                    <div class="card-exp">
+                                        <input type="text" id="exp-month" maxlength="2" placeholder="MM" required>
+                                        <span>/</span>
+                                        <input type="text" id="exp-year" maxlength="2" placeholder="YY" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="cvv">CVV</label>
+                                    <input type="text" id="cvv" maxlength="3" placeholder="CVV" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="btn-primary btn-large full-width" type="submit">
+                            Confirmar reserva
+                        </button>
+                    </form>
+                </section>
+
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="site-footer">
+            <div class="footer-content">
+                <div class="footer-col left">
+                    <a href="#">FAQ</a>
+                    <a href="#">Contacto</a>
+                    <a href="#">Mi Perfil</a>
+                </div>
+
+                <div class="footer-col center">
+                    <strong>WEBSITE</strong>
+                </div>
+
+                <div class="footer-col right">
+                    <a href="#">About</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Support</a>
+                </div>
+            </div>
+
+            <div class="legal">
+                <p>&copy; 2010 - 2025 Privacy - Terms</p>
+            </div>
+        </footer>
+
+        <script src="script/compra.js"></script>
+        <script src="script/idiomas.js"></script>
+    </body>
+</html>

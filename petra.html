@@ -12,7 +12,7 @@
         <!-- Cabecera -->
         <header class="site-header">
             <div class="header-left">
-                <span class="logo-text">WEBSITE</span>
+                <a href="index.html" class="logo-text">WEBSITE</a>
                 
                 <div class="utilities-wrapper">
                     <div class="search-box">
@@ -42,47 +42,43 @@
 
             <nav class="header-center">
                 <ul>
-                    <li><a href="#">Destinos destacados</a></li>
+                    <li><a href="index.html">Destinos destacados</a></li>
                     <li><a href="#">Experiencias recomendadas</a></li>
                 </ul>
             </nav>
 
             <div class="header-right">
                 <a href="#" class="nav-link">FAQ</a>
-                <a href="#" class="nav-link">Help</a>
+                <a href="#" class="nav-link">Ayuda</a>
                 <button id="btn-login" class="btn-text">Inicia sesión</button>
                 <a href="signup.html" class="btn-primary">Regístrate</a>
             </div>
         </header>
 
-    <!-- CONTENIDO PRINCIPAL -->
-    <main class="destino-pagina">
-
-        <div class="destino-layout">
-
-            <!-- COLUMNA IZQUIERDA -->
-            <div class="destino-left">
-
-                <!-- CARRUSEL -->
-                <section class="destino-carrusel-wrapper">
-                    <div class="carrusel">
-                        <div class="carrusel-track">
-                            <img src="images/petra.jpeg" alt="Petra">
-                            <img src="images/petra2.jpeg" alt="Petra">
-                            <img src="images/petra3.jpg" alt="Petra">
-                        </div>
-
-                        <button class="carrusel-btn prev">&#10094;</button>
-                        <button class="carrusel-btn next">&#10095;</button>
+        <!-- Contenido principal -->
+        <main class="destino-pagina">
+            
+            <!-- Carrusel de imágenes -->
+            <section class="destino-carrusel-wrapper">
+                <div class="carrusel">
+                    <div class="carrusel-track">
+                        <img src="images/petra.jpeg" alt="Petra - El Tesoro">
+                        <img src="images/petra2.jpeg" alt="Petra - Vista panorámica">
+                        <img src="images/petra3.jpg" alt="Petra - Monasterio">
                     </div>
 
-                    <div class="destino-text">
-                        <h1 class="destino-title">Petra</h1>
-                        <p class="destino-sub">La joya de Jordania — historia, cultura y aventura.</p>
-                    </div>
-                </section>
+                    <button class="carrusel-btn prev" aria-label="Imagen anterior">&#10094;</button>
+                    <button class="carrusel-btn next" aria-label="Siguiente imagen">&#10095;</button>
+                </div>
 
-                <!-- INFORMACIÓN DEL DESTINO -->
+                <div class="destino-text">
+                    <h1 class="destino-title">Petra</h1>
+                    <p class="destino-sub">La joya de Jordania — historia, cultura y aventura.</p>
+                </div>
+            </section>
+
+            <div class="destino-content">
+                <!-- Info del destino -->
                 <section class="destino-info">
                     <h2>Información del destino</h2>
                     <p>
@@ -98,24 +94,21 @@
                         <li>Entrada al Tesoro y Monasterio</li>
                         <li>Guía turístico local</li>
                     </ul>
+
+                    <!-- Botón para ir a la página de compra -->
+                    <div class="cta-section">
+                        <p class="price-info">Desde <strong>120€</strong> por persona</p>
+                        <button class="btn-primary btn-large" onclick="location.href='compra.html?destino=petra'">
+                            Reservar ahora
+                        </button>
+                    </div>
                 </section>
 
-                <!-- RESEÑAS -->
+                <!-- Sección de reseñas -->
                 <section class="destino-reseñas">
-
                     <h3>Opiniones recientes</h3>
                     <div id="reviews">
-                        <div class="review-item">
-                            <strong>Laura G.</strong>
-                            <p>“Una experiencia increíble. El amanecer en el Tesoro es inolvidable.”</p>
-                            <span>★★★★★</span>
-                        </div>
-
-                        <div class="review-item">
-                            <strong>Javier M.</strong>
-                            <p>“El guía fue excelente, pero hace bastante calor, id preparados.”</p>
-                            <span>★★★★☆</span>
-                        </div>
+                        <!-- Las reseñas se cargan dinámicamente -->
                     </div>
 
                     <h3>Escribe tu reseña</h3>
@@ -133,144 +126,35 @@
                     </form>
                 </section>
             </div>
+        </main>
 
-            <!-- COLUMNA DERECHA: FORMULARIO DE COMPRA -->
-            <aside class="destino-aside">
-                <div class="aside-box">
-                    <h2>Comprar viaje</h2>
-                    <p class="price">Desde <strong>120€</strong></p>
-
-                    <form id="buy-form">
-
-                        <!-- Datos del titular -->
-                        <h3>Datos del titular</h3>
-
-                        <br>
-                        <label>Nombre y apellidos</label>
-                        <input type="text" id="fullname" placeholder="Ej: Laura Martínez" required>
-
-                        <br><br>
-                        <label>Correo electrónico</label>
-                        <input type="email" id="email" placeholder="correo@email.com" required>
-
-                        <hr>
-
-                        <!-- Acompañantes -->
-                        <h3>Acompañantes</h3>
-                        <p class="text-sm">Puedes añadir hasta 7 acompañantes (máx. 8 viajeros en la reserva).</p>
-
-                        <div id="companions-list"></div>
-
-                        <button type="button" class="btn-primary" id="add-companion">Añadir acompañante</button>
-
-                        <hr>
-
-                        <!-- Mascotas -->
-                        <h3>Mascota</h3>
-                            <div class="group">
-                                <label class="mascota-label">
-                                    <input type="checkbox" id="mascota-toggle">
-                                    Viajaré con mascota
-                                </label>
-
-                                <div id="mascota-fields" style="display:none;">
-                                    <br>
-                                    <label>Tipo de mascota</label>
-                                    <select id="pet-type">
-                                        <option value="perro">Perro</option>
-                                        <option value="gato">Gato</option>
-                                        <option value="ave">Ave</option>
-                                        <option value="otro">Otro</option>
-                                    </select>
-
-                                    <label>Tamaño de la mascota</label>
-                                    <select id="pet-size">
-                                        <option value="pequeño">Pequeño</option>
-                                        <option value="mediano">Mediano</option>
-                                        <option value="grande">Grande</option>
-                                    </select>
-                                </div>
-                            </div>
-                        <hr>
-
-                        <!-- Alergias -->
-                        <h3>Alergias o intolerancias</h3>
-                        <div class="group">
-                            <label class="alergia-label">
-                                <input type="checkbox" id="allergy-toggle">
-                                Tengo alergias / intolerancias
-                            </label>
-
-                            <div id="allergy-fields" style="display:none;">
-                                <textarea id="allergy-text" placeholder="Describe..." ></textarea>
-                            </div>
-                        </div>
-                        <hr>
-
-                        <!-- Datos de pago -->
-                        <h3>Datos de pago</h3>
-
-                        <br>
-                        <label>Tipo de tarjeta</label>
-                        <select id="card-type" required>
-                            <option value="" disabled selected>Selecciona una tarjeta</option>
-                            <option value="visa">Visa</option>
-                            <option value="mastercard">Mastercard</option>
-                            <option value="amex">American Express</option>
-                        </select>
-
-                        <br><br>
-                        <label>Número de tarjeta</label>
-                        <input type="text" id="card-number" maxlength="19" placeholder="XXXX XXXX XXXX XXXX" required>
-
-                        <br><br>
-                        <label>Fecha de expiración</label>
-                        <div class="card-exp">
-                            <input type="text" id="exp-month" maxlength="2" placeholder="MM" required>
-                            <span>/</span>
-                            <input type="text" id="exp-year" maxlength="2" placeholder="YY" required>
-                        </div>
-
-                        <br>
-                        <label>CVV</label>
-                        <input type="text" id="cvv" maxlength="3" placeholder="CVV" required>
-
-                        <br><br>
-                        <button class="btn-primary full-width" type="submit">Confirmar compra</button>
-                    </form>
+        <!-- Footer -->
+        <footer class="site-footer">
+            <div class="footer-content">
+                <div class="footer-col left">
+                    <a href="#">FAQ</a>
+                    <a href="#">Contacto</a>
+                    <a href="#">Mi Perfil</a>
                 </div>
-            </aside>
-        </div>
-    </main>
 
-    <!-- FOOTER -->
-    <footer class="site-footer">
-        <div class="footer-content">
-            <div class="footer-col left">
-                <a href="#">FAQ</a>
-                <a href="#">Contacto</a>
-                <a href="#">Mi Perfil</a>
+                <div class="footer-col center">
+                    <strong>WEBSITE</strong>
+                </div>
+
+                <div class="footer-col right">
+                    <a href="#">About</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Support</a>
+                </div>
             </div>
 
-            <div class="footer-col center">
-                <strong>WEBSITE</strong>
+            <div class="legal">
+                <p>&copy; 2010 - 2025 Privacy - Terms</p>
             </div>
+        </footer>
 
-            <div class="footer-col right">
-                <a href="#">About</a>
-                <a href="#">Blog</a>
-                <a href="#">Support</a>
-            </div>
-        </div>
-
-        <div class="legal">
-            <p>&copy; 2010 - 2025 Privacy - Terms</p>
-        </div>
-    </footer>
-
-    <script src="script/carrusel.js"></script>
-    <script src="script/compra.js"></script>
-    <script src="script/reseñas.js"></script>
-    <script src="script/idiomas.js"></script>
-</body>
+        <script src="script/carrusel.js"></script>
+        <script src="script/reseñas.js"></script>
+        <script src="script/idiomas.js"></script>
+    </body>
 </html>

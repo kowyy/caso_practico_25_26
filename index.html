@@ -8,13 +8,15 @@
     </head>
 
     <body>
-        <!-- Cabecera -->
+        <!-- Cabecera principal del sitio -->
         <header class="site-header">
             <div class="header-left">
                 <span class="logo-text">WEBSITE</span>
                 
                 <div class="utilities-wrapper">
-                    <div class="search-box">
+                    <!-- Buscador mejorado -->
+                    <div class="search-container">
+                        <input type="text" id="search-input" placeholder="Buscar destinos..." autocomplete="off">
                         <svg class="icon-search" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="11" cy="11" r="8"></circle>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -23,6 +25,7 @@
 
                     <div class="separator"></div>
 
+                    <!-- Selector de idioma -->
                     <div class="lang-wrapper">
                         <span id="lang-selected">ES</span>
 
@@ -48,84 +51,87 @@
 
             <div class="header-right">
                 <a href="#" class="nav-link" data-i18n="faq">FAQ</a>
-                <a href="#" class="nav-link" data-i18n="faq">Help</a>
+                <a href="#" class="nav-link" data-i18n="help">Ayuda</a>
                 <button id="btn-login" class="btn-text" data-i18n="login">Inicia sesión</button>
                 <a href="signup.html" class="btn-primary" data-i18n="signup">Regístrate</a>
             </div>
         </header>
 
+        <!-- Dropdown de resultados de búsqueda -->
+        <div id="search-results"></div>
+
         <main id="main-content">
+            <!-- Hero section -->
             <section class="hero">
                 <h1 data-i18n="hero_title">Bienvenido a tu próxima experiencia</h1>
                 <p id="welcome-message" data-i18n="hero_subtitle">Explora el mundo con nosotros.</p>
             </section>
 
-            <!-- Sección Mejores Destinos -->
+            <!-- Grid de destinos destacados -->
             <section class="mejores-destinos" aria-labelledby="mejores-destinos-title">
-            <header class="md-header">
-                <h2 id="mejores-destinos-title">MEJORES DESTINOS</h2>
-                <p class="md-sub" data-i18n="best_sub">Los mejores destinos turísticos</p>
-            </header>
+                <header class="md-header">
+                    <h2 id="mejores-destinos-title">MEJORES DESTINOS</h2>
+                    <p class="md-sub" data-i18n="best_sub">Los mejores destinos turísticos</p>
+                </header>
 
-            <div class="destinos-grid">
-                <!-- Destino 1: Petra -->
-                <article class="destino-card">
-                <div class="thumb">
-                    <!-- si usas imágenes locales p. ej. images/petra.jpg, sustituye el src -->
-                    <img src="images/petra.jpeg" alt="Entrada tallada en roca - Petra">
-                </div>
-                <div class="card-body">
-                    <h3 class="destino-title">Petra</h3>
-                    <div class="meta-row">
-                    <button class="ver-mas" onclick="location.href='petra.html'">Ver más</button>
-                    <div class="rating" aria-label="Calificación 4.1 de 5 (120 reseñas)">
-                        <span class="rating-value">4,1</span>
-                        <span class="stars" aria-hidden="true">★★★★☆</span>
-                        <span class="reviews">(120 reseñas)</span>
-                    </div>
-                    </div>
-                </div>
-                </article>
-
-                <!-- Destino 2: Las Vegas -->
-                <article class="destino-card">
-                <div class="thumb">
-                    <img src="images/vegas.jpeg" alt="Las Vegas de noche">
-                </div>
-                <div class="card-body">
-                    <h3 class="destino-title">Las Vegas</h3>
-                    <div class="meta-row">
-                    <button class="ver-mas" onclick="location.href='las-vegas.html'" data-i18n="see-more">Ver más</button>
-                    <div class="rating" aria-label="Calificación 5.0 de 5 (532 reseñas)">
-                        <span class="rating-value">5,0</span>
-                        <span class="stars" aria-hidden="true">★★★★★</span>
-                        <span class="reviews">(532 reseñas)</span>
-                    </div>
-                    </div>
-                </div>
-                </article>
-
-                <!-- Destino 3: Puerto Rico -->
-                <article class="destino-card">
-                <div class="thumb">
-                    <img src="images/puerto-rico.jpeg" alt="Puerto Rico">
-                </div>
-                <div class="card-body">
-                    <h3 class="destino-title">Puerto Rico</h3>
-                    <div class="meta-row">
-                    <button class="ver-mas" onclick="location.href='puerto-rico.html'">Ver más</button>
-                        <div class="rating" aria-label="Calificación 4.3 de 5 (324 reseñas)">
-                            <span class="rating-value">4,3</span>
-                            <span class="stars" aria-hidden="true">★★★★☆</span>
-                            <span class="reviews">(324 reseñas)</span>
+                <div class="destinos-grid">
+                    <!-- Tarjeta de Petra -->
+                    <article class="destino-card" data-destino="petra">
+                        <div class="thumb">
+                            <img src="images/petra.jpeg" alt="Entrada tallada en roca - Petra">
                         </div>
-                    </div>
-                </div>
-                </article>
-            </div>
-            </section>
-            <!-- TERMINA: Sección Mejores Destinos -->
+                        <div class="card-body">
+                            <h3 class="destino-title">Petra</h3>
+                            <div class="meta-row">
+                                <button class="ver-mas" onclick="location.href='petra.html'">Ver más</button>
+                                <div class="rating" aria-label="Calificación 4.1 de 5 (120 reseñas)">
+                                    <span class="rating-value">4,1</span>
+                                    <span class="stars" aria-hidden="true">★★★★☆</span>
+                                    <span class="reviews">(120 reseñas)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
 
+                    <!-- Tarjeta de Las Vegas -->
+                    <article class="destino-card" data-destino="las-vegas">
+                        <div class="thumb">
+                            <img src="images/vegas.jpeg" alt="Las Vegas de noche">
+                        </div>
+                        <div class="card-body">
+                            <h3 class="destino-title">Las Vegas</h3>
+                            <div class="meta-row">
+                                <button class="ver-mas" onclick="location.href='las-vegas.html'" data-i18n="see-more">Ver más</button>
+                                <div class="rating" aria-label="Calificación 5.0 de 5 (532 reseñas)">
+                                    <span class="rating-value">5,0</span>
+                                    <span class="stars" aria-hidden="true">★★★★★</span>
+                                    <span class="reviews">(532 reseñas)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Tarjeta de Puerto Rico -->
+                    <article class="destino-card" data-destino="puerto-rico">
+                        <div class="thumb">
+                            <img src="images/puerto-rico.jpeg" alt="Puerto Rico">
+                        </div>
+                        <div class="card-body">
+                            <h3 class="destino-title">Puerto Rico</h3>
+                            <div class="meta-row">
+                                <button class="ver-mas" onclick="location.href='puerto-rico.html'">Ver más</button>
+                                <div class="rating" aria-label="Calificación 4.3 de 5 (324 reseñas)">
+                                    <span class="rating-value">4,3</span>
+                                    <span class="stars" aria-hidden="true">★★★★☆</span>
+                                    <span class="reviews">(324 reseñas)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Modal de login -->
             <dialog id="login-modal" class="custom-modal">
                 <div class="auth-container modal-content">
                     <h2>Iniciar Sesión</h2>
@@ -158,6 +164,7 @@
             </dialog>
         </main>
 
+        <!-- Pie de página -->
         <footer class="site-footer">
             <div class="footer-content">
                 <div class="footer-col left">
@@ -184,5 +191,6 @@
 
         <script src="script/app.js"></script>
         <script src="script/idiomas.js"></script>
+        <script src="script/buscador.js"></script>
     </body>
 </html>

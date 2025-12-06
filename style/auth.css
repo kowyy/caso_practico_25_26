@@ -1,0 +1,43 @@
+/* Estilos para login y registro */
+
+.auth-container {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    width: 100%;
+    max-width: 380px;
+    box-sizing: border-box;
+}
+
+.auth-container h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.subtitle {
+    text-align: center;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+}
+
+/* Modal de login */
+dialog.custom-modal {
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin: auto;
+    max-width: 400px;
+    width: 90%;
+}
+
+dialog.custom-modal::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+}
+
+.modal-content {
+    margin: 0;
+}

@@ -1,0 +1,61 @@
+/* Variables globales y estilos base */
+
+:root {
+    --bg-light: #f9f9f9;
+    --bg-footer: #f4f4f4;
+    --text-primary: #111;
+    --text-secondary: #555;
+    --btn-black: #000;
+    --btn-white: #fff;
+    --border-color: #ccc;
+    --star-color: #f2b01e;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Google Sans Flex', Rubik, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: var(--text-primary);
+    background-color: var(--bg-light);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 4rem 2rem;
+}
+
+/* Utilidades generales */
+.full-width {
+    width: 100%;
+}
+
+.centered {
+    text-align: center;
+}
+
+.text-sm {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+/* Hero section */
+.hero {
+    text-align: center;
+    max-width: 800px;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: -1px;
+}

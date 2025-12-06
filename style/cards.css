@@ -1,0 +1,116 @@
+/* Tarjetas de destinos */
+
+.mejores-destinos {
+    width: 100%;
+    max-width: 1200px;
+    margin: 3rem auto;
+}
+
+.md-header {
+    text-align: center;
+    margin: 0 0 28px;
+}
+
+.md-header h2 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.md-sub {
+    margin-top: 8px;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+/* Grid de destinos */
+.destinos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+    align-items: start;
+    max-width: 1200px;
+    margin: 0 auto 48px;
+    padding: 0 1rem;
+}
+
+.destino-card {
+    background: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+    transition: transform 0.2s;
+}
+
+.destino-card:hover {
+    transform: translateY(-4px);
+}
+
+.thumb {
+    width: 100%;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    background: #eee;
+}
+
+.thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .35s ease;
+}
+
+.destino-card:hover .thumb img {
+    transform: scale(1.05);
+}
+
+.card-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.destino-title {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* Ratings */
+.rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.rating .rating-value {
+    color: var(--btn-black);
+    font-weight: 800;
+}
+
+.stars {
+    color: var(--star-color);
+    letter-spacing: 1px;
+}
+
+.reviews {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}

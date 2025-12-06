@@ -1,14 +1,12 @@
-/* ============================================
-   SISTEMA DE RESEÑAS CON LIMITE Y LOCALSTORAGE
-   ============================================ */
+// Sistema de reseñas con límite de 3 y almacenamiento local
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    // Identificar qué página es
+    // Detectar en qué página estamos
     const pageID = document.body.getAttribute("data-destino");
 
     if (!pageID) {
-        console.error("ERROR: falta data-destino en <body>");
+        console.error("No se encontró el atributo data-destino en <body>");
         return;
     }
 
@@ -16,14 +14,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("review-form");
     const autoTextareas = document.querySelectorAll("textarea");
 
+    // Textareas que crecen con el contenido
     autoTextareas.forEach(area => {
         area.addEventListener("input", () => {
-            area.style.height = "auto";      // reinicia altura
-            area.style.height = area.scrollHeight + "px"; // ajusta a contenido
+            area.style.height = "auto";
+            area.style.height = area.scrollHeight + "px";
         });
     });
 
-    // Reseñas predeterminadas
+    // Reseñas por defecto para cada destino
     const defaultReviews = {
         "petra": [
             { name: "Laura G.", text: "Una experiencia increíble. El amanecer en el Tesoro es inolvidable.", rating: 5 },
@@ -39,16 +38,15 @@ document.addEventListener("DOMContentLoaded", () => {
         ]
     };
 
-    // Cargar reseñas desde localStorage
+    // Cargar reseñas guardadas o usar las predeterminadas
     let reviews = JSON.parse(localStorage.getItem("reviews_" + pageID));
 
-    // Si no existen, cargar predeterminadas
     if (!reviews) {
-        reviews = defaultReviews[pageID];
+        reviews = defaultReviews[pageID] || [];
         localStorage.setItem("reviews_" + pageID, JSON.stringify(reviews));
     }
 
-    // Función para mostrar reseñas
+    // Renderizar las reseñas en el DOM
     function renderReviews() {
         reviewsContainer.innerHTML = "";
 
@@ -56,23 +54,21 @@ document.addEventListener("DOMContentLoaded", () => {
             const div = document.createElement("div");
             div.className = "review-item";
 
+            const stars = "★".repeat(r.rating) + "☆".repeat(5 - r.rating);
+
             div.innerHTML = `
                 <strong>${r.name}</strong>
                 <p>${r.text}</p>
-                <span>${"★".repeat(r.rating)}${"☆".repeat(5 - r.rating)}</span>
+                <span>${stars}</span>
             `;
 
             reviewsContainer.appendChild(div);
         });
     }
 
-    // Pintamos reseñas
     renderReviews();
 
-
-    // ======================================
-    // AÑADIR NUEVA RESEÑA CON LIMITE DE 3
-    // ======================================
+    // Añadir nueva reseña
     form.addEventListener("submit", e => {
         e.preventDefault();
 
@@ -82,21 +78,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const newReview = { name, text, rating };
 
-        // Si ya hay 3 reseñas → eliminar la más antigua (posición 0)
+        // Limitar a 3 reseñas, eliminar la más antigua si hay más
         if (reviews.length >= 3) {
-            reviews.shift(); // elimina la más vieja
+            reviews.shift();
         }
 
-        // Añadir la nueva
         reviews.push(newReview);
 
         // Guardar en localStorage
         localStorage.setItem("reviews_" + pageID, JSON.stringify(reviews));
 
-        // Volver a pintar
         renderReviews();
 
-        // Limpiar formulario
         form.reset();
+        
+        alert("¡Gracias por tu reseña!");
     });
 });

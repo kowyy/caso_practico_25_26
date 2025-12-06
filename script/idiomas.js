@@ -1,16 +1,13 @@
+// Sistema de cambio de idioma (ES/EN)
+
 document.addEventListener("DOMContentLoaded", () => {
 
-    /* -------------------------------------------
-       ELEMENTOS DEL SELECTOR
-    --------------------------------------------*/
     const langWrapper = document.querySelector(".lang-wrapper");
     const langToggle = document.getElementById("lang-toggle");
     const langMenu = document.getElementById("lang-menu");
     const langSelected = document.getElementById("lang-selected");
 
-    /* -------------------------------------------
-       DICCIONARIO DE TRADUCCIONES
-    --------------------------------------------*/
+    // Diccionario de traducciones
     const translations = {
         es: {
             hero_title: "Bienvenido a tu próxima experiencia",
@@ -41,37 +38,29 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    /* -------------------------------------------
-       FUNCIÓN DE TRADUCCIÓN
-    --------------------------------------------*/
+    // Aplicar traducciones
     function applyTranslations(lang) {
         document.querySelectorAll("[data-i18n]").forEach(el => {
             const key = el.getAttribute("data-i18n");
-            if (translations[lang][key]) {
+            if (translations[lang] && translations[lang][key]) {
                 el.textContent = translations[lang][key];
             }
         });
     }
 
-    /* -------------------------------------------
-       DETECTAR IDIOMA DEL NAVEGADOR
-    --------------------------------------------*/
+    // Detectar idioma del navegador
     const userLang = navigator.language.toLowerCase().startsWith("en") ? "en" : "es";
     langSelected.textContent = userLang.toUpperCase();
     applyTranslations(userLang);
 
-    /* -------------------------------------------
-       ABRIR Y CERRAR MENÚ
-    --------------------------------------------*/
+    // Toggle del menú de idioma
     langToggle.addEventListener("click", (e) => {
         e.stopPropagation();
         langMenu.style.display = langMenu.style.display === "block" ? "none" : "block";
         langWrapper.classList.toggle("rotate");
     });
 
-    /* -------------------------------------------
-       CAMBIAR IDIOMA MANUALMENTE
-    --------------------------------------------*/
+    // Cambiar idioma al hacer clic en una opción
     langMenu.querySelectorAll("li").forEach(option => {
         option.addEventListener("click", (e) => {
             e.stopPropagation();
@@ -79,7 +68,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const newLang = option.dataset.lang;
             langSelected.textContent = newLang.toUpperCase();
 
-            // Aplicar traducción
             applyTranslations(newLang);
 
             langMenu.style.display = "none";
@@ -87,9 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    /* -------------------------------------------
-       CERRAR SI SE HACE CLIC FUERA
-    --------------------------------------------*/
+    // Cerrar menú al hacer clic fuera
     document.addEventListener("click", () => {
         langMenu.style.display = "none";
         langWrapper.classList.remove("rotate");

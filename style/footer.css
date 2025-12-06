@@ -1,0 +1,32 @@
+/* Estilos del footer */
+
+.site-footer {
+    background-color: var(--bg-footer);
+    padding: 4rem 2rem 2rem;
+    text-align: center;
+    border-top: 1px solid #eaeaea;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 900px;
+    margin: 0 auto 3rem auto;
+}
+
+.footer-col a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    margin: 0 10px;
+    transition: color 0.2s;
+}
+
+.footer-col a:hover {
+    color: var(--text-primary);
+}
+
+.legal {
+    font-size: 0.8rem;
+    color: #888;
+}

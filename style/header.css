@@ -1,0 +1,157 @@
+/* Estilos de la cabecera */
+
+.site-header {
+    background-color: #e6e6e6;
+    padding: 1rem 2rem;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    border-bottom: 1px solid #dcdcdc;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.logo-text {
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--text-primary);
+}
+
+/* Contenedor de búsqueda e idioma */
+.utilities-wrapper {
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 2px;
+    color: var(--text-secondary);
+    transition: color 0.2s;
+}
+
+.search-box:hover {
+    color: var(--text-primary);
+}
+
+.separator {
+    width: 1px;
+    height: 16px;
+    background-color: #ccc;
+    margin: 0 10px;
+}
+
+/* Selector de idioma */
+.lang-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.lang-dropdown {
+    position: absolute;
+    top: 28px;
+    right: 0;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    list-style: none;
+    padding: 4px 0;
+    margin: 0;
+    width: 70px;
+    display: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    z-index: 20;
+}
+
+.lang-dropdown li {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.lang-dropdown li:hover {
+    background: #eee;
+}
+
+.lang-wrapper.rotate .icon-chevron {
+    transform: rotate(90deg);
+}
+
+.icon-chevron {
+    pointer-events: auto;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: transform .2s ease;
+}
+
+#lang-selected {
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+#lang-selector {
+    appearance: none;
+    background: transparent;
+    border: none;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    cursor: pointer;
+    padding-right: 5px;
+}
+
+/* Navegación central */
+.header-center ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 30px;
+}
+
+.header-center a {
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.header-center a:hover {
+    color: var(--text-primary);
+}
+
+/* Zona derecha */
+.header-right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+.nav-link:hover {
+    color: var(--text-primary);
+}

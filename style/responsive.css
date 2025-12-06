@@ -1,0 +1,77 @@
+/* Media queries para responsive design */
+
+@media (max-width: 900px) {
+    /* Header */
+    .site-header {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .header-left, 
+    .header-right {
+        justify-content: center;
+    }
+    
+    /* Footer */
+    .footer-content {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    /* Grid de destinos */
+    .destinos-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    
+    /* Página de compra */
+    .compra-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .compra-resumen {
+        position: relative;
+        top: 0;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    /* Grid de destinos - una sola columna */
+    .destinos-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding: 0 0.75rem;
+    }
+    
+    .md-header {
+        margin-bottom: 18px;
+    }
+    
+    .card-body {
+        padding: 12px;
+    }
+    
+    .destino-title {
+        font-size: 1rem;
+    }
+    
+    /* Carrusel más pequeño */
+    .carrusel {
+        height: 300px;
+    }
+    
+    /* Formulario de compra */
+    .compra-formulario {
+        padding: 1.5rem;
+    }
+    
+    /* Hero */
+    .hero h1 {
+        font-size: 2rem;
+    }
+}
