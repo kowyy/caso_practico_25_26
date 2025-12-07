@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experiencias Recomendadas - Viajes y Experiencias</title>
+    <link rel="stylesheet" href="style/main.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="header-left">
+            <a href="index.html" class="logo-text">WEBSITE</a>
+            
+            <div class="utilities-wrapper">
+                <div class="search-container">
+                    <input type="text" id="search-input" placeholder="Buscar destinos..." autocomplete="off">
+                    <svg class="icon-search" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </div>
+
+                <div class="separator"></div>
+
+                <div class="lang-wrapper">
+                    <span id="lang-selected">ES</span>
+                    <svg id="lang-toggle" class="icon-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 6 15 12 9 18"></polyline>
+                    </svg>
+                    <ul id="lang-menu" class="lang-dropdown">
+                        <li data-lang="es">ES</li>
+                        <li data-lang="en">EN</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <nav class="header-center">
+            <ul>
+                <li><a href="destinos-destacados.html">Destinos destacados</a></li>
+                <li><a href="experiencias.html" class="active">Experiencias recomendadas</a></li>
+            </ul>
+        </nav>
+
+        <div class="header-right">
+            <a href="#" class="nav-link">FAQ</a>
+            <a href="#" class="nav-link">Ayuda</a>
+            <button id="btn-login" class="btn-text">Inicia sesión</button>
+            <a href="signup.html" class="btn-primary">Regístrate</a>
+        </div>
+    </header>
+
+    <div id="search-results"></div>
+
+    <main id="main-content">
+        <section class="featured-hero">
+            <h1>Experiencias Recomendadas</h1>
+            <p>Vive aventuras únicas y descubre lo mejor de cada destino</p>
+        </section>
+
+        <section class="filters-section">
+            <div class="filters-container">
+                <button class="filter-btn active" data-type="todas">Todas</button>
+                <button class="filter-btn" data-type="aventura">Aventura</button>
+                <button class="filter-btn" data-type="cultura">Cultura</button>
+                <button class="filter-btn" data-type="gastronomia">Gastronomía</button>
+                <button class="filter-btn" data-type="relax">Relax</button>
+                <button class="filter-btn" data-type="naturaleza">Naturaleza</button>
+            </div>
+        </section>
+
+        <section class="experiencias-section">
+            <div class="experiencias-grid" id="experiencias-grid">
+                <!-- Se carga dinámicamente -->
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-col left">
+                <a href="#">FAQ</a>
+                <a href="#">Contacto</a>
+                <a href="#">Mi Perfil</a>
+            </div>
+            <div class="footer-col center">
+                <strong>WEBSITE</strong>
+            </div>
+            <div class="footer-col right">
+                <a href="#">About</a>
+                <a href="#">Blog</a>
+                <a href="#">Support</a>
+            </div>
+        </div>
+        <div class="legal">
+            <p>&copy; 2010 - 2025 Privacy - Terms</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const grid = document.getElementById('experiencias-grid');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            
+            // Base de datos de experiencias
+            const experiencias = [
+                {
+                    tipo: 'aventura',
+                    titulo: 'Safari fotográfico en Tanzania',
+                    descripcion: 'Observa la gran migración y captura los momentos más increíbles de la fauna africana.',
+                    imagen: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&q=80',
+                    duracion: '7 días',
+                    precio: 2890,
+                    rating: 4.9,
+                    reviews: 234
+                },
+                {
+                    tipo: 'cultura',
+                    titulo: 'Templos antiguos de Angkor Wat',
+                    descripcion: 'Explora los majestuosos templos de Camboya al amanecer con guías expertos.',
+                    imagen: 'https://images.unsplash.com/photo-1563656353898-febc9270a0f8?w=800&q=80',
+                    duracion: '4 días',
+                    precio: 890,
+                    rating: 4.8,
+                    reviews: 412
+                },
+                {
+                    tipo: 'gastronomia',
+                    titulo: 'Tour gastronómico por Tokio',
+                    descripcion: 'Descubre la auténtica cocina japonesa en mercados locales y restaurantes tradicionales.',
+                    imagen: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&q=80',
+                    duracion: '3 días',
+                    precio: 650,
+                    rating: 4.7,
+                    reviews: 189
+                },
+                {
+                    tipo: 'aventura',
+                    titulo: 'Trekking al Machu Picchu',
+                    descripcion: 'Camina por el famoso Camino Inca hasta la ciudadela perdida de los Incas.',
+                    imagen: 'https://images.unsplash.com/photo-1587595431973-160d0d94add1?w=800&q=80',
+                    duracion: '5 días',
+                    precio: 1240,
+                    rating: 5.0,
+                    reviews: 567
+                },
+                {
+                    tipo: 'relax',
+                    titulo: 'Retiro de yoga en Bali',
+                    descripcion: 'Encuentra tu paz interior en un resort rodeado de arrozales y templos sagrados.',
+                    imagen: 'https://images.unsplash.com/photo-1545389336-cf090694435e?w=800&q=80',
+                    duracion: '7 días',
+                    precio: 1580,
+                    rating: 4.9,
+                    reviews: 298
+                },
+                {
+                    tipo: 'naturaleza',
+                    titulo: 'Auroras boreales en Islandia',
+                    descripcion: 'Observa las increíbles auroras boreales y explora cascadas, glaciares y géiseres.',
+                    imagen: 'https://images.unsplash.com/photo-1579033461380-adb47c3eb938?w=800&q=80',
+                    duracion: '6 días',
+                    precio: 1890,
+                    rating: 4.8,
+                    reviews: 342
+                },
+                {
+                    tipo: 'cultura',
+                    titulo: 'Tour por las pirámides de Egipto',
+                    descripcion: 'Visita las pirámides de Giza, el Sphinx y navega por el Nilo en crucero.',
+                    imagen: 'https://images.unsplash.com/photo-1568322445389-f64ac2515020?w=800&q=80',
+                    duracion: '8 días',
+                    precio: 2100,
+                    rating: 4.7,
+                    reviews: 445
+                },
+                {
+                    tipo: 'aventura',
+                    titulo: 'Buceo en la Gran Barrera de Coral',
+                    descripcion: 'Sumérgete en el arrecife de coral más grande del mundo y descubre su biodiversidad.',
+                    imagen: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&q=80',
+                    duracion: '4 días',
+                    precio: 1450,
+                    rating: 4.9,
+                    reviews: 276
+                },
+                {
+                    tipo: 'gastronomia',
+                    titulo: 'Cata de vinos en La Toscana',
+                    descripcion: 'Recorre viñedos históricos y degusta los mejores vinos italianos.',
+                    imagen: 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?w=800&q=80',
+                    duracion: '5 días',
+                    precio: 1120,
+                    rating: 4.8,
+                    reviews: 312
+                },
+                {
+                    tipo: 'relax',
+                    titulo: 'Spa y termas en Budapest',
+                    descripcion: 'Relájate en las famosas termas históricas de la capital húngara.',
+                    imagen: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=80',
+                    duracion: '3 días',
+                    precio: 590,
+                    rating: 4.6,
+                    reviews: 198
+                },
+                {
+                    tipo: 'naturaleza',
+                    titulo: 'Senderismo en los Alpes suizos',
+                    descripcion: 'Camina por los senderos más espectaculares de Europa con vistas impresionantes.',
+                    imagen: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&q=80',
+                    duracion: '6 días',
+                    precio: 1680,
+                    rating: 4.9,
+                    reviews: 389
+                },
+                {
+                    tipo: 'cultura',
+                    titulo: 'Flamenco auténtico en Sevilla',
+                    descripcion: 'Vive la pasión del flamenco en tablaos tradicionales y aprende sus secretos.',
+                    imagen: 'https://images.unsplash.com/photo-1559564477-6e8582270002?w=800&q=80',
+                    duracion: '2 días',
+                    precio: 420,
+                    rating: 4.7,
+                    reviews: 156
+                }
+            ];
+
+            function getStars(value) {
+                const rating = Math.round(value);
+                return "★".repeat(rating) + "☆".repeat(5 - rating);
+            }
+
+            function renderExperiencias(lista) {
+                grid.innerHTML = "";
+                
+                lista.forEach(exp => {
+                    const starsStr = getStars(exp.rating);
+                    
+                    const card = document.createElement("article");
+                    card.className = "experiencia-card";
+                    card.setAttribute("data-tipo", exp.tipo);
+                    
+                    card.innerHTML = `
+                        <div class="exp-thumb">
+                            <img src="${exp.imagen}" alt="${exp.titulo}" loading="lazy">
+                            <div class="exp-badge">${exp.tipo}</div>
+                            <div class="price-badge">${exp.precio}€</div>
+                        </div>
+                        <div class="exp-body">
+                            <h3>${exp.titulo}</h3>
+                            <p>${exp.descripcion}</p>
+                            <div class="exp-meta">
+                                <div class="duration">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <polyline points="12 6 12 12 16 14"></polyline>
+                                    </svg>
+                                    ${exp.duracion}
+                                </div>
+                                <div class="rating">
+                                    <span class="stars">${starsStr}</span>
+                                    <span class="rating-value">${exp.rating}</span>
+                                    <span class="reviews">(${exp.reviews})</span>
+                                </div>
+                            </div>
+                            <button class="ver-mas">Reservar ahora</button>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+
+            // Renderizar todas al inicio
+            renderExperiencias(experiencias);
+
+            // Sistema de filtros
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    const tipo = btn.dataset.type;
+                    
+                    if (tipo === 'todas') {
+                        renderExperiencias(experiencias);
+                    } else {
+                        const filtered = experiencias.filter(e => e.tipo === tipo);
+                        renderExperiencias(filtered);
+                    }
+                });
+            });
+        });
+    </script>
+    <script src="script/app.js"></script>
+    <script src="script/idiomas.js"></script>
+    <script src="script/buscador.js"></script>
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destinos Destacados - Viajes y Experiencias</title>
+    <link rel="stylesheet" href="style/main.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="header-left">
+            <a href="index.html" class="logo-text">WEBSITE</a>
+            
+            <div class="utilities-wrapper">
+                <div class="search-container">
+                    <input type="text" id="search-input" placeholder="Buscar destinos..." autocomplete="off">
+                    <svg class="icon-search" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </div>
+
+                <div class="separator"></div>
+
+                <div class="lang-wrapper">
+                    <span id="lang-selected">ES</span>
+                    <svg id="lang-toggle" class="icon-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 6 15 12 9 18"></polyline>
+                    </svg>
+                    <ul id="lang-menu" class="lang-dropdown">
+                        <li data-lang="es">ES</li>
+                        <li data-lang="en">EN</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <nav class="header-center">
+            <ul>
+                <li><a href="destinos-destacados.html">Destinos destacados</a></li>
+                <li><a href="experiencias.html" class="active">Experiencias recomendadas</a></li>
+            </ul>
+        </nav>
+
+
+        <div class="header-right">
+            <a href="#" class="nav-link">FAQ</a>
+            <a href="#" class="nav-link">Ayuda</a>
+            <button id="btn-login" class="btn-text">Inicia sesión</button>
+            <a href="signup.html" class="btn-primary">Regístrate</a>
+        </div>
+    </header>
+
+    <div id="search-results"></div>
+
+    <main id="main-content">
+        <section class="featured-hero">
+            <h1>Destinos Destacados</h1>
+            <p>Descubre los lugares más increíbles del mundo seleccionados especialmente para ti</p>
+        </section>
+
+        <section class="filters-section">
+            <div class="filters-container">
+                <button class="filter-btn active" data-continent="todos">Todos</button>
+                <button class="filter-btn" data-continent="Europa">Europa</button>
+                <button class="filter-btn" data-continent="Asia">Asia</button>
+                <button class="filter-btn" data-continent="América del Norte">América del Norte</button>
+                <button class="filter-btn" data-continent="América del Sur">América del Sur</button>
+                <button class="filter-btn" data-continent="África">África</button>
+                <button class="filter-btn" data-continent="Oceanía">Oceanía</button>
+            </div>
+        </section>
+
+        <section class="featured-destinos">
+            <div class="destinos-grid" id="featured-grid">
+                <!-- Se carga dinámicamente -->
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-col left">
+                <a href="#">FAQ</a>
+                <a href="#">Contacto</a>
+                <a href="#">Mi Perfil</a>
+            </div>
+            <div class="footer-col center">
+                <strong>WEBSITE</strong>
+            </div>
+            <div class="footer-col right">
+                <a href="#">About</a>
+                <a href="#">Blog</a>
+                <a href="#">Support</a>
+            </div>
+        </div>
+        <div class="legal">
+            <p>&copy; 2010 - 2025 Privacy - Terms</p>
+        </div>
+    </footer>
+
+    <script>
+        // Cargar y mostrar destinos destacados
+        document.addEventListener('DOMContentLoaded', async () => {
+            const grid = document.getElementById('featured-grid');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            
+            function createSlug(text) {
+                return text.toString().toLowerCase()
+                    .replace(/\s+/g, '-')
+                    .replace(/[^\w\-]+/g, '')
+                    .replace(/\-\-+/g, '-')
+                    .replace(/^-+/, '')
+                    .replace(/-+$/, '');
+            }
+
+            function getStars(value) {
+                const rating = Math.round(value);
+                return "★".repeat(rating) + "☆".repeat(5 - rating);
+            }
+
+            let allDestinos = [];
+
+            try {
+                const response = await fetch('ciudades-del-mundo.json');
+                const data = await response.json();
+                
+                data.continents.forEach(cont => {
+                    cont.countries.forEach(pais => {
+                        pais.cities.forEach(ciudad => {
+                            // Generar precio basado en hash del nombre
+                            let hash = 0;
+                            for (let i = 0; i < ciudad.name.length; i++) {
+                                hash = ciudad.name.charCodeAt(i) + ((hash << 5) - hash);
+                            }
+                            const precio = 500 + (Math.abs(hash) % 1500);
+                            
+                            // Generar rating aleatorio pero consistente
+                            const rating = (3 + (Math.abs(hash) % 21) / 10).toFixed(1);
+                            const reviews = 50 + (Math.abs(hash) % 450);
+                            
+                            allDestinos.push({
+                                id: createSlug(ciudad.name),
+                                nombre: ciudad.name,
+                                pais: pais.name,
+                                continente: cont.name,
+                                descripcion: ciudad.description,
+                                imagen: ciudad.image.url,
+                                precio: precio,
+                                rating: rating,
+                                reviews: reviews,
+                                url: `destino-template.html?id=${createSlug(ciudad.name)}`
+                            });
+                        });
+                    });
+                });
+
+                renderDestinos(allDestinos);
+                
+            } catch (error) {
+                console.error("Error cargando destinos:", error);
+                grid.innerHTML = "<p>Error cargando destinos. Por favor intenta más tarde.</p>";
+            }
+
+            function renderDestinos(destinos) {
+                grid.innerHTML = "";
+                
+                destinos.forEach(d => {
+                    const starsStr = getStars(d.rating);
+                    
+                    const article = document.createElement("article");
+                    article.className = "destino-card featured";
+                    article.setAttribute("data-continente", d.continente);
+                    
+                    article.innerHTML = `
+                        <div class="thumb">
+                            <img src="${d.imagen}" alt="${d.nombre}" loading="lazy">
+                            <div class="price-badge">${d.precio}€</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="location-tag">${d.pais}</div>
+                            <h3 class="destino-title">${d.nombre}</h3>
+                            <p class="destino-desc">${d.descripcion}</p>
+                            <div class="rating" aria-label="Calificación ${d.rating} de 5 (${d.reviews} reseñas)">
+                                <span class="stars" aria-hidden="true">${starsStr}</span>
+                                <span class="rating-value">${d.rating}</span>
+                                <span class="reviews">(${d.reviews})</span>
+                            </div>
+                            <button class="ver-mas" onclick="location.href='${d.url}'">Ver detalles</button>
+                        </div>
+                    `;
+                    grid.appendChild(article);
+                });
+            }
+
+            // Sistema de filtros
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    const continent = btn.dataset.continent;
+                    
+                    if (continent === 'todos') {
+                        renderDestinos(allDestinos);
+                    } else {
+                        const filtered = allDestinos.filter(d => d.continente === continent);
+                        renderDestinos(filtered);
+                    }
+                });
+            });
+        });
+    </script>
+    <script src="script/app.js"></script>
+    <script src="script/idiomas.js"></script>
+    <script src="script/buscador.js"></script>
+</body>
+</html>
