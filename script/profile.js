@@ -18,6 +18,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // Elementos para el cambio de imagen
     const changeAvatarBtn = document.getElementById("btn-change-avatar");
     const avatarInput = document.getElementById("avatar-upload");
+    
+    // Nuevos campos
+    const fullnameInput = document.getElementById("user-fullname");
+    const emailInput = document.getElementById("user-email");
+    const phoneInput = document.getElementById("user-phone");
+    const countrySelect = document.getElementById("user-country");
 
     // Ponemos el nombre del usuario
     nameDisplay.textContent = username;
@@ -38,9 +44,54 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("site_user_bio_" + username, bioInput.value);
     });
 
+    // Cargar y guardar información personal
+    const savedFullname = localStorage.getItem("site_user_fullname_" + username);
+    const savedEmail = localStorage.getItem("site_user_email_" + username);
+    const savedPhone = localStorage.getItem("site_user_phone_" + username);
+    const savedCountry = localStorage.getItem("site_user_country_" + username);
+
+    if (savedFullname) fullnameInput.value = savedFullname;
+    if (savedEmail) emailInput.value = savedEmail;
+    if (savedPhone) phoneInput.value = savedPhone;
+    if (savedCountry) countrySelect.value = savedCountry;
+
+    // Auto-guardar campos
+    fullnameInput.addEventListener("input", () => {
+        localStorage.setItem("site_user_fullname_" + username, fullnameInput.value);
+    });
+    
+    emailInput.addEventListener("input", () => {
+        localStorage.setItem("site_user_email_" + username, emailInput.value);
+    });
+    
+    phoneInput.addEventListener("input", () => {
+        localStorage.setItem("site_user_phone_" + username, phoneInput.value);
+    });
+    
+    countrySelect.addEventListener("change", () => {
+        localStorage.setItem("site_user_country_" + username, countrySelect.value);
+    });
+
+    // Preferencias de viaje
+    const prefCheckboxes = document.querySelectorAll('input[name="pref"]');
+    const savedPrefs = JSON.parse(localStorage.getItem("site_user_prefs_" + username) || "[]");
+    
+    prefCheckboxes.forEach(checkbox => {
+        if (savedPrefs.includes(checkbox.value)) {
+            checkbox.checked = true;
+        }
+        
+        checkbox.addEventListener("change", () => {
+            const currentPrefs = Array.from(prefCheckboxes)
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
+            localStorage.setItem("site_user_prefs_" + username, JSON.stringify(currentPrefs));
+        });
+    });
+
     // Lógica para cambiar la foto de perfil
     changeAvatarBtn.addEventListener("click", () => {
-        avatarInput.click(); // Esto abre el selector de archivos nativo
+        avatarInput.click();
     });
 
     avatarInput.addEventListener("change", (e) => {

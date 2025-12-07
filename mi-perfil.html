@@ -14,66 +14,159 @@
                 <a href="index.html" class="logo-text">WEBSITE</a>
                 
                 <div class="utilities-wrapper">
-                    <div class="separator"></div>
                     <div class="lang-wrapper">
                         <span id="lang-selected">ES</span>
+                        <svg id="lang-toggle" class="icon-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 6 15 12 9 18"></polyline>
+                        </svg>
+                        <ul id="lang-menu" class="lang-dropdown">
+                            <li data-lang="es">ES</li>
+                            <li data-lang="en">EN</li>
+                        </ul>
                     </div>
                 </div>
             </div>
 
             <nav class="header-center">
                 <ul>
-                    <li><a href="index.html">Destinos destacados</a></li>
-                    <li><a href="#">Experiencias recomendadas</a></li>
+                    <li><a href="destinos-destacados.html">Destinos destacados</a></li>
+                    <li><a href="experiencias.html">Experiencias recomendadas</a></li>
                 </ul>
             </nav>
 
             <div class="header-right">
                 <a href="#" class="nav-link">Ayuda</a>
-                <button id="btn-login-header" class="btn-text">Mi Cuenta</button>
+                <a href="#" class="nav-link">FAQ</a>
             </div>
         </header>
 
         <main class="profile-page">
-            <div class="profile-card">
+            <div class="profile-wrapper">
                 
-                <div class="profile-left">
-                    <h1>MI CUENTA</h1>
-                    
-                    <div class="user-info-container">
-                        <div class="avatar-wrapper">
+                <!-- Sidebar de navegación -->
+                <aside class="profile-sidebar">
+                    <div class="profile-user-section">
+                        <div class="avatar-container">
                             <img src="" id="profile-pic" alt="Foto de perfil">
-                            
                             <input type="file" id="avatar-upload" hidden accept="image/*">
-                            <button id="btn-change-avatar" class="btn-text small">Cambiar foto</button>
+                            <button id="btn-change-avatar" class="avatar-change-btn">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                    <circle cx="12" cy="13" r="4"></circle>
+                                </svg>
+                            </button>
                         </div>
-
-                        <p id="profile-name">Cargando usuario...</p>
+                        <h2 id="profile-name">Cargando usuario...</h2>
+                        <p class="user-member-since">Miembro desde 2024</p>
                     </div>
 
-                    <div class="bio-section">
-                        <h2>BIO</h2>
-                        <textarea id="user-bio" placeholder="Escribe algo sobre ti aquí..."></textarea>
-                        <p class="text-sm hint">Los cambios se guardan automáticamente.</p>
+                    <nav class="profile-nav">
+                        <a href="#" class="active">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            Mi Perfil
+                        </a>
+                        <a href="#">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            Mis Reservas
+                        </a>
+                        <a href="#">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                            </svg>
+                            Mis Reseñas
+                        </a>
+                        <a href="#">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                            </svg>
+                            Configuración
+                        </a>
+                    </nav>
+
+                    <button id="btn-logout" class="logout-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        Cerrar Sesión
+                    </button>
+                </aside>
+
+                <!-- Contenido principal -->
+                <div class="profile-content">
+                    <div class="profile-section">
+                        <h3>Información Personal</h3>
+                        <div class="profile-info-grid">
+                            <div class="info-item">
+                                <label>Nombre completo</label>
+                                <input type="text" id="user-fullname" placeholder="Tu nombre completo">
+                            </div>
+                            <div class="info-item">
+                                <label>Correo electrónico</label>
+                                <input type="email" id="user-email" placeholder="tu@email.com">
+                            </div>
+                            <div class="info-item">
+                                <label>Teléfono</label>
+                                <input type="tel" id="user-phone" placeholder="+34 600 000 000">
+                            </div>
+                            <div class="info-item">
+                                <label>País</label>
+                                <select id="user-country">
+                                    <option value="">Selecciona tu país</option>
+                                    <option value="es">España</option>
+                                    <option value="mx">México</option>
+                                    <option value="ar">Argentina</option>
+                                    <option value="co">Colombia</option>
+                                    <option value="other">Otro</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <div class="profile-separator"></div>
-
-                <div class="profile-right">
-                    <div class="profile-menu">
-                        <a href="#" class="active">Mi Perfil</a>
-                        <a href="#">Mis Reservas</a>
-                        <a href="#">Mis Reseñas</a>
+                    <div class="profile-section">
+                        <h3>Biografía</h3>
+                        <textarea id="user-bio" placeholder="Cuéntanos sobre ti, tus viajes favoritos, tus próximos destinos..."></textarea>
+                        <p class="hint">Los cambios se guardan automáticamente</p>
                     </div>
 
-                    <div class="profile-bottom">
-                        <a href="#">Configuración</a>
-                        <button id="btn-logout" class="btn-text logout">Log Out</button>
-                    </div>
-
-                    <div class="profile-legal">
-                        <p>&copy; 2010 - 2025 Privacy - Terms</p>
+                    <div class="profile-section">
+                        <h3>Preferencias de Viaje</h3>
+                        <div class="preferences-grid">
+                            <label class="preference-item">
+                                <input type="checkbox" name="pref" value="playa">
+                                <span>Playa</span>
+                            </label>
+                            <label class="preference-item">
+                                <input type="checkbox" name="pref" value="montaña">
+                                <span>Montaña</span>
+                            </label>
+                            <label class="preference-item">
+                                <input type="checkbox" name="pref" value="ciudad">
+                                <span>Ciudad</span>
+                            </label>
+                            <label class="preference-item">
+                                <input type="checkbox" name="pref" value="aventura">
+                                <span>Aventura</span>
+                            </label>
+                            <label class="preference-item">
+                                <input type="checkbox" name="pref" value="cultura">
+                                <span>Cultura</span>
+                            </label>
+                            <label class="preference-item">
+                                <input type="checkbox" name="pref" value="gastronomia">
+                                <span>Gastronomía</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
 
@@ -89,9 +182,17 @@
                 <div class="footer-col center">
                     <strong>WEBSITE</strong>
                 </div>
+                <div class="footer-col right">
+                    <a href="#">About</a>
+                    <a href="#">Blog</a>
+                </div>
+            </div>
+            <div class="legal">
+                <p>&copy; 2010 - 2025 Privacy - Terms</p>
             </div>
         </footer>
 
         <script src="script/profile.js"></script>
+        <script src="script/idiomas.js"></script>
     </body>
 </html>

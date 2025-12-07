@@ -107,4 +107,137 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // Cargar contenido dinámico para la página principal
+    loadHomeContent();
 });
+
+// Función para cargar el contenido de la página principal
+async function loadHomeContent() {
+    const carousel = document.getElementById('home-carousel');
+    const destinosGrid = document.querySelector('.destinos-grid');
+    
+    if (!carousel && !destinosGrid) return;
+
+    function createSlug(text) {
+        return text.toString().toLowerCase()
+            .replace(/\s+/g, '-')
+            .replace(/[^\w\-]+/g, '')
+            .replace(/\-\-+/g, '-')
+            .replace(/^-+/, '')
+            .replace(/-+$/, '');
+    }
+
+    function getStars(value) {
+        const rating = Math.round(value);
+        return "★".repeat(rating) + "☆".repeat(5 - rating);
+    }
+
+    try {
+        const response = await fetch('ciudades-del-mundo.json');
+        const data = await response.json();
+        
+        let allDestinos = [];
+        
+        data.continents.forEach(cont => {
+            cont.countries.forEach(pais => {
+                pais.cities.forEach(ciudad => {
+                    let hash = 0;
+                    for (let i = 0; i < ciudad.name.length; i++) {
+                        hash = ciudad.name.charCodeAt(i) + ((hash << 5) - hash);
+                    }
+                    const precio = 500 + (Math.abs(hash) % 1500);
+                    const rating = (3 + (Math.abs(hash) % 21) / 10).toFixed(1);
+                    const reviews = 50 + (Math.abs(hash) % 450);
+                    
+                    allDestinos.push({
+                        id: createSlug(ciudad.name),
+                        nombre: ciudad.name,
+                        pais: pais.name,
+                        descripcion: ciudad.description,
+                        imagen: ciudad.image.url,
+                        precio: precio,
+                        rating: rating,
+                        reviews: reviews,
+                        url: `destino-template.html?id=${createSlug(ciudad.name)}`
+                    });
+                });
+            });
+        });
+
+        // Mezclar destinos aleatoriamente
+        allDestinos.sort(() => Math.random() - 0.5);
+
+        // Cargar carrusel (primeros 10)
+        if (carousel) {
+            const carouselDestinos = allDestinos.slice(0, 10);
+            carouselDestinos.forEach(d => {
+                const card = document.createElement('div');
+                card.className = 'carousel-destination-card';
+                card.onclick = () => location.href = d.url;
+                
+                card.innerHTML = `
+                    <img src="${d.imagen}" alt="${d.nombre}" class="carousel-img">
+                    <div class="carousel-info">
+                        <h3>${d.nombre}</h3>
+                        <p class="carousel-location">${d.pais}</p>
+                        <div class="carousel-rating">
+                            <span class="stars">${getStars(d.rating)}</span>
+                            <span class="rating-value">${d.rating}</span>
+                            <span class="reviews">(${d.reviews})</span>
+                        </div>
+                    </div>
+                `;
+                carousel.appendChild(card);
+            });
+
+            // Funcionalidad de navegación del carrusel
+            const prevBtn = document.querySelector('.carousel-nav.prev');
+            const nextBtn = document.querySelector('.carousel-nav.next');
+            
+            if (prevBtn && nextBtn) {
+                prevBtn.addEventListener('click', () => {
+                    carousel.scrollBy({ left: -350, behavior: 'smooth' });
+                });
+                
+                nextBtn.addEventListener('click', () => {
+                    carousel.scrollBy({ left: 350, behavior: 'smooth' });
+                });
+            }
+        }
+
+        // Cargar grid (6 destinos seleccionados)
+        if (destinosGrid) {
+            const gridDestinos = allDestinos.slice(10, 16);
+            destinosGrid.innerHTML = "";
+            
+            gridDestinos.forEach(d => {
+                const starsStr = getStars(d.rating);
+                
+                const article = document.createElement("article");
+                article.className = "destino-card";
+                
+                article.innerHTML = `
+                    <div class="thumb">
+                        <img src="${d.imagen}" alt="${d.nombre}" loading="lazy">
+                    </div>
+                    <div class="card-body">
+                        <h3 class="destino-title">${d.nombre}</h3>
+                        <div class="meta-row">
+                            <button class="ver-mas" onclick="location.href='${d.url}'">Ver más</button>
+                            <div class="rating" aria-label="Calificación ${d.rating} de 5 (${d.reviews} reseñas)">
+                                <span class="rating-value">${d.rating}</span>
+                                <span class="stars" aria-hidden="true">${starsStr}</span>
+                                <span class="reviews">(${d.reviews} reseñas)</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                destinosGrid.appendChild(article);
+            });
+        }
+        
+    } catch (error) {
+        console.error("Error cargando destinos:", error);
+    }
+}

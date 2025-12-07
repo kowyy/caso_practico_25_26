@@ -34,6 +34,18 @@
     border: 1px solid rgba(0,0,0,0.05);
 }
 
+.utilities-wrapper:has(.lang-wrapper:first-child) {
+    padding: 8px 14px;
+}
+
+.utilities-wrapper:has(.lang-wrapper:first-child) .lang-wrapper {
+    gap: 8px;
+}
+
+.utilities-wrapper:has(.lang-wrapper:first-child) #lang-selected {
+    font-size: 0.9rem;
+}
+
 .search-box {
     display: flex;
     align-items: center;

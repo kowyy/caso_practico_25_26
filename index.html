@@ -62,14 +62,59 @@
                 <p id="welcome-message" data-i18n="hero_subtitle">Explora el mundo con nosotros.</p>
             </section>
 
+            <!-- Sección destacada con carrusel -->
+            <section class="featured-destinations-carousel">
+                <h2>Destinos más populares</h2>
+                <div class="carousel-wrapper">
+                    <button class="carousel-nav prev" aria-label="Anterior">‹</button>
+                    <div class="destinations-carousel" id="home-carousel">
+                        <!-- Se carga dinámicamente -->
+                    </div>
+                    <button class="carousel-nav next" aria-label="Siguiente">›</button>
+                </div>
+            </section>
+
+            <!-- Categorías de viaje -->
+            <section class="travel-categories">
+                <h2>Encuentra tu estilo de viaje</h2>
+                <div class="categories-grid">
+                    <a href="destinos-destacados.html" class="category-card">
+                        <div class="category-icon">🏖️</div>
+                        <h3>Playas paradisíacas</h3>
+                        <p>Relájate en los mejores destinos costeros</p>
+                    </a>
+                    <a href="experiencias.html?type=aventura" class="category-card">
+                        <div class="category-icon">⛰️</div>
+                        <h3>Aventura extrema</h3>
+                        <p>Vive experiencias llenas de adrenalina</p>
+                    </a>
+                    <a href="experiencias.html?type=cultura" class="category-card">
+                        <div class="category-icon">🏛️</div>
+                        <h3>Cultura e historia</h3>
+                        <p>Descubre patrimonio y tradiciones</p>
+                    </a>
+                    <a href="experiencias.html?type=gastronomia" class="category-card">
+                        <div class="category-icon">🍽️</div>
+                        <h3>Gastronomía local</h3>
+                        <p>Saborea los mejores platos del mundo</p>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Selección curada de destinos -->
             <section class="mejores-destinos" aria-labelledby="mejores-destinos-title">
                 <header class="md-header">
-                    <h2 id="mejores-destinos-title">MEJORES DESTINOS</h2>
-                    <p class="md-sub" data-i18n="best_sub">Los mejores destinos turísticos</p>
+                    <h2 id="mejores-destinos-title">SELECCIÓN DEL MES</h2>
+                    <p class="md-sub" data-i18n="best_sub">Nuestras recomendaciones para este mes</p>
                 </header>
 
                 <div class="destinos-grid">
-                    </div>
+                    <!-- Se carga dinámicamente (máx 6 destinos) -->
+                </div>
+                
+                <div class="cta-center">
+                    <a href="destinos-destacados.html" class="btn-primary btn-large">Ver todos los destinos</a>
+                </div>
             </section>
 
             <dialog id="login-modal" class="custom-modal">
