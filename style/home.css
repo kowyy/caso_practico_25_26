@@ -27,7 +27,7 @@
     overflow-x: auto;
     scroll-behavior: smooth;
     scrollbar-width: none;
-    padding: 10px 0 20px;
+    padding: 20px 0;
 }
 
 .destinations-carousel::-webkit-scrollbar {
@@ -94,6 +94,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    padding-bottom: 4px;
     z-index: 10;
     transition: background 0.2s;
 }
