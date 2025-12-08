@@ -156,7 +156,9 @@
                     });
                 });
 
-                renderDestinos(allDestinos);
+                setTimeout(() => {
+                    renderDestinos(allDestinos);
+                }, 0);
                 
             } catch (error) {
                 console.error("Error cargando destinos:", error);
