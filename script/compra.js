@@ -158,6 +158,14 @@ if(buyForm) {
     buyForm.addEventListener("submit", function(e) {
         e.preventDefault();
 
+        const username = localStorage.getItem('site_username') || sessionStorage.getItem('site_username');
+        
+        if (!username) {
+            alert('Debes iniciar sesión para completar la reserva');
+            window.location.href = 'index.html';
+            return;
+        }
+
         const titular = {
             nombre: document.getElementById("fullname").value,
             email: document.getElementById("email").value
@@ -177,17 +185,88 @@ if(buyForm) {
 
         const alergias = allergyToggle.checked ? allergyText.value.trim() : "Ninguna";
 
-        // Simular confirmación de reserva
-        alert(
-            "¡Reserva realizada correctamente!\n\n" +
-            "Titular: " + titular.nombre + "\n" +
-            "Acompañantes: " + acompañantes.length + "\n" +
-            "Mascota: " + (mascota ? mascota.tipo + " (" + mascota.tamaño + ")" : "No") + "\n" +
-            "Alergias: " + alergias
-        );
+        // Obtener info del destino
+        const destinoNombre = document.getElementById("destino-nombre").textContent;
+        const destinoPrecio = document.getElementById("destino-precio").textContent;
+        const destinoImg = document.getElementById("destino-img").src;
 
-        console.log({ titular, acompañantes, mascota, alergias });
+        // Crear objeto de reserva
+        const reserva = {
+            id: Date.now(),
+            fecha: new Date().toLocaleDateString('es-ES'),
+            destino: destinoNombre,
+            precio: destinoPrecio,
+            imagen: destinoImg,
+            titular: titular,
+            acompañantes: acompañantes,
+            mascota: mascota,
+            alergias: alergias,
+            estado: 'Confirmada'
+        };
+
+        // Guardar en localStorage
+        const reservasExistentes = JSON.parse(localStorage.getItem(`reservas_${username}`) || '[]');
+        reservasExistentes.push(reserva);
+        localStorage.setItem(`reservas_${username}`, JSON.stringify(reservasExistentes));
+
+        // Mostrar confirmación
+        mostrarConfirmacionReserva(reserva);
     });
+}
+
+function mostrarConfirmacionReserva(reserva) {
+    const overlay = document.createElement('div');
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.backgroundColor = 'rgba(0,0,0,0.5)';
+    overlay.style.display = 'flex';
+    overlay.style.justifyContent = 'center';
+    overlay.style.alignItems = 'center';
+    overlay.style.zIndex = '10000';
+
+    const modal = document.createElement('div');
+    modal.style.backgroundColor = 'white';
+    modal.style.padding = '2.5rem';
+    modal.style.borderRadius = '12px';
+    modal.style.boxShadow = '0 4px 20px rgba(0,0,0,0.2)';
+    modal.style.textAlign = 'center';
+    modal.style.minWidth = '400px';
+    modal.style.maxWidth = '90%';
+
+    modal.innerHTML = `
+        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2" style="margin-bottom: 1rem;">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        <h2 style="margin: 0 0 0.5rem 0; color: #4CAF50;">¡Reserva confirmada!</h2>
+        <p style="color: #666; margin-bottom: 1.5rem;">Tu viaje a <strong>${reserva.destino}</strong> ha sido reservado exitosamente</p>
+        <div style="background: #f9f9f9; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; text-align: left;">
+            <p style="margin: 0.5rem 0;"><strong>Titular:</strong> ${reserva.titular.nombre}</p>
+            <p style="margin: 0.5rem 0;"><strong>Email:</strong> ${reserva.titular.email}</p>
+            <p style="margin: 0.5rem 0;"><strong>Acompañantes:</strong> ${reserva.acompañantes.length}</p>
+            <p style="margin: 0.5rem 0;"><strong>Fecha:</strong> ${reserva.fecha}</p>
+        </div>
+        <button id="btn-ver-reservas" style="background: #000; color: #fff; border: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; cursor: pointer; margin-right: 10px;">
+            Ver mis reservas
+        </button>
+        <button id="btn-volver-inicio" style="background: #fff; color: #000; border: 1px solid #ccc; padding: 12px 24px; border-radius: 6px; font-weight: 600; cursor: pointer;">
+            Volver al inicio
+        </button>
+    `;
+
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+
+    document.getElementById('btn-ver-reservas').onclick = () => {
+        window.location.href = 'mi-perfil.html?tab=reservas';
+    };
+
+    document.getElementById('btn-volver-inicio').onclick = () => {
+        window.location.href = 'index.html';
+    };
 }
 
 // Formateo automático del número de tarjeta

@@ -41,7 +41,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const loginForm = document.getElementById('login-form');
 
             loginBtn.addEventListener('click', () => modal.showModal());
-            closeModal.addEventListener('click', () => modal.close());
+            
+            if (closeModal) {
+                closeModal.addEventListener('click', () => modal.close());
+            }
 
             loginForm.addEventListener('submit', (e) => {
                 const username = document.getElementById('username').value;
@@ -53,10 +56,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     sessionStorage.setItem('site_username', username);
                 }
                 
-                window.location.href = 'index.html';
+                // Recargar la página actual en lugar de ir al index
+                window.location.reload();
             });
         }
     }
+
+    initLoginModal();
 
     const signupForm = document.getElementById('signup-form');
     if (signupForm) {

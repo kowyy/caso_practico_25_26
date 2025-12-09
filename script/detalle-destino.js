@@ -98,8 +98,76 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             // Configurar botón de reserva
             document.getElementById("btn-reservar").onclick = () => {
-                location.href = `compra.html?destino=${destinoId}`;
+                // Verificar si el usuario está logueado
+                const username = localStorage.getItem('site_username') || sessionStorage.getItem('site_username');
+                
+                if (!username) {
+                    // No está logueado - mostrar modal
+                    mostrarModalLogin();
+                } else {
+                    // Está logueado - ir a compra
+                    location.href = `compra.html?destino=${destinoId}`;
+                }
             };
+
+            // Modal de login cuando no estás autenticado
+            function mostrarModalLogin() {
+                const overlay = document.createElement('div');
+                overlay.style.position = 'fixed';
+                overlay.style.top = '0';
+                overlay.style.left = '0';
+                overlay.style.width = '100%';
+                overlay.style.height = '100%';
+                overlay.style.backgroundColor = 'rgba(0,0,0,0.5)';
+                overlay.style.display = 'flex';
+                overlay.style.justifyContent = 'center';
+                overlay.style.alignItems = 'center';
+                overlay.style.zIndex = '10000';
+
+                const modal = document.createElement('div');
+                modal.style.backgroundColor = 'white';
+                modal.style.padding = '2.5rem';
+                modal.style.borderRadius = '12px';
+                modal.style.boxShadow = '0 4px 20px rgba(0,0,0,0.2)';
+                modal.style.textAlign = 'center';
+                modal.style.minWidth = '350px';
+                modal.style.maxWidth = '90%';
+
+                modal.innerHTML = `
+                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#f2b01e" stroke-width="2" style="margin-bottom: 1rem;">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <h3 style="margin: 0 0 1rem 0; font-size: 1.4rem;">Inicia sesión para continuar</h3>
+                    <p style="color: #666; margin-bottom: 2rem;">Necesitas estar registrado para realizar reservas</p>
+                    <div style="display: flex; gap: 1rem; justify-content: center;">
+                        <button id="modal-login-btn" style="background: #000; color: #fff; border: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                            Iniciar sesión
+                        </button>
+                        <button id="modal-cancel-btn" style="background: #fff; color: #000; border: 1px solid #ccc; padding: 12px 24px; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                            Cancelar
+                        </button>
+                    </div>
+                `;
+
+                overlay.appendChild(modal);
+                document.body.appendChild(overlay);
+
+                document.getElementById('modal-login-btn').onclick = () => {
+                    window.location.href = 'index.html#login';
+                };
+
+                document.getElementById('modal-cancel-btn').onclick = () => {
+                    document.body.removeChild(overlay);
+                };
+
+                overlay.onclick = (e) => {
+                    if (e.target === overlay) {
+                        document.body.removeChild(overlay);
+                    }
+                };
+            }
 
         } else {
             document.querySelector(".destino-content").innerHTML = "<h2>Destino no encontrado</h2>";

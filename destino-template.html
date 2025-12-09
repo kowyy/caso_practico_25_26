@@ -36,10 +36,10 @@
             </nav>
 
             <div class="header-right">
-                <a href="#" class="nav-link">FAQ</a>
-                <a href="#" class="nav-link">Ayuda</a>
-                <button id="btn-login" class="btn-text">Inicia sesión</button>
-                <a href="signup.html" class="btn-primary">Regístrate</a>
+                <a href="#" class="nav-link" data-i18n="faq">FAQ</a>
+                <a href="#" class="nav-link" data-i18n="help">Ayuda</a>
+                <button id="btn-login" class="btn-text" data-i18n="login">Inicia sesión</button>
+                <a href="signup.html" class="btn-primary" data-i18n="signup">Regístrate</a>
             </div>
         </header>
 
@@ -143,5 +143,36 @@
         <script src="script/reseñas.js"></script>
         <script src="script/idiomas.js"></script>
         <script src="script/detalle-destino.js"></script>
+        <!-- Modal de Login -->
+        <dialog id="login-modal" class="custom-modal">
+            <div class="auth-container modal-content">
+                <h2>Iniciar Sesión</h2>
+                <p class="subtitle">Hola de nuevo</p>
+
+                <form method="dialog" id="login-form" class="styled-form">
+                    <div class="form-group">
+                        <label for="username">Usuario</label>
+                        <input type="text" id="username" name="username" placeholder="Tu nombre de usuario" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Contraseña</label>
+                        <input type="password" id="password" name="password" placeholder="Tu contraseña" required>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="remember-me"> 
+                            <span class="text-sm">Recordar credenciales</span>
+                        </label>
+                    </div>
+
+                    <div class="form-actions vertical">
+                        <button type="submit" id="confirm-login" class="btn-primary full-width">Entrar</button>
+                        <button type="button" id="close-modal" class="btn-text full-width">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </dialog>
     </body>
 </html>

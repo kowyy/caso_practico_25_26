@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
-        // Reseñas de ejemplo fijas (Legacy)
+        // Reseñas de ejemplo fijas
         const legacyReviews = {
             "petra": [
                 { name: "Laura G.", text: "Una experiencia increíble. El amanecer en el Tesoro es inolvidable. 📸", rating: 5 },
@@ -86,7 +86,6 @@ document.addEventListener("DOMContentLoaded", () => {
         // Cargar reseñas guardadas (Persistencia)
         let reviews = JSON.parse(localStorage.getItem("reviews_" + id));
 
-        // Si no hay guardadas, usamos las legacy o generamos nuevas
         if (!reviews) {
             if (legacyReviews[id]) {
                 reviews = legacyReviews[id];
@@ -144,6 +143,13 @@ document.addEventListener("DOMContentLoaded", () => {
             form.addEventListener("submit", e => {
                 e.preventDefault();
 
+                const username = localStorage.getItem('site_username') || sessionStorage.getItem('site_username');
+                
+                if (!username) {
+                    alert('Debes iniciar sesión para escribir una reseña');
+                    return;
+                }
+
                 const nameInput = document.getElementById("review-name");
                 const textInput = document.getElementById("review-text");
                 const ratingInput = document.getElementById("review-rating");
@@ -151,13 +157,24 @@ document.addEventListener("DOMContentLoaded", () => {
                 const newReview = { 
                     name: nameInput.value, 
                     text: textInput.value, 
-                    rating: parseInt(ratingInput.value) 
+                    rating: parseInt(ratingInput.value),
+                    fecha: new Date().toLocaleDateString('es-ES'),
+                    destino: id
                 };
                 
                 reviews.push(newReview);
                 
                 // Guardamos en el navegador
                 localStorage.setItem("reviews_" + id, JSON.stringify(reviews));
+
+                // Guardar en el historial del usuario
+                const userReviews = JSON.parse(localStorage.getItem(`user_reviews_${username}`) || '[]');
+                userReviews.push({
+                    ...newReview,
+                    destinoNombre: document.getElementById("page-title").textContent,
+                    destinoPais: document.getElementById("page-country").textContent
+                });
+                localStorage.setItem(`user_reviews_${username}`, JSON.stringify(userReviews));
 
                 renderReviews(); 
                 form.reset();
