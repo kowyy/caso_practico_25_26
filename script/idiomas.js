@@ -149,7 +149,6 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     function applyTranslations(lang) {
-        // 1. Elementos con data-i18n
         document.querySelectorAll("[data-i18n]").forEach(el => {
             const key = el.getAttribute("data-i18n");
             if (translations[lang] && translations[lang][key]) {
@@ -161,7 +160,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // 2. Botones "Ver más"
         document.querySelectorAll('.ver-mas').forEach(btn => {
             if (btn.closest('.experiencia-card')) {
                 btn.textContent = translations[lang]['btn_reserve'];
@@ -172,7 +170,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // 3. Traducir Filtros (ESTO ES LO NUEVO QUE ARREGLA TUS CAPTURAS)
         document.querySelectorAll('.filter-btn').forEach(btn => {
             let key = null;
             const continent = btn.getAttribute('data-continent'); // Para destinos
@@ -191,7 +188,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // 4. Traducir Badges de Experiencias (Aventura, Cultura...)
         document.querySelectorAll('.exp-badge').forEach(badge => {
             const type = badge.textContent.toLowerCase();
             const key = 'filter_' + type;
@@ -200,7 +196,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // 5. Traducir "reseñas"
         document.querySelectorAll('.reviews').forEach(span => {
             const text = span.textContent;
             const match = text.match(/\((\d+)/); 
@@ -216,7 +211,6 @@ document.addEventListener("DOMContentLoaded", () => {
         applyTranslations(currentLang);
     };
 
-    // INICIALIZACIÓN
     let currentLang = localStorage.getItem("site_lang");
     if (!currentLang) {
         currentLang = "es"; // Por defecto español

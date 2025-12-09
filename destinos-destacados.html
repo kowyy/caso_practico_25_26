@@ -60,7 +60,6 @@
 
         <section class="filters-section">
             <div class="filters-container">
-                <button class="filter-btn active" data-continent="todos">Todos</button>
                 <button class="filter-btn" data-continent="Europa">Europa</button>
                 <button class="filter-btn" data-continent="Asia">Asia</button>
                 <button class="filter-btn" data-continent="América del Norte">América del Norte</button>
@@ -149,7 +148,8 @@
                     });
                 });
 
-                renderDestinos(allDestinos);
+                const europaDestinos = allDestinos.filter(d => d.continente === 'Europa');
+                renderDestinos(europaDestinos);
                 
             } catch (error) {
                 console.error("Error cargando destinos:", error);
@@ -190,7 +190,6 @@
                     grid.appendChild(article);
                 });
 
-                // --- TRUCO: LLAMAR AL TRADUCTOR AQUÍ ---
                 if (window.updateDynamicTranslations) {
                     window.updateDynamicTranslations();
                 }
@@ -202,13 +201,8 @@
                     btn.classList.add('active');
                     
                     const continent = btn.dataset.continent;
-                    
-                    if (continent === 'todos') {
-                        renderDestinos(allDestinos);
-                    } else {
-                        const filtered = allDestinos.filter(d => d.continente === continent);
-                        renderDestinos(filtered);
-                    }
+                    const filtered = allDestinos.filter(d => d.continente === continent);
+                    renderDestinos(filtered);
                 });
             });
 

@@ -32,7 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-        // --- LÓGICA DE EMOJIS (NUEVO) ---
         const emojiBtns = document.querySelectorAll('.emoji-btn');
         const textArea = document.getElementById('review-text');
         
@@ -45,7 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
             });
         }
-        // -------------------------------
 
         // Reseñas de ejemplo fijas (Legacy)
         const legacyReviews = {

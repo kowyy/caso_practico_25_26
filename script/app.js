@@ -207,7 +207,6 @@ async function loadHomeContent() {
             });
         }
 
-        // --- TRUCO FINAL PARA TRADUCIR EL CONTENIDO DINÁMICO ---
         if (window.updateDynamicTranslations) {
             window.updateDynamicTranslations();
         }
