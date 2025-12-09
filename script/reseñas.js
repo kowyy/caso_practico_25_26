@@ -37,7 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         // Generador Procedural (Mocking System)
-        // Crea reseñas falsas coherentes para cualquier ciudad nueva
         function generateMockReviews(cityId) {
             const names = ["Alex M.", "Sarah J.", "Carlos D.", "Yuki T.", "Emma W.", "Priya K.", "Lars U."];
             const templates = [
@@ -49,7 +48,6 @@ document.addEventListener("DOMContentLoaded", () => {
             ];
 
             const mockReviews = [];
-            // Generar entre 2 y 4 reseñas aleatorias
             const numReviews = Math.floor(Math.random() * 3) + 2; 
 
             const cityName = cityId.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
@@ -57,10 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
             for (let i = 0; i < numReviews; i++) {
                 const randomName = names[Math.floor(Math.random() * names.length)];
                 const randomTemplate = templates[Math.floor(Math.random() * templates.length)];
-                // Interpolación simple
                 const text = randomTemplate.replace("{City}", cityName);
-                
-                // Rating ponderado hacia arriba (para que se vea bonito)
                 const rating = Math.random() > 0.3 ? 5 : 4; 
 
                 mockReviews.push({ name: randomName, text: text, rating: rating });
@@ -76,7 +71,6 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 reviews = generateMockReviews(id);
             }
-            // Persistir inmediatamente para que el usuario las vea fijas en su sesión
             localStorage.setItem("reviews_" + id, JSON.stringify(reviews));
         }
 
@@ -93,7 +87,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 const div = document.createElement("div");
                 div.className = "review-item";
 
-                // Renderizado de estrellas
                 const stars = "★".repeat(r.rating) + "☆".repeat(5 - r.rating);
 
                 div.innerHTML = `
@@ -125,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 };
 
                 if (reviews.length >= 5) {
-                    reviews.shift(); // Elimina la más antigua
+                    reviews.shift(); 
                 }
                 reviews.push(newReview);
 
@@ -133,8 +126,73 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 renderReviews();
                 form.reset();
-                alert("¡Gracias por tu reseña!");
+                
+                // AQUÍ ESTÁ EL CAMBIO: Usamos nuestra función personalizada en lugar de alert()
+                mostrarAlerta("¡Gracias por tu reseña!");
             });
         }
+    }
+
+    // --- FUNCIÓN PARA CREAR ALERTA PERSONALIZADA (SIN IP) ---
+    function mostrarAlerta(mensaje) {
+        // Crear el fondo oscuro
+        const overlay = document.createElement('div');
+        overlay.style.position = 'fixed';
+        overlay.style.top = '0';
+        overlay.style.left = '0';
+        overlay.style.width = '100%';
+        overlay.style.height = '100%';
+        overlay.style.backgroundColor = 'rgba(0,0,0,0.5)';
+        overlay.style.display = 'flex';
+        overlay.style.justifyContent = 'center';
+        overlay.style.alignItems = 'center';
+        overlay.style.zIndex = '10000'; // Muy alto para que quede encima de todo
+
+        // Crear la cajita blanca
+        const modal = document.createElement('div');
+        modal.style.backgroundColor = 'white';
+        modal.style.padding = '2rem';
+        modal.style.borderRadius = '12px';
+        modal.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+        modal.style.textAlign = 'center';
+        modal.style.minWidth = '300px';
+        modal.style.maxWidth = '90%';
+
+        // Título o Logo (Opcional, ponemos el nombre de la web)
+        const titulo = document.createElement('h3');
+        titulo.textContent = 'WEBSITE'; // O el nombre de vuestra web
+        titulo.style.marginTop = '0';
+        titulo.style.marginBottom = '1rem';
+        titulo.style.color = '#333';
+
+        // El mensaje
+        const texto = document.createElement('p');
+        texto.textContent = mensaje;
+        texto.style.fontSize = '1.1rem';
+        texto.style.marginBottom = '1.5rem';
+
+        // El botón
+        const btn = document.createElement('button');
+        btn.textContent = 'Aceptar';
+        // Estilos parecidos a vuestro btn-primary
+        btn.style.backgroundColor = '#000'; 
+        btn.style.color = '#fff';
+        btn.style.border = 'none';
+        btn.style.padding = '10px 24px';
+        btn.style.borderRadius = '4px';
+        btn.style.cursor = 'pointer';
+        btn.style.fontWeight = '600';
+
+        // Cerrar al hacer clic
+        btn.onclick = () => {
+            document.body.removeChild(overlay);
+        };
+
+        // Juntar todo
+        modal.appendChild(titulo);
+        modal.appendChild(texto);
+        modal.appendChild(btn);
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
     }
 });
