@@ -56,6 +56,13 @@
 
                 <div class="destino-text">
                     <h1 class="destino-title" id="page-title">Cargando...</h1>
+                    
+                    <div id="rating-summary" style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
+                        <span id="summary-stars" style="color: var(--star-color); font-size: 1.2rem; letter-spacing: 2px;"></span>
+                        <span id="summary-score" style="font-weight: bold; font-size: 1.1rem;"></span>
+                        <span id="summary-count" style="color: var(--text-secondary); font-size: 0.9rem;"></span>
+                    </div>
+
                     <p class="destino-sub" id="page-country">...</p>
                 </div>
             </section>
@@ -84,7 +91,20 @@
                     <h3>Escribe tu reseña</h3>
                     <form id="review-form">
                         <input type="text" id="review-name" placeholder="Tu nombre" required>
+                        
                         <textarea id="review-text" placeholder="Tu experiencia..." required></textarea>
+                        
+                        <div id="emoji-toolbar" style="margin-bottom: 10px; user-select: none;">
+                            <span style="cursor:pointer; font-size:1.2rem; margin-right:5px;" class="emoji-btn">✈️</span>
+                            <span style="cursor:pointer; font-size:1.2rem; margin-right:5px;" class="emoji-btn">🌍</span>
+                            <span style="cursor:pointer; font-size:1.2rem; margin-right:5px;" class="emoji-btn">📸</span>
+                            <span style="cursor:pointer; font-size:1.2rem; margin-right:5px;" class="emoji-btn">🏨</span>
+                            <span style="cursor:pointer; font-size:1.2rem; margin-right:5px;" class="emoji-btn">⭐</span>
+                            <span style="cursor:pointer; font-size:1.2rem; margin-right:5px;" class="emoji-btn">🍝</span>
+                            <span style="cursor:pointer; font-size:1.2rem; margin-right:5px;" class="emoji-btn">🏔️</span>
+                            <span style="cursor:pointer; font-size:1.2rem; margin-right:5px;" class="emoji-btn">🏖️</span>
+                        </div>
+
                         <select id="review-rating">
                             <option value="5">5 ★</option>
                             <option value="4">4 ★</option>
@@ -103,7 +123,7 @@
                 <div class="footer-col left">
                     <a href="#">FAQ</a>
                     <a href="#">Contacto</a>
-                    <a href="#">Mi Perfil</a>
+                    <a href="mi-perfil.html">Mi Perfil</a>
                 </div>
                 <div class="footer-col center">
                     <strong>WEBSITE</strong>

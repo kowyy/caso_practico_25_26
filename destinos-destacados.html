@@ -14,7 +14,7 @@
             
             <div class="utilities-wrapper">
                 <div class="search-container">
-                    <input type="text" id="search-input" placeholder="Buscar destinos..." autocomplete="off">
+                    <input type="text" id="search-input" placeholder="Buscar destinos..." data-i18n="search_placeholder" autocomplete="off">
                     <svg class="icon-search" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -39,25 +39,23 @@
 
         <nav class="header-center">
             <ul>
-                <li><a href="destinos-destacados.html" class="active">Destinos destacados</a></li>
-                <li><a href="experiencias.html">Experiencias recomendadas</a></li>
+                <li><a href="destinos-destacados.html" class="active" data-i18n="menu_destinos">Destinos destacados</a></li>
+                <li><a href="experiencias.html" data-i18n="menu_experiencias">Experiencias recomendadas</a></li>
             </ul>
         </nav>
 
         <div class="header-right">
-            <a href="#" class="nav-link">FAQ</a>
-            <a href="#" class="nav-link">Ayuda</a>
-            <button id="btn-login" class="btn-text">Inicia sesión</button>
-            <a href="signup.html" class="btn-primary">Regístrate</a>
+            <a href="#" class="nav-link" data-i18n="faq">FAQ</a>
+            <a href="#" class="nav-link" data-i18n="help">Ayuda</a>
+            <button id="btn-login" class="btn-text" data-i18n="login">Inicia sesión</button>
+            <a href="signup.html" class="btn-primary" data-i18n="signup">Regístrate</a>
         </div>
     </header>
 
-    <div id="search-results"></div>
-
     <main id="main-content">
         <section class="featured-hero">
-            <h1>Destinos Destacados</h1>
-            <p>Descubre los lugares más increíbles del mundo seleccionados especialmente para ti</p>
+            <h1 data-i18n="dest_hero_title">Destinos Destacados</h1>
+            <p data-i18n="dest_hero_sub">Descubre los lugares más increíbles del mundo seleccionados especialmente para ti</p>
         </section>
 
         <section class="filters-section">
@@ -74,25 +72,24 @@
 
         <section class="featured-destinos">
             <div class="destinos-grid" id="featured-grid">
-                <!-- Se carga dinámicamente -->
-            </div>
+                </div>
         </section>
     </main>
 
     <footer class="site-footer">
         <div class="footer-content">
             <div class="footer-col left">
-                <a href="#">FAQ</a>
-                <a href="#">Contacto</a>
-                <a href="mi-perfil.html">Mi Perfil</a>
+                <a href="#" data-i18n="faq">FAQ</a>
+                <a href="#" data-i18n="footer_contact">Contacto</a>
+                <a href="mi-perfil.html" data-i18n="footer_profile">Mi Perfil</a>
             </div>
             <div class="footer-col center">
                 <strong>WEBSITE</strong>
             </div>
             <div class="footer-col right">
-                <a href="#">About</a>
-                <a href="#">Blog</a>
-                <a href="#">Support</a>
+                <a href="#" data-i18n="footer_about">About</a>
+                <a href="#" data-i18n="footer_blog">Blog</a>
+                <a href="#" data-i18n="footer_support">Support</a>
             </div>
         </div>
         <div class="legal">
@@ -101,7 +98,6 @@
     </footer>
 
     <script>
-        // Cargar y mostrar destinos destacados
         document.addEventListener('DOMContentLoaded', async () => {
             const grid = document.getElementById('featured-grid');
             const filterBtns = document.querySelectorAll('.filter-btn');
@@ -129,14 +125,11 @@
                 data.continents.forEach(cont => {
                     cont.countries.forEach(pais => {
                         pais.cities.forEach(ciudad => {
-                            // Generar precio basado en hash del nombre
                             let hash = 0;
                             for (let i = 0; i < ciudad.name.length; i++) {
                                 hash = ciudad.name.charCodeAt(i) + ((hash << 5) - hash);
                             }
                             const precio = 500 + (Math.abs(hash) % 1500);
-                            
-                            // Generar rating aleatorio pero consistente
                             const rating = (3 + (Math.abs(hash) % 21) / 10).toFixed(1);
                             const reviews = 50 + (Math.abs(hash) % 450);
                             
@@ -156,7 +149,6 @@
                     });
                 });
 
-                // Renderizar inmediatamente
                 renderDestinos(allDestinos);
                 
             } catch (error) {
@@ -174,7 +166,6 @@
                 
                 destinos.forEach(d => {
                     const starsStr = getStars(d.rating);
-                    
                     const article = document.createElement("article");
                     article.className = "destino-card featured";
                     article.setAttribute("data-continente", d.continente);
@@ -188,19 +179,23 @@
                             <div class="location-tag">${d.pais}</div>
                             <h3 class="destino-title">${d.nombre}</h3>
                             <p class="destino-desc">${d.descripcion}</p>
-                            <div class="rating" aria-label="Calificación ${d.rating} de 5 (${d.reviews} reseñas)">
-                                <span class="stars" aria-hidden="true">${starsStr}</span>
+                            <div class="rating">
+                                <span class="stars">${starsStr}</span>
                                 <span class="rating-value">${d.rating}</span>
-                                <span class="reviews">(${d.reviews})</span>
+                                <span class="reviews">(${d.reviews} reseñas)</span>
                             </div>
                             <button class="ver-mas" onclick="location.href='${d.url}'">Ver detalles</button>
                         </div>
                     `;
                     grid.appendChild(article);
                 });
+
+                // --- TRUCO: LLAMAR AL TRADUCTOR AQUÍ ---
+                if (window.updateDynamicTranslations) {
+                    window.updateDynamicTranslations();
+                }
             }
 
-            // Sistema de filtros
             filterBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
                     filterBtns.forEach(b => b.classList.remove('active'));
@@ -217,22 +212,20 @@
                 });
             });
 
+            // Búsqueda local en esta página
             const searchInput = document.getElementById('search-input');
-
             if (searchInput) {
                 searchInput.addEventListener('input', (e) => {
                     const query = e.target.value.toLowerCase().trim();
                     const cards = document.querySelectorAll('.destino-card');
 
                     cards.forEach(card => {
-                        // Buscamos en el título y en la descripción de la tarjeta actual
                         const title = card.querySelector('.destino-title')?.textContent.toLowerCase() || "";
                         const desc = card.querySelector('.destino-desc')?.textContent.toLowerCase() || "";
                         const country = card.querySelector('.location-tag')?.textContent.toLowerCase() || "";
 
-                        // Si coincide con la búsqueda O si el input está vacío -> Mostrar
                         if (title.includes(query) || desc.includes(query) || country.includes(query) || query === "") {
-                            card.style.display = "flex"; // O "block", según tu CSS base, flex suele ir bien con cards
+                            card.style.display = "flex";
                         } else {
                             card.style.display = "none";
                         }

@@ -14,7 +14,7 @@
                 
                 <div class="utilities-wrapper">
                     <div class="search-container">
-                        <input type="text" id="search-input" placeholder="Buscar destinos..." autocomplete="off">
+                        <input type="text" id="search-input" placeholder="Buscar destinos..." data-i18n="search_placeholder" autocomplete="off">
                         <svg class="icon-search" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="11" cy="11" r="8"></circle>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -26,12 +26,9 @@
 
                     <div class="lang-wrapper">
                         <span id="lang-selected">ES</span>
-
-                        <svg id="lang-toggle" class="icon-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2">
+                        <svg id="lang-toggle" class="icon-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polyline points="9 6 15 12 9 18"></polyline>
                         </svg>
-
                         <ul id="lang-menu" class="lang-dropdown">
                             <li data-lang="es">ES</li>
                             <li data-lang="en">EN</li>
@@ -61,58 +58,53 @@
                 <p id="welcome-message" data-i18n="hero_subtitle">Explora el mundo con nosotros.</p>
             </section>
 
-            <!-- Sección destacada con carrusel -->
             <section class="featured-destinations-carousel">
-                <h2>Destinos más populares</h2>
+                <h2 data-i18n="carousel_title">Destinos más populares</h2>
                 <div class="carousel-wrapper">
                     <button class="carousel-nav prev" aria-label="Anterior">‹</button>
                     <div class="destinations-carousel" id="home-carousel">
-                        <!-- Se carga dinámicamente -->
-                    </div>
+                        </div>
                     <button class="carousel-nav next" aria-label="Siguiente">›</button>
                 </div>
             </section>
 
-            <!-- Categorías de viaje -->
             <section class="travel-categories">
-                <h2>Encuentra tu estilo de viaje</h2>
+                <h2 data-i18n="categories_title">Encuentra tu estilo de viaje</h2>
                 <div class="categories-grid">
                     <a href="destinos-destacados.html" class="category-card">
                         <div class="category-icon">🏖️</div>
-                        <h3>Playas paradisíacas</h3>
-                        <p>Relájate en los mejores destinos costeros</p>
+                        <h3 data-i18n="cat_beaches">Playas paradisíacas</h3>
+                        <p data-i18n="cat_beaches_sub">Relájate en los mejores destinos costeros</p>
                     </a>
                     <a href="experiencias.html?type=aventura" class="category-card">
                         <div class="category-icon">⛰️</div>
-                        <h3>Aventura extrema</h3>
-                        <p>Vive experiencias llenas de adrenalina</p>
+                        <h3 data-i18n="cat_adventure">Aventura extrema</h3>
+                        <p data-i18n="cat_adventure_sub">Vive experiencias llenas de adrenalina</p>
                     </a>
                     <a href="experiencias.html?type=cultura" class="category-card">
                         <div class="category-icon">🏛️</div>
-                        <h3>Cultura e historia</h3>
-                        <p>Descubre patrimonio y tradiciones</p>
+                        <h3 data-i18n="cat_culture">Cultura e historia</h3>
+                        <p data-i18n="cat_culture_sub">Descubre patrimonio y tradiciones</p>
                     </a>
                     <a href="experiencias.html?type=gastronomia" class="category-card">
                         <div class="category-icon">🍽️</div>
-                        <h3>Gastronomía local</h3>
-                        <p>Saborea los mejores platos del mundo</p>
+                        <h3 data-i18n="cat_food">Gastronomía local</h3>
+                        <p data-i18n="cat_food_sub">Saborea los mejores platos del mundo</p>
                     </a>
                 </div>
             </section>
 
-            <!-- Selección curada de destinos -->
             <section class="mejores-destinos" aria-labelledby="mejores-destinos-title">
                 <header class="md-header">
-                    <h2 id="mejores-destinos-title">SELECCIÓN DEL MES</h2>
+                    <h2 id="mejores-destinos-title" data-i18n="best_title">SELECCIÓN DEL MES</h2>
                     <p class="md-sub" data-i18n="best_sub">Nuestras recomendaciones para este mes</p>
                 </header>
 
                 <div class="destinos-grid">
-                    <!-- Se carga dinámicamente (máx 6 destinos) -->
-                </div>
+                    </div>
                 
                 <div class="cta-center">
-                    <a href="destinos-destacados.html" class="btn-primary btn-large">Ver todos los destinos</a>
+                    <a href="destinos-destacados.html" class="btn-primary btn-large" data-i18n="see_more_destinations">Ver todos los destinos</a>
                 </div>
             </section>
 
@@ -151,9 +143,9 @@
         <footer class="site-footer">
             <div class="footer-content">
                 <div class="footer-col left">
-                    <a href="#">FAQ</a>
-                    <a href="#">Contacto</a>
-                    <a href="#">Mi Perfil</a>
+                    <a href="#" data-i18n="faq">FAQ</a>
+                    <a href="#" data-i18n="footer_contact">Contacto</a>
+                    <a href="#" data-i18n="footer_profile">Mi Perfil</a>
                 </div>
 
                 <div class="footer-col center">
@@ -161,9 +153,9 @@
                 </div>
 
                 <div class="footer-col right">
-                    <a href="#">About</a>
-                    <a href="#">Blog</a>
-                    <a href="#">Support</a>
+                    <a href="#" data-i18n="footer_about">About</a>
+                    <a href="#" data-i18n="footer_blog">Blog</a>
+                    <a href="#" data-i18n="footer_support">Support</a>
                 </div>
             </div>
 

@@ -7,10 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (savedUser && headerRight) {
         
-        // Usamos la foto guardada o generamos las iniciales
         const avatarSrc = savedAvatar || `https://ui-avatars.com/api/?name=${savedUser}&background=0D8ABC&color=fff`;
 
-        // Inyectamos el HTML del usuario logueado
         headerRight.innerHTML = `
             <a href="#" class="nav-link" data-i18n="faq">FAQ</a>
             <a href="#" class="nav-link" data-i18n="help">Ayuda</a>
@@ -20,11 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <img src="${avatarSrc}" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid #ddd;">
                     <span style="font-weight: 600; color: var(--text-primary); font-size: 0.9rem;">${savedUser}</span>
                 </a>
-                <button id="btn-logout-header" class="btn-text" style="color: #dc3545; font-size: 0.85rem; margin-left: 5px;">Log Out</button>
+                <button id="btn-logout-header" class="btn-text" style="color: #dc3545; font-size: 0.85rem; margin-left: 5px;" data-i18n="logout">Log Out</button>
             </div>
         `;
 
-        // Funcionalidad del botón Log Out del header
         document.getElementById('btn-logout-header').addEventListener('click', () => {
             localStorage.removeItem('site_username');
             localStorage.removeItem('site_user_avatar');
@@ -32,12 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.reload(); 
         });
     } else {
-        // Si no hay usuario, iniciamos el sistema de modal normal
         initLoginModal();
     }
 
-
-    // Función para manejar el modal de login
     function initLoginModal() {
         const loginBtn = document.getElementById('btn-login');
         const modal = document.getElementById('login-modal');
@@ -64,14 +58,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-
-    // Manejo del formulario de registro
     const signupForm = document.getElementById('signup-form');
-    
     if (signupForm) {
         signupForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            
             const username = document.getElementById('reg-username').value;
             const password = document.getElementById('reg-password').value;
             const confirmPassword = document.getElementById('reg-confirm').value;
@@ -88,10 +78,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.location.href = 'index.html';
             };
 
-            // Si el usuario subió una foto, la procesamos
             if (fileInput.files && fileInput.files[0]) {
                 const reader = new FileReader();
-                
                 reader.onload = function(e) {
                     try {
                         localStorage.setItem('site_user_avatar', e.target.result);
@@ -100,7 +88,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         alert("La imagen es demasiado grande. Intenta con una más pequeña.");
                     }
                 };
-                
                 reader.readAsDataURL(fileInput.files[0]);
             } else {
                 finalizarRegistro();
@@ -108,25 +95,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Cargar contenido dinámico para la página principal
     loadHomeContent();
 });
 
-// Función para cargar el contenido de la página principal
 async function loadHomeContent() {
     const carousel = document.getElementById('home-carousel');
     const destinosGrid = document.querySelector('.destinos-grid');
     
-    // Solo cargar si existe alguno de estos elementos
     if (!carousel && !destinosGrid) return;
 
     function createSlug(text) {
-        return text.toString().toLowerCase()
-            .replace(/\s+/g, '-')
-            .replace(/[^\w\-]+/g, '')
-            .replace(/\-\-+/g, '-')
-            .replace(/^-+/, '')
-            .replace(/-+$/, '');
+        return text.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '').replace(/\-\-+/g, '-').replace(/^-+/, '').replace(/-+$/, '');
     }
 
     function getStars(value) {
@@ -136,9 +115,7 @@ async function loadHomeContent() {
 
     try {
         const response = await fetch('ciudades-del-mundo.json');
-        if (!response.ok) {
-            throw new Error('Error al cargar ciudades-del-mundo.json');
-        }
+        if (!response.ok) throw new Error('Error al cargar ciudades-del-mundo.json');
         
         const data = await response.json();
         let allDestinos = [];
@@ -147,9 +124,7 @@ async function loadHomeContent() {
             cont.countries.forEach(pais => {
                 pais.cities.forEach(ciudad => {
                     let hash = 0;
-                    for (let i = 0; i < ciudad.name.length; i++) {
-                        hash = ciudad.name.charCodeAt(i) + ((hash << 5) - hash);
-                    }
+                    for (let i = 0; i < ciudad.name.length; i++) hash = ciudad.name.charCodeAt(i) + ((hash << 5) - hash);
                     const precio = 500 + (Math.abs(hash) % 1500);
                     const rating = (3 + (Math.abs(hash) % 21) / 10).toFixed(1);
                     const reviews = 50 + (Math.abs(hash) % 450);
@@ -169,13 +144,11 @@ async function loadHomeContent() {
             });
         });
 
-        // Mezclar destinos aleatoriamente
         allDestinos.sort(() => Math.random() - 0.5);
 
-        // Cargar carrusel (primeros 10)
         if (carousel) {
             const carouselDestinos = allDestinos.slice(0, 10);
-            carousel.innerHTML = ''; // Limpiar antes de cargar
+            carousel.innerHTML = ''; 
             
             carouselDestinos.forEach(d => {
                 const card = document.createElement('div');
@@ -190,36 +163,27 @@ async function loadHomeContent() {
                         <div class="carousel-rating">
                             <span class="stars">${getStars(d.rating)}</span>
                             <span class="rating-value">${d.rating}</span>
-                            <span class="reviews">(${d.reviews})</span>
+                            <span class="reviews">(${d.reviews} reseñas)</span>
                         </div>
                     </div>
                 `;
                 carousel.appendChild(card);
             });
 
-            // Funcionalidad de navegación del carrusel
             const prevBtn = document.querySelector('.carousel-nav.prev');
             const nextBtn = document.querySelector('.carousel-nav.next');
-            
             if (prevBtn && nextBtn) {
-                prevBtn.addEventListener('click', () => {
-                    carousel.scrollBy({ left: -350, behavior: 'smooth' });
-                });
-                
-                nextBtn.addEventListener('click', () => {
-                    carousel.scrollBy({ left: 350, behavior: 'smooth' });
-                });
+                prevBtn.addEventListener('click', () => carousel.scrollBy({ left: -350, behavior: 'smooth' }));
+                nextBtn.addEventListener('click', () => carousel.scrollBy({ left: 350, behavior: 'smooth' }));
             }
         }
 
-        // Cargar grid (6 destinos seleccionados)
         if (destinosGrid) {
             const gridDestinos = allDestinos.slice(10, 16);
             destinosGrid.innerHTML = "";
             
             gridDestinos.forEach(d => {
                 const starsStr = getStars(d.rating);
-                
                 const article = document.createElement("article");
                 article.className = "destino-card";
                 
@@ -242,14 +206,15 @@ async function loadHomeContent() {
                 destinosGrid.appendChild(article);
             });
         }
+
+        // --- TRUCO FINAL PARA TRADUCIR EL CONTENIDO DINÁMICO ---
+        if (window.updateDynamicTranslations) {
+            window.updateDynamicTranslations();
+        }
         
     } catch (error) {
         console.error("Error cargando destinos:", error);
-        if (carousel) {
-            carousel.innerHTML = "<p style='padding: 2rem; text-align: center;'>Error al cargar destinos</p>";
-        }
-        if (destinosGrid) {
-            destinosGrid.innerHTML = "<p style='padding: 2rem; text-align: center;'>Error al cargar destinos</p>";
-        }
+        if (carousel) carousel.innerHTML = "<p style='padding: 2rem; text-align: center;'>Error al cargar destinos</p>";
+        if (destinosGrid) destinosGrid.innerHTML = "<p style='padding: 2rem; text-align: center;'>Error al cargar destinos</p>";
     }
 }

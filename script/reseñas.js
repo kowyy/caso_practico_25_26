@@ -1,7 +1,8 @@
-// Sistema de reseñas con persistencia local y generación procedural (Mocking)
+// Logica de las reseñas y puntuaciones
 
 document.addEventListener("DOMContentLoaded", () => {
 
+    // Esperamos a que cargue el ID del destino
     const waitForDestinoID = () => {
         const pageID = document.body.getAttribute("data-destino");
         if (pageID) {
@@ -18,6 +19,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const form = document.getElementById("review-form");
         const autoTextareas = document.querySelectorAll("textarea");
 
+        // Elementos de la cabecera para actualizar la nota
+        const summaryStars = document.getElementById("summary-stars");
+        const summaryScore = document.getElementById("summary-score");
+        const summaryCount = document.getElementById("summary-count");
+
+        // Ajustar altura del textarea al escribir
         autoTextareas.forEach(area => {
             area.addEventListener("input", () => {
                 area.style.height = "auto";
@@ -25,10 +32,26 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
+        // --- LÓGICA DE EMOJIS (NUEVO) ---
+        const emojiBtns = document.querySelectorAll('.emoji-btn');
+        const textArea = document.getElementById('review-text');
+        
+        if(emojiBtns && textArea) {
+            emojiBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Añadir el emoji al texto existente
+                    textArea.value += btn.textContent;
+                    textArea.focus(); // Volver a poner el foco en la caja
+                });
+            });
+        }
+        // -------------------------------
+
+        // Reseñas de ejemplo fijas (Legacy)
         const legacyReviews = {
             "petra": [
-                { name: "Laura G.", text: "Una experiencia increíble. El amanecer en el Tesoro es inolvidable.", rating: 5 },
-                { name: "Javier M.", text: "El guía fue excelente, pero hace bastante calor, id preparados.", rating: 4 }
+                { name: "Laura G.", text: "Una experiencia increíble. El amanecer en el Tesoro es inolvidable. 📸", rating: 5 },
+                { name: "Javier M.", text: "El guía fue excelente, pero hace bastante calor, id preparados. ☀️", rating: 4 }
             ],
             "las-vegas": [
                 { name: "Marina P.", text: "El espectáculo del Cirque du Soleil fue increíble.", rating: 5 },
@@ -36,20 +59,19 @@ document.addEventListener("DOMContentLoaded", () => {
             ]
         };
 
-        // Generador Procedural (Mocking System)
+        // Generar reseñas falsas (Mocking) para ciudades nuevas
         function generateMockReviews(cityId) {
             const names = ["Alex M.", "Sarah J.", "Carlos D.", "Yuki T.", "Emma W.", "Priya K.", "Lars U."];
             const templates = [
-                "¡{City} superó mis expectativas! La comida fue increíble.",
-                "Un destino precioso. Recomiendo visitar el centro histórico.",
+                "¡{City} superó mis expectativas! La comida fue increíble. 🍝",
+                "Un destino precioso. Recomiendo visitar el centro histórico. 🏛️",
                 "El viaje estuvo bien organizado, aunque {City} estaba muy llena de gente.",
-                "Volvería a {City} sin dudarlo. La gente es muy amable.",
-                "Experiencia inolvidable. Los paisajes son tal cual las fotos."
+                "Volvería a {City} sin dudarlo. La gente es muy amable. 😊",
+                "Experiencia inolvidable. Los paisajes son tal cual las fotos. 🏔️"
             ];
 
             const mockReviews = [];
             const numReviews = Math.floor(Math.random() * 3) + 2; 
-
             const cityName = cityId.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
             for (let i = 0; i < numReviews; i++) {
@@ -63,8 +85,10 @@ document.addEventListener("DOMContentLoaded", () => {
             return mockReviews;
         }
 
+        // Cargar reseñas guardadas (Persistencia)
         let reviews = JSON.parse(localStorage.getItem("reviews_" + id));
 
+        // Si no hay guardadas, usamos las legacy o generamos nuevas
         if (!reviews) {
             if (legacyReviews[id]) {
                 reviews = legacyReviews[id];
@@ -72,6 +96,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 reviews = generateMockReviews(id);
             }
             localStorage.setItem("reviews_" + id, JSON.stringify(reviews));
+        }
+
+        // Función matemática para calcular la media real
+        function updateHeaderSummary() {
+            if (!summaryStars || reviews.length === 0) return;
+
+            const totalScore = reviews.reduce((sum, r) => sum + r.rating, 0);
+            const average = (totalScore / reviews.length).toFixed(1);
+            const roundedAverage = Math.round(average);
+            const starsStr = "★".repeat(roundedAverage) + "☆".repeat(5 - roundedAverage);
+
+            summaryStars.textContent = starsStr;
+            summaryScore.textContent = average;
+            summaryCount.textContent = `(${reviews.length} opiniones)`;
         }
 
         function renderReviews() {
@@ -86,7 +124,6 @@ document.addEventListener("DOMContentLoaded", () => {
             [...reviews].reverse().forEach(r => {
                 const div = document.createElement("div");
                 div.className = "review-item";
-
                 const stars = "★".repeat(r.rating) + "☆".repeat(5 - r.rating);
 
                 div.innerHTML = `
@@ -96,13 +133,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
                     <p>${r.text}</p>
                 `;
-
                 reviewsContainer.appendChild(div);
             });
+
+            updateHeaderSummary();
         }
 
         renderReviews();
 
+        // Enviar nueva reseña
         if (form) {
             form.addEventListener("submit", e => {
                 e.preventDefault();
@@ -116,26 +155,22 @@ document.addEventListener("DOMContentLoaded", () => {
                     text: textInput.value, 
                     rating: parseInt(ratingInput.value) 
                 };
-
-                if (reviews.length >= 5) {
-                    reviews.shift(); 
-                }
+                
                 reviews.push(newReview);
-
+                
+                // Guardamos en el navegador
                 localStorage.setItem("reviews_" + id, JSON.stringify(reviews));
 
-                renderReviews();
+                renderReviews(); 
                 form.reset();
                 
-                // AQUÍ ESTÁ EL CAMBIO: Usamos nuestra función personalizada en lugar de alert()
                 mostrarAlerta("¡Gracias por tu reseña!");
             });
         }
     }
 
-    // --- FUNCIÓN PARA CREAR ALERTA PERSONALIZADA (SIN IP) ---
+    // Modal personalizado
     function mostrarAlerta(mensaje) {
-        // Crear el fondo oscuro
         const overlay = document.createElement('div');
         overlay.style.position = 'fixed';
         overlay.style.top = '0';
@@ -146,9 +181,8 @@ document.addEventListener("DOMContentLoaded", () => {
         overlay.style.display = 'flex';
         overlay.style.justifyContent = 'center';
         overlay.style.alignItems = 'center';
-        overlay.style.zIndex = '10000'; // Muy alto para que quede encima de todo
+        overlay.style.zIndex = '10000';
 
-        // Crear la cajita blanca
         const modal = document.createElement('div');
         modal.style.backgroundColor = 'white';
         modal.style.padding = '2rem';
@@ -158,23 +192,19 @@ document.addEventListener("DOMContentLoaded", () => {
         modal.style.minWidth = '300px';
         modal.style.maxWidth = '90%';
 
-        // Título o Logo (Opcional, ponemos el nombre de la web)
         const titulo = document.createElement('h3');
-        titulo.textContent = 'WEBSITE'; // O el nombre de vuestra web
+        titulo.textContent = 'WEBSITE'; 
         titulo.style.marginTop = '0';
         titulo.style.marginBottom = '1rem';
         titulo.style.color = '#333';
 
-        // El mensaje
         const texto = document.createElement('p');
         texto.textContent = mensaje;
         texto.style.fontSize = '1.1rem';
         texto.style.marginBottom = '1.5rem';
 
-        // El botón
         const btn = document.createElement('button');
         btn.textContent = 'Aceptar';
-        // Estilos parecidos a vuestro btn-primary
         btn.style.backgroundColor = '#000'; 
         btn.style.color = '#fff';
         btn.style.border = 'none';
@@ -183,12 +213,10 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.style.cursor = 'pointer';
         btn.style.fontWeight = '600';
 
-        // Cerrar al hacer clic
         btn.onclick = () => {
             document.body.removeChild(overlay);
         };
 
-        // Juntar todo
         modal.appendChild(titulo);
         modal.appendChild(texto);
         modal.appendChild(btn);
