@@ -1,14 +1,21 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    // Controlamos qué mostrar en el header (Login o Perfil)
+    // Controlamos qué mostrar en el header si el usuario tiene sesión activa o no
     const headerRight = document.querySelector('.header-right');
-    const savedUser = localStorage.getItem('site_username') || sessionStorage.getItem('site_username');
-    const savedAvatar = localStorage.getItem('site_user_avatar');
+    const activeSessionUser = localStorage.getItem('site_username') || sessionStorage.getItem('site_username');
+    
+    // Recuperamos los datos de este usuario específico desde nuestra base de datos simulada
+    const usersDB = JSON.parse(localStorage.getItem('database_users') || '[]');
+    const currentUserData = usersDB.find(u => u.username === activeSessionUser);
 
-    if (savedUser && headerRight) {
+    if (activeSessionUser && headerRight) {
         
-        const avatarSrc = savedAvatar || `https://ui-avatars.com/api/?name=${savedUser}&background=0D8ABC&color=fff`;
+        // Si el usuario tiene avatar guardado usamos ese y si no generamos uno por defecto
+        const avatarSrc = (currentUserData && currentUserData.avatar) 
+            ? currentUserData.avatar 
+            : `https://ui-avatars.com/api/?name=${activeSessionUser}&background=0D8ABC&color=fff`;
 
+        // Inyectamos el HTML del usuario logueado en la cabecera
         headerRight.innerHTML = `
             <a href="#" class="nav-link" data-i18n="faq">FAQ</a>
             <a href="#" class="nav-link" data-i18n="help">Ayuda</a>
@@ -16,78 +23,94 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="user-menu-item" style="display: flex; align-items: center; gap: 10px; margin-left: 10px;">
                 <a href="mi-perfil.html" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
                     <img src="${avatarSrc}" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid #ddd;">
-                    <span style="font-weight: 600; color: var(--text-primary); font-size: 0.9rem;">${savedUser}</span>
+                    <span style="font-weight: 600; color: var(--text-primary); font-size: 0.9rem;">${activeSessionUser}</span>
                 </a>
                 <button id="btn-logout-header" class="btn-text" style="color: #dc3545; font-size: 0.85rem; margin-left: 5px;" data-i18n="logout">Log Out</button>
             </div>
         `;
 
+        // Asignamos el evento para destruir la sesión local y de sesión
         document.getElementById('btn-logout-header').addEventListener('click', () => {
             localStorage.removeItem('site_username');
-            localStorage.removeItem('site_user_avatar');
             sessionStorage.removeItem('site_username');
             window.location.reload(); 
         });
     } else {
+        // Si no hay usuario activo inicializamos la lógica del modal de login
         initLoginModal();
     }
 
+    // Función que gestiona la apertura y el envío del formulario de login
     function initLoginModal() {
         const loginBtn = document.getElementById('btn-login');
         const modal = document.getElementById('login-modal');
         
+        // Verificamos que los elementos existan en el DOM antes de asignar eventos
         if (loginBtn && modal) {
             const closeModal = document.getElementById('close-modal');
             const loginForm = document.getElementById('login-form');
 
+            // Abrimos el modal nativo del navegador
             loginBtn.addEventListener('click', () => modal.showModal());
             
             if (closeModal) {
                 closeModal.addEventListener('click', () => modal.close());
             }
 
+            // Aquí procesamos el intento de inicio de sesión
             loginForm.addEventListener('submit', (e) => {
-                const username = document.getElementById('username').value;
+                // Evitamos que el formulario recargue la página por defecto para manejarlo nosotros
+                // Nota: al ser method="dialog" a veces no es necesario pero es buena práctica en validación
+                const usernameInput = document.getElementById('username').value;
+                const passwordInput = document.getElementById('password').value;
                 const remember = document.getElementById('remember-me').checked;
 
-                if (remember) {
-                    localStorage.setItem('site_username', username);
+                // Leemos nuestra base de datos de usuarios registrados del almacenamiento local
+                const currentUsers = JSON.parse(localStorage.getItem('database_users') || '[]');
+
+                // Buscamos si existe un usuario que coincida exactamente en nombre y contraseña
+                const validUser = currentUsers.find(user => user.username === usernameInput && user.password === passwordInput);
+
+                if (validUser) {
+                    // Si las credenciales son correctas guardamos la sesión
+                    if (remember) {
+                        localStorage.setItem('site_username', validUser.username);
+                    } else {
+                        sessionStorage.setItem('site_username', validUser.username);
+                    }
+                    window.location.reload();
                 } else {
-                    sessionStorage.setItem('site_username', username);
+                    // Si no encontramos al usuario detenemos el evento y mostramos error
+                    e.preventDefault();
+                    alert('Usuario o contraseña incorrectos. Por favor regístrate si no tienes cuenta.');
+                    modal.close(); // Cerramos el modal para que pueda intentarlo de nuevo o ir a registro
                 }
-                
-                // Recargar la página actual en lugar de ir al index
-                window.location.reload();
             });
         }
     }
 
+    // Intentamos inicializar el modal por si acaso estamos en una página que lo carga dinámicamente
     initLoginModal();
 
+    // Lógica para el formulario de registro en signup.html
     const signupForm = document.getElementById('signup-form');
     if (signupForm) {
         const avatarInput = document.getElementById('reg-avatar');
         const avatarPreview = document.getElementById('avatar-preview');
         const avatarFeedback = document.getElementById('avatar-feedback');
         
-        // Preview en tiempo real
+        // Vista previa de la imagen cuando el usuario selecciona un archivo
         if (avatarInput) {
             avatarInput.addEventListener('change', (e) => {
                 const file = e.target.files[0];
                 
                 if (file) {
-                    // Validar tamaño (2MB = 2 * 1024 * 1024 bytes)
+                    // Validamos que el archivo no sea excesivamente pesado para localStorage
                     if (file.size > 2 * 1024 * 1024) {
                         avatarFeedback.textContent = 'La imagen es muy grande (máx 2MB)';
                         avatarFeedback.classList.remove('success');
                         avatarFeedback.style.color = '#dc3545';
                         avatarPreview.classList.remove('has-image');
-                        avatarPreview.innerHTML = `
-                            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="12" cy="7" r="4"></circle>
-                            </svg>
-                        `;
                         return;
                     }
                     
@@ -103,37 +126,68 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
         
+        // Manejamos el envío del formulario de registro
         signupForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const username = document.getElementById('reg-username').value;
+            const email = document.getElementById('reg-email').value;
             const password = document.getElementById('reg-password').value;
             const confirmPassword = document.getElementById('reg-confirm').value;
             const fileInput = document.getElementById('reg-avatar');
             
+            // Validaciones básicas antes de procesar
             if (password !== confirmPassword) {
                 alert('Las contraseñas no coinciden');
                 return;
             }
 
-            const finalizarRegistro = () => {
+            // Recuperamos los usuarios existentes para evitar duplicados
+            const currentUsers = JSON.parse(localStorage.getItem('database_users') || '[]');
+            
+            // Comprobamos si el nombre de usuario ya está cogido
+            const userExists = currentUsers.some(u => u.username === username);
+            if (userExists) {
+                alert('El nombre de usuario ya existe. Por favor elige otro.');
+                return;
+            }
+
+            // Función auxiliar para guardar el usuario y redirigir
+            const saveAndRedirect = (avatarData) => {
+                const newUser = {
+                    username: username,
+                    email: email,
+                    password: password, // En un entorno real esto debería ir hasheado
+                    avatar: avatarData || null,
+                    createdAt: new Date().toISOString()
+                };
+
+                // Añadimos el nuevo usuario al array y guardamos en localStorage
+                currentUsers.push(newUser);
+                localStorage.setItem('database_users', JSON.stringify(currentUsers));
                 localStorage.setItem('site_username', username);
-                alert('¡Cuenta creada! Redirigiendo al inicio...');
+                localStorage.setItem('site_user_avatar', avatarData);
+                if (avatarData) {
+                    localStorage.setItem('site_user_avatar', avatarData);
+                }
+
+                alert('¡Registro completado! Bienvenido.');
                 window.location.href = 'index.html';
             };
 
+            // Procesamos la imagen si existe antes de guardar
             if (fileInput.files && fileInput.files[0]) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function(evt) {
                     try {
-                        localStorage.setItem('site_user_avatar', e.target.result);
-                        finalizarRegistro();
+                        saveAndRedirect(evt.target.result);
                     } catch (error) {
-                        alert("La imagen es demasiado grande. Intenta con una más pequeña.");
+                        alert("La imagen es demasiado grande para guardarla. Se guardará el usuario sin foto.");
+                        saveAndRedirect(null);
                     }
                 };
                 reader.readAsDataURL(fileInput.files[0]);
             } else {
-                finalizarRegistro();
+                saveAndRedirect(null);
             }
         });
     }

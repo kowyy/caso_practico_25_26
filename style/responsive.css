@@ -1,77 +1,188 @@
-/* Media queries para responsive design */
+
+html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
 
 @media (max-width: 900px) {
-    /* Header */
     .site-header {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-        text-align: center;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem 1.5rem;
+        gap: 0;
     }
-    
-    .header-left, 
+
     .header-right {
-        justify-content: center;
+        position: absolute;
+        top: 1rem;
+        right: 1.5rem;
+        width: auto;
+        justify-content: flex-end;
     }
-    
-    /* Footer */
+
+    .header-left {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .logo-text {
+        margin-right: auto;
+        padding-bottom: 10px;
+    }
+
+    .utilities-wrapper {
+        order: 3;
+        width: 100%;
+        margin-top: 5px;
+        display: flex;
+        justify-content: space-between;
+        background: white;
+    }
+
+    .search-container {
+        width: 100%;
+        max-width: none;
+    }
+
+    .header-center {
+        width: 100%;
+        margin-top: 15px;
+        border-top: 1px solid rgba(0,0,0,0.05);
+        padding-top: 10px;
+    }
+
+    .header-center ul {
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
     .footer-content {
+        display: flex;
         flex-direction: column;
         gap: 20px;
+        text-align: center;
     }
-    
-    /* Grid de destinos */
-    .destinos-grid {
+
+    .footer-col.left,
+    .footer-col.right {
+        justify-self: center;
+        text-align: center;
+    }
+
+    .destinos-grid,
+    .experiencias-grid,
+    .categories-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 20px;
     }
-    
-    /* Página de compra */
+
     .compra-container {
         grid-template-columns: 1fr;
     }
-    
     .compra-resumen {
         position: relative;
         top: 0;
     }
-    
     .form-row {
         grid-template-columns: 1fr;
     }
 }
 
 @media (max-width: 640px) {
-    /* Grid de destinos - una sola columna */
-    .destinos-grid {
-        grid-template-columns: 1fr;
+    .site-header {
+        padding: 1rem;
+    }
+    .header-right {
+        right: 1rem;
+    }
+
+    .featured-destinations-carousel {
+        padding: 0;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .featured-destinations-carousel h2 {
+        text-align: center;
+        padding: 0 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .carousel-wrapper {
+        padding: 0;
+        width: 100%;
+    }
+
+    .carousel-nav {
+        display: none;
+    }
+
+    .destinations-carousel {
+        padding: 10px 20px;
         gap: 16px;
-        padding: 0 0.75rem;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
     }
-    
-    .md-header {
-        margin-bottom: 18px;
+
+    .carousel-destination-card {
+        flex: 0 0 85%;
+        max-width: 320px;
+        scroll-snap-align: center;
+        scroll-snap-stop: always;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-    
-    .card-body {
-        padding: 12px;
+
+    .destinos-grid,
+    .experiencias-grid,
+    .categories-grid {
+        grid-template-columns: 1fr;
+        padding: 0 1rem;
+        gap: 24px;
     }
-    
-    .destino-title {
-        font-size: 1rem;
+
+    .profile-header-card,
+    .profile-avatar-section {
+        flex-direction: column;
+        text-align: center;
     }
-    
-    /* Carrusel más pequeño */
-    .carrusel {
-        height: 300px;
+    .profile-info-grid {
+        grid-template-columns: 1fr;
     }
-    
-    /* Formulario de compra */
-    .compra-formulario {
-        padding: 1.5rem;
+    .reserva-card {
+        flex-direction: column;
     }
-    
-    /* Hero */
+    .reserva-card img {
+        width: 100%;
+        height: 180px;
+    }
+
     .hero h1 {
-        font-size: 2rem;
+        font-size: 1.8rem;
+    }
+    .hero p {
+        padding: 0 1rem;
+    }
+
+    .search-container {
+        max-width: 140px;
+    }
+
+    #search-results {
+        width: calc(100vw - 2rem);
+        left: 50%;
+        transform: translateX(-50%);
+        position: fixed;
+        top: 140px;
+        max-height: 50vh;
     }
 }
+
