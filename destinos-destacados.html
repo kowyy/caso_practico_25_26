@@ -148,8 +148,10 @@
                     });
                 });
 
-                const europaDestinos = allDestinos.filter(d => d.continente === 'Europa');
-                renderDestinos(europaDestinos);
+                allDestinos.sort(() => Math.random() - 0.5);
+
+                const randomSelection = allDestinos.slice(0, 9);
+                renderDestinos(randomSelection);
                 
             } catch (error) {
                 console.error("Error cargando destinos:", error);

@@ -50,11 +50,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
         });
 
-        // Renderizar grid inicial con todos los destinos
-        if(destinosGrid) {
-            renderGrid(destinos);
-        }
-
     } catch (error) {
         console.error("Error cargando los destinos:", error);
         if(destinosGrid) {

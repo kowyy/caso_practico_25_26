@@ -1,75 +1,165 @@
-
 html, body {
-    overflow-x: hidden;
-    max-width: 100vw;
+    overflow-x: hidden; /* Evita el desplazamiento horizontal cuando algo se sale del contenedor */
     width: 100%;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
-@media (max-width: 900px) {
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+img {
+    max-width: 100%; /* Las imágenes se ajustan al tamaño disponible */
+    height: auto;
+}
+
+@media (max-width: 1200px) {
+
     .site-header {
-        position: relative;
-        display: flex;
+        display: flex; /* Cambiamos a una estructura vertical para evitar que los elementos se monten */
         flex-direction: column;
         align-items: center;
-        padding: 1rem 1.5rem;
-        gap: 0;
+        padding: 1rem;
+        gap: 1rem;
+        height: auto;
     }
 
+    .header-left, 
+    .header-center, 
     .header-right {
-        position: absolute;
-        top: 1rem;
-        right: 1.5rem;
-        width: auto;
-        justify-content: flex-end;
+        width: 100%; /* Que cada bloque del header aproveche el ancho completo */
+        justify-content: center;
+        margin: 0;
     }
 
     .header-left {
-        width: 100%;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-start;
-        align-items: center;
-    }
-
-    .logo-text {
-        margin-right: auto;
-        padding-bottom: 10px;
-    }
-
-    .utilities-wrapper {
-        order: 3;
-        width: 100%;
-        margin-top: 5px;
-        display: flex;
-        justify-content: space-between;
-        background: white;
+        flex-wrap: wrap; /* Permite que el logo y el buscador bajen en línea si hace falta */
+        gap: 15px;
+        text-align: center;
     }
 
     .search-container {
-        width: 100%;
-        max-width: none;
+        flex: 1; /* Se expande lo necesario sin deformarse */
+        min-width: 200px;
+        max-width: 400px;
     }
 
     .header-center {
-        width: 100%;
-        margin-top: 15px;
+        padding: 10px 0; /* Mantiene los enlaces ordenados y centrados */
         border-top: 1px solid rgba(0,0,0,0.05);
-        padding-top: 10px;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
     }
-
+    
     .header-center ul {
-        justify-content: center;
+        justify-content: center; /* Centra los enlaces de navegación */
         gap: 20px;
         flex-wrap: wrap;
     }
 
-    .footer-content {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
+    .header-right {
+        gap: 15px; /* Espaciado más cómodo entre iconos */
+    }
+
+    .featured-destinations-carousel {
+        width: 100%;
+        padding: 0 1rem;
+        overflow: hidden;
+    }
+
+    .featured-destinations-carousel h2 {
+        text-align: center; /* Centra el título del carrusel */
+        width: 100%;
+        padding: 0 10px;
+    }
+
+    .carousel-wrapper {
+        width: 100%;
+        padding: 0; /* Evita desbordamientos indeseados */
+    }
+
+    .destinations-carousel {
+        padding: 20px 5px; /* Ajuste cómodo en pantallas táctiles */
+        scroll-padding-left: 20px;
+    }
+
+    .carousel-destination-card {
+        flex: 0 0 280px; /* Tarjetas un poco más flexibles */ 
+        max-width: 85vw; /* Nunca mayores que la vista */
+    }
+
+    .carousel-nav {
+        display: none; /* En pantallas pequeñas es más fácil usar scroll natural */
+    }
+    
+    .categories-grid {
+        grid-template-columns: repeat(2, 1fr); /* Dos columnas para una vista más clara */
+        gap: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .hero {
+        padding: 0 1rem; /* Hace que el contenido principal no toque los bordes */
+    }
+    
+    .hero h1 {
+        font-size: 2rem; /* Texto más cómodo para pantallas medianas */
+    }
+
+    .destinos-grid,
+    .experiencias-grid {
+        grid-template-columns: 1fr; /* Un solo bloque por fila para facilitar la lectura */
+        padding: 0 1rem;
+    }
+
+    .compra-container {
+        grid-template-columns: 1fr; /* Todo en una columna */
+        gap: 2rem;
+    }
+
+    .compra-resumen {
+        position: relative; /* Evita que se quede fijo mientras haces scroll */
+        top: 0;
+        order: -1;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr; /* Formularios más legibles */
+    }
+
+    .profile-container-simple {
+        padding: 1rem; /* Espaciado más cómodo */
+    }
+    
+    .profile-header-card {
+        flex-direction: column; /* Diseño más vertical y claro */
         text-align: center;
+    }
+    
+    .profile-avatar-section {
+        flex-direction: column; /* Alineación natural para pantallas pequeñas */
+    }
+
+    .profile-info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .reserva-card {
+        flex-direction: column; /* Tarjetas más fáciles de leer */
+    }
+    
+    .reserva-card img {
+        width: 100%;
+        height: 180px; /* Tamaño adaptado */
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        text-align: center; /* Orden más limpio en móvil */
     }
 
     .footer-col.left,
@@ -77,112 +167,47 @@ html, body {
         justify-self: center;
         text-align: center;
     }
-
-    .destinos-grid,
-    .experiencias-grid,
-    .categories-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-    }
-
-    .compra-container {
-        grid-template-columns: 1fr;
-    }
-    .compra-resumen {
-        position: relative;
-        top: 0;
-    }
-    .form-row {
-        grid-template-columns: 1fr;
-    }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 480px) {
+    
     .site-header {
-        padding: 1rem;
-    }
-    .header-right {
-        right: 1rem;
+        padding: 0.8rem; /* Ajuste más compacto */
     }
 
-    .featured-destinations-carousel {
-        padding: 0;
+    .logo-text {
+        font-size: 1.2rem; /* Logo más equilibrado */
+    }
+
+    .utilities-wrapper {
         width: 100%;
-        overflow: hidden;
+        justify-content: space-between;
     }
-
-    .featured-destinations-carousel h2 {
-        text-align: center;
-        padding: 0 1rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .carousel-wrapper {
-        padding: 0;
-        width: 100%;
-    }
-
-    .carousel-nav {
-        display: none;
-    }
-
-    .destinations-carousel {
-        padding: 10px 20px;
-        gap: 16px;
-        scroll-snap-type: x mandatory;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .carousel-destination-card {
-        flex: 0 0 85%;
-        max-width: 320px;
-        scroll-snap-align: center;
-        scroll-snap-stop: always;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-
-    .destinos-grid,
-    .experiencias-grid,
-    .categories-grid {
-        grid-template-columns: 1fr;
-        padding: 0 1rem;
-        gap: 24px;
-    }
-
-    .profile-header-card,
-    .profile-avatar-section {
-        flex-direction: column;
-        text-align: center;
-    }
-    .profile-info-grid {
-        grid-template-columns: 1fr;
-    }
-    .reserva-card {
-        flex-direction: column;
-    }
-    .reserva-card img {
-        width: 100%;
-        height: 180px;
-    }
-
-    .hero h1 {
-        font-size: 1.8rem;
-    }
-    .hero p {
-        padding: 0 1rem;
-    }
-
+    
     .search-container {
-        max-width: 140px;
+        max-width: 100%; /* Deja que el buscador utilice todo el espacio posible */
+    }
+    
+    #search-results {
+        width: 100%;
+        left: 0; /* Evita que se salga hacia un costado */
+        max-height: 50vh; /* Evita que tome demasiada pantalla */
     }
 
-    #search-results {
-        width: calc(100vw - 2rem);
-        left: 50%;
-        transform: translateX(-50%);
-        position: fixed;
-        top: 140px;
-        max-height: 50vh;
+    .categories-grid {
+        grid-template-columns: 1fr; /* Una columna para mayor claridad */
+    }
+
+    .carrusel {
+        height: 250px; /* Reduce un poco la altura para pantallas muy pequeñas */
+    }
+    
+    .destino-title {
+        font-size: 1.8rem; /* Mejor adaptación del título */
+    }
+
+    .auth-container {
+        padding: 1.5rem; /* Espaciado cómodo para modales */
     }
 }
 
