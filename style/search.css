@@ -40,7 +40,6 @@
     position: absolute;
     top: calc(100% + 10px);
     left: 0;
-    right: 0;
     width: 450px;
     max-height: 500px;
     overflow-y: auto;

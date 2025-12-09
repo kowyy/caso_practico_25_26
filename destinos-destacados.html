@@ -19,6 +19,7 @@
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
+                    <div id="search-results"></div>
                 </div>
 
                 <div class="separator"></div>
@@ -215,6 +216,29 @@
                     }
                 });
             });
+
+            const searchInput = document.getElementById('search-input');
+
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    const query = e.target.value.toLowerCase().trim();
+                    const cards = document.querySelectorAll('.destino-card');
+
+                    cards.forEach(card => {
+                        // Buscamos en el título y en la descripción de la tarjeta actual
+                        const title = card.querySelector('.destino-title')?.textContent.toLowerCase() || "";
+                        const desc = card.querySelector('.destino-desc')?.textContent.toLowerCase() || "";
+                        const country = card.querySelector('.location-tag')?.textContent.toLowerCase() || "";
+
+                        // Si coincide con la búsqueda O si el input está vacío -> Mostrar
+                        if (title.includes(query) || desc.includes(query) || country.includes(query) || query === "") {
+                            card.style.display = "flex"; // O "block", según tu CSS base, flex suele ir bien con cards
+                        } else {
+                            card.style.display = "none";
+                        }
+                    });
+                });
+            }
         });
     </script>
     <script src="script/app.js"></script>

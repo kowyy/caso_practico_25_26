@@ -4,10 +4,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     const searchContainer = document.querySelector(".search-container");
     const searchInput = document.getElementById("search-input");
     const searchResults = document.getElementById("search-results");
-    const destinosGrid = document.querySelector(".destinos-grid");
+    
+    let destinosGrid = document.querySelector(".destinos-grid");
+
+    if (destinosGrid && destinosGrid.id === "featured-grid") {
+        console.log("Detectada página de Destacados: El buscador no modificará el grid.");
+        destinosGrid = null; 
+    }
 
     let destinos = [];
-
+    
     // Función auxiliar para crear slugs (IDs)
     function createSlug(text) {
         return text.toString().toLowerCase()
