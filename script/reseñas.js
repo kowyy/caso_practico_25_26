@@ -1,5 +1,3 @@
-// Logica de las reseñas y puntuaciones
-
 document.addEventListener("DOMContentLoaded", () => {
 
     // Esperamos a que cargue el ID del destino
@@ -17,14 +15,18 @@ document.addEventListener("DOMContentLoaded", () => {
     function initReviews(id) {
         const reviewsContainer = document.getElementById("reviews");
         const form = document.getElementById("review-form");
-        const autoTextareas = document.querySelectorAll("textarea");
+        
+        const username = localStorage.getItem('site_username') || sessionStorage.getItem('site_username');
+        const userLabel = document.getElementById('reviewing-as');
+        const userDisplay = document.getElementById('reviewer-username');
 
-        // Elementos de la cabecera para actualizar la nota
-        const summaryStars = document.getElementById("summary-stars");
-        const summaryScore = document.getElementById("summary-score");
-        const summaryCount = document.getElementById("summary-count");
+        if (username && userLabel && userDisplay) {
+            userDisplay.textContent = username;
+            userLabel.style.display = 'block';
+        }
 
         // Ajustar altura del textarea al escribir
+        const autoTextareas = document.querySelectorAll("textarea");
         autoTextareas.forEach(area => {
             area.addEventListener("input", () => {
                 area.style.height = "auto";
@@ -38,9 +40,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if(emojiBtns && textArea) {
             emojiBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
-                    // Añadir el emoji al texto existente
                     textArea.value += btn.textContent;
-                    textArea.focus(); // Volver a poner el foco en la caja
+                    textArea.focus();
                 });
             });
         }
@@ -57,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ]
         };
 
-        // Generar reseñas falsas (Mocking) para ciudades nuevas
+        // Generar reseñas falsas para ciudades nuevas
         function generateMockReviews(cityId) {
             const names = ["Alex M.", "Sarah J.", "Carlos D.", "Yuki T.", "Emma W.", "Priya K.", "Lars U."];
             const templates = [
@@ -83,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return mockReviews;
         }
 
-        // Cargar reseñas guardadas (Persistencia)
+        // Cargar reseñas guardadas
         let reviews = JSON.parse(localStorage.getItem("reviews_" + id));
 
         if (!reviews) {
@@ -95,8 +96,12 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.setItem("reviews_" + id, JSON.stringify(reviews));
         }
 
-        // Función matemática para calcular la media real
+        // Actualizar resumen en cabecera
         function updateHeaderSummary() {
+            const summaryStars = document.getElementById("summary-stars");
+            const summaryScore = document.getElementById("summary-score");
+            const summaryCount = document.getElementById("summary-count");
+
             if (!summaryStars || reviews.length === 0) return;
 
             const totalScore = reviews.reduce((sum, r) => sum + r.rating, 0);
@@ -143,19 +148,19 @@ document.addEventListener("DOMContentLoaded", () => {
             form.addEventListener("submit", e => {
                 e.preventDefault();
 
-                const username = localStorage.getItem('site_username') || sessionStorage.getItem('site_username');
+                // Obtenemos el usuario activo en el momento del envío
+                const activeUser = localStorage.getItem('site_username') || sessionStorage.getItem('site_username');
                 
-                if (!username) {
+                if (!activeUser) {
                     alert('Debes iniciar sesión para escribir una reseña');
                     return;
                 }
 
-                const nameInput = document.getElementById("review-name");
                 const textInput = document.getElementById("review-text");
                 const ratingInput = document.getElementById("review-rating");
 
                 const newReview = { 
-                    name: nameInput.value, 
+                    name: activeUser,
                     text: textInput.value, 
                     rating: parseInt(ratingInput.value),
                     fecha: new Date().toLocaleDateString('es-ES'),
@@ -164,76 +169,56 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 reviews.push(newReview);
                 
-                // Guardamos en el navegador
+                // Guardar en el navegador (Local)
                 localStorage.setItem("reviews_" + id, JSON.stringify(reviews));
 
-                // Guardar en el historial del usuario
-                const userReviews = JSON.parse(localStorage.getItem(`user_reviews_${username}`) || '[]');
+                // Guardar en el historial personal del usuario
+                const userReviews = JSON.parse(localStorage.getItem(`user_reviews_${activeUser}`) || '[]');
                 userReviews.push({
                     ...newReview,
                     destinoNombre: document.getElementById("page-title").textContent,
                     destinoPais: document.getElementById("page-country").textContent
                 });
-                localStorage.setItem(`user_reviews_${username}`, JSON.stringify(userReviews));
+                localStorage.setItem(`user_reviews_${activeUser}`, JSON.stringify(userReviews));
 
                 renderReviews(); 
                 form.reset();
                 
+                // Mostrar alerta personalizada
                 mostrarAlerta("¡Gracias por tu reseña!");
             });
         }
     }
 
-    // Modal personalizado
     function mostrarAlerta(mensaje) {
         const overlay = document.createElement('div');
-        overlay.style.position = 'fixed';
-        overlay.style.top = '0';
-        overlay.style.left = '0';
-        overlay.style.width = '100%';
-        overlay.style.height = '100%';
-        overlay.style.backgroundColor = 'rgba(0,0,0,0.5)';
-        overlay.style.display = 'flex';
-        overlay.style.justifyContent = 'center';
-        overlay.style.alignItems = 'center';
-        overlay.style.zIndex = '10000';
+        Object.assign(overlay.style, {
+            position: 'fixed', top: '0', left: '0', width: '100%', height: '100%',
+            backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex',
+            justifyContent: 'center', alignItems: 'center', zIndex: '10000'
+        });
 
         const modal = document.createElement('div');
-        modal.style.backgroundColor = 'white';
-        modal.style.padding = '2rem';
-        modal.style.borderRadius = '12px';
-        modal.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
-        modal.style.textAlign = 'center';
-        modal.style.minWidth = '300px';
-        modal.style.maxWidth = '90%';
+        Object.assign(modal.style, {
+            backgroundColor: 'white', padding: '2rem', borderRadius: '12px',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.2)', textAlign: 'center',
+            minWidth: '300px', maxWidth: '90%'
+        });
 
-        const titulo = document.createElement('h3');
-        titulo.textContent = 'WEBSITE'; 
-        titulo.style.marginTop = '0';
-        titulo.style.marginBottom = '1rem';
-        titulo.style.color = '#333';
-
-        const texto = document.createElement('p');
-        texto.textContent = mensaje;
-        texto.style.fontSize = '1.1rem';
-        texto.style.marginBottom = '1.5rem';
+        modal.innerHTML = `
+            <h3 style="margin-top:0; margin-bottom:1rem; color:#333;">WEBSITE</h3>
+            <p style="font-size:1.1rem; margin-bottom:1.5rem;">${mensaje}</p>
+        `;
 
         const btn = document.createElement('button');
         btn.textContent = 'Aceptar';
-        btn.style.backgroundColor = '#000'; 
-        btn.style.color = '#fff';
-        btn.style.border = 'none';
-        btn.style.padding = '10px 24px';
-        btn.style.borderRadius = '4px';
-        btn.style.cursor = 'pointer';
-        btn.style.fontWeight = '600';
+        Object.assign(btn.style, {
+            backgroundColor: '#000', color: '#fff', border: 'none',
+            padding: '10px 24px', borderRadius: '4px', cursor: 'pointer', fontWeight: '600'
+        });
 
-        btn.onclick = () => {
-            document.body.removeChild(overlay);
-        };
+        btn.onclick = () => document.body.removeChild(overlay);
 
-        modal.appendChild(titulo);
-        modal.appendChild(texto);
         modal.appendChild(btn);
         overlay.appendChild(modal);
         document.body.appendChild(overlay);

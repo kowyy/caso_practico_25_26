@@ -60,7 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
             // Aquí procesamos el intento de inicio de sesión
             loginForm.addEventListener('submit', (e) => {
                 // Evitamos que el formulario recargue la página por defecto para manejarlo nosotros
-                // Nota: al ser method="dialog" a veces no es necesario pero es buena práctica en validación
                 const usernameInput = document.getElementById('username').value;
                 const passwordInput = document.getElementById('password').value;
                 const remember = document.getElementById('remember-me').checked;

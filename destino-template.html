@@ -89,9 +89,11 @@
                     <div id="reviews"></div>
 
                     <h3>Escribe tu reseña</h3>
+                    <p id="reviewing-as" style="font-size: 0.9rem; color: #666; margin-bottom: 10px; display: none;">
+                        Publicando como: <strong id="reviewer-username">Usuario</strong>
+                    </p>
+
                     <form id="review-form">
-                        <input type="text" id="review-name" placeholder="Tu nombre" required>
-                        
                         <textarea id="review-text" placeholder="Tu experiencia..." required></textarea>
                         
                         <div id="emoji-toolbar" style="margin-bottom: 10px; user-select: none;">
@@ -140,6 +142,7 @@
         </footer>
 
         <script src="script/carrusel.js"></script>
+        <script src="script/app.js"></script>
         <script src="script/reseñas.js"></script>
         <script src="script/idiomas.js"></script>
         <script src="script/detalle-destino.js"></script>

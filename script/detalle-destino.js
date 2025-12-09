@@ -63,7 +63,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const carruselTrack = document.getElementById("dynamic-carrusel");
             
-            // Usamos el nuevo array 'carousel_images' si existe, si no, fallback a la imagen principal en array
             const imagesToLoad = destinoData.carousel_images || [destinoData.image.url];
             
             let imgsHTML = '';
