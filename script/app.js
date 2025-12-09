@@ -117,6 +117,7 @@ async function loadHomeContent() {
     const carousel = document.getElementById('home-carousel');
     const destinosGrid = document.querySelector('.destinos-grid');
     
+    // Solo cargar si existe alguno de estos elementos
     if (!carousel && !destinosGrid) return;
 
     function createSlug(text) {
@@ -135,8 +136,11 @@ async function loadHomeContent() {
 
     try {
         const response = await fetch('ciudades-del-mundo.json');
-        const data = await response.json();
+        if (!response.ok) {
+            throw new Error('Error al cargar ciudades-del-mundo.json');
+        }
         
+        const data = await response.json();
         let allDestinos = [];
         
         data.continents.forEach(cont => {
@@ -171,6 +175,8 @@ async function loadHomeContent() {
         // Cargar carrusel (primeros 10)
         if (carousel) {
             const carouselDestinos = allDestinos.slice(0, 10);
+            carousel.innerHTML = ''; // Limpiar antes de cargar
+            
             carouselDestinos.forEach(d => {
                 const card = document.createElement('div');
                 card.className = 'carousel-destination-card';
@@ -239,5 +245,11 @@ async function loadHomeContent() {
         
     } catch (error) {
         console.error("Error cargando destinos:", error);
+        if (carousel) {
+            carousel.innerHTML = "<p style='padding: 2rem; text-align: center;'>Error al cargar destinos</p>";
+        }
+        if (destinosGrid) {
+            destinosGrid.innerHTML = "<p style='padding: 2rem; text-align: center;'>Error al cargar destinos</p>";
+        }
     }
 }

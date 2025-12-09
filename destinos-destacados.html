@@ -38,11 +38,10 @@
 
         <nav class="header-center">
             <ul>
-                <li><a href="destinos-destacados.html">Destinos destacados</a></li>
-                <li><a href="experiencias.html" class="active">Experiencias recomendadas</a></li>
+                <li><a href="destinos-destacados.html" class="active">Destinos destacados</a></li>
+                <li><a href="experiencias.html">Experiencias recomendadas</a></li>
             </ul>
         </nav>
-
 
         <div class="header-right">
             <a href="#" class="nav-link">FAQ</a>
@@ -84,7 +83,7 @@
             <div class="footer-col left">
                 <a href="#">FAQ</a>
                 <a href="#">Contacto</a>
-                <a href="#">Mi Perfil</a>
+                <a href="mi-perfil.html">Mi Perfil</a>
             </div>
             <div class="footer-col center">
                 <strong>WEBSITE</strong>
@@ -156,9 +155,8 @@
                     });
                 });
 
-                setTimeout(() => {
-                    renderDestinos(allDestinos);
-                }, 0);
+                // Renderizar inmediatamente
+                renderDestinos(allDestinos);
                 
             } catch (error) {
                 console.error("Error cargando destinos:", error);
@@ -167,6 +165,11 @@
 
             function renderDestinos(destinos) {
                 grid.innerHTML = "";
+                
+                if (destinos.length === 0) {
+                    grid.innerHTML = "<p style='text-align:center; padding:2rem;'>No se encontraron destinos.</p>";
+                    return;
+                }
                 
                 destinos.forEach(d => {
                     const starsStr = getStars(d.rating);

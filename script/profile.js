@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // Si no está logueado, lo mandamos fuera
     if (!username) {
-        window.location.href = "index.html";
+        window.location.href = "signup.html";
         return;
     }
 
