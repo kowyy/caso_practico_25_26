@@ -60,6 +60,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const signupForm = document.getElementById('signup-form');
     if (signupForm) {
+        const avatarInput = document.getElementById('reg-avatar');
+        const avatarPreview = document.getElementById('avatar-preview');
+        const avatarFeedback = document.getElementById('avatar-feedback');
+        
+        // Preview en tiempo real
+        if (avatarInput) {
+            avatarInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                
+                if (file) {
+                    // Validar tamaño (2MB = 2 * 1024 * 1024 bytes)
+                    if (file.size > 2 * 1024 * 1024) {
+                        avatarFeedback.textContent = 'La imagen es muy grande (máx 2MB)';
+                        avatarFeedback.classList.remove('success');
+                        avatarFeedback.style.color = '#dc3545';
+                        avatarPreview.classList.remove('has-image');
+                        avatarPreview.innerHTML = `
+                            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        `;
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        avatarPreview.innerHTML = `<img src="${event.target.result}" alt="Preview">`;
+                        avatarPreview.classList.add('has-image');
+                        avatarFeedback.textContent = '✓ Foto seleccionada correctamente';
+                        avatarFeedback.classList.add('success');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+        
         signupForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const username = document.getElementById('reg-username').value;
