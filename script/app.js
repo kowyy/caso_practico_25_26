@@ -133,7 +133,30 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = document.getElementById('reg-password').value;
             const confirmPassword = document.getElementById('reg-confirm').value;
             const fileInput = document.getElementById('reg-avatar');
-            
+
+            // Validación para un email real mediante una expresión regular
+            const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+
+            if (!emailRegex.test(email)) {
+                alert("Por favor introduce un correo electrónico válido.");
+                return;
+            }
+
+            // Validación de una contraseña segura mediante una expresión regular
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*\-_])[A-Za-z\d!@#\$%\^&\*\-_]{8,}$/;
+
+            if (!passwordRegex.test(password)) {
+                alert(
+                    "La contraseña debe incluir:\n" +
+                    "• Mínimo 8 caracteres\n" +
+                    "• Al menos 1 letra mayúscula\n" +
+                    "• Al menos 1 letra minúscula\n" +
+                    "• Al menos 1 número\n" +
+                    "• Al menos 1 símbolo (!@#$%^&*-_)\n"
+                );
+                return;
+            }
+
             // Validaciones básicas antes de procesar
             if (password !== confirmPassword) {
                 alert('Las contraseñas no coinciden');
