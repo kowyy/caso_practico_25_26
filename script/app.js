@@ -196,8 +196,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function loadHomeContent() {
     const carousel = document.getElementById('home-carousel');
-    const destinosGrid = document.querySelector('.destinos-grid');
+    let destinosGrid = document.querySelector('.destinos-grid'); 
+
+    if (destinosGrid && destinosGrid.id === 'featured-grid') {
+        destinosGrid = null;
+    }
     
+    // 3. El resto sigue igual...
     if (!carousel && !destinosGrid) return;
 
     function createSlug(text) {
