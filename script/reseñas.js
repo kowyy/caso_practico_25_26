@@ -206,7 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         modal.innerHTML = `
-            <h3 style="margin-top:0; margin-bottom:1rem; color:#333;">WEBSITE</h3>
+            <h3 style="margin-top:0; margin-bottom:1rem; color:#333;">TRAVELLING</h3>
             <p style="font-size:1.1rem; margin-bottom:1.5rem;">${mensaje}</p>
         `;
 
