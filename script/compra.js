@@ -37,49 +37,65 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     const urlParams = new URLSearchParams(window.location.search);
+    const purchaseType = urlParams.get("type");
     const destinoId = urlParams.get("destino");
 
-    // Helper slug
-    function createSlug(text) {
-        return text.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '').replace(/^-+/, '').replace(/-+$/, '');
-    }
+    let data = null;
 
-    let data = destinosDataStatic[destinoId];
+    // Lógica de experiencias vs destinos
+    if (purchaseType === 'experience') {
+        // Cargar datos pasados desde experiencias.html
+        const storedData = sessionStorage.getItem('purchase_data');
+        if (storedData) {
+            data = JSON.parse(storedData);
+        } else {
+            // Fallback si recargan y se pierde la sesión o entran directo
+            window.location.href = 'experiencias.html';
+            return;
+        }
+    } else {
+        // Helper slug
+        function createSlug(text) {
+            return text.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '').replace(/^-+/, '').replace(/-+$/, '');
+        }
 
-    // Si no está en estático, buscar en JSON
-    if (!data && destinoId) {
-        try {
-            const response = await fetch('ciudades-del-mundo.json');
-            const jsonData = await response.json();
-            
-            let foundCity = null;
-            for (const cont of jsonData.continents) {
-                for (const pais of cont.countries) {
-                    const found = pais.cities.find(c => createSlug(c.name) === destinoId);
-                    if (found) { foundCity = found; break; }
+        data = destinosDataStatic[destinoId];
+
+        // Si no está en estático, buscar en JSON
+        if (!data && destinoId) {
+            try {
+                const response = await fetch('ciudades-del-mundo.json');
+                const jsonData = await response.json();
+                
+                let foundCity = null;
+                for (const cont of jsonData.continents) {
+                    for (const pais of cont.countries) {
+                        const found = pais.cities.find(c => createSlug(c.name) === destinoId);
+                        if (found) { foundCity = found; break; }
+                    }
+                    if (foundCity) break;
                 }
-                if (foundCity) break;
-            }
 
-            if (foundCity) {
-                let hash = 0;
-                for (let i = 0; i < foundCity.name.length; i++) hash = foundCity.name.charCodeAt(i) + ((hash << 5) - hash);
-                const precioCalc = 500 + (Math.abs(hash) % 1500);
+                if (foundCity) {
+                    let hash = 0;
+                    for (let i = 0; i < foundCity.name.length; i++) hash = foundCity.name.charCodeAt(i) + ((hash << 5) - hash);
+                    const precioCalc = 500 + (Math.abs(hash) % 1500);
 
-                data = {
-                    nombre: foundCity.name,
-                    precio: precioCalc + "€",
-                    imagen: foundCity.image.url,
-                    incluye: [
-                        "Vuelo ida y vuelta",
-                        "Alojamiento céntrico",
-                        "Desayunos incluidos",
-                        "Seguro de viaje"
-                    ]
-                };
+                    data = {
+                        nombre: foundCity.name,
+                        precio: precioCalc + "€",
+                        imagen: foundCity.image.url,
+                        incluye: [
+                            "Vuelo ida y vuelta",
+                            "Alojamiento céntrico",
+                            "Desayunos incluidos",
+                            "Seguro de viaje"
+                        ]
+                    };
+                }
+            } catch (e) {
+                console.error("Error fetching dynamic data for purchase", e);
             }
-        } catch (e) {
-            console.error("Error fetching dynamic data for purchase", e);
         }
     }
 
@@ -98,7 +114,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         const listaIncluye = document.getElementById("destino-incluye");
-        if(listaIncluye) {
+        if(listaIncluye && data.incluye) {
             listaIncluye.innerHTML = "";
             data.incluye.forEach(item => {
                 const li = document.createElement("li");

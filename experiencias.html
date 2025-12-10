@@ -105,6 +105,7 @@
             // Base de datos de experiencias
             const experiencias = [
                 {
+                    id: 'safari-tanzania',
                     tipo: 'aventura',
                     titulo: 'Safari fotográfico en Tanzania',
                     descripcion: 'Observa la gran migración y captura los momentos más increíbles de la fauna africana.',
@@ -115,6 +116,7 @@
                     reviews: 234
                 },
                 {
+                    id: 'angkor-wat',
                     tipo: 'cultura',
                     titulo: 'Templos antiguos de Angkor Wat',
                     descripcion: 'Explora los majestuosos templos de Camboya al amanecer con guías expertos.',
@@ -125,6 +127,7 @@
                     reviews: 412
                 },
                 {
+                    id: 'tokio-food',
                     tipo: 'gastronomia',
                     titulo: 'Tour gastronómico por Tokio',
                     descripcion: 'Descubre la auténtica cocina japonesa en mercados locales y restaurantes tradicionales.',
@@ -135,6 +138,7 @@
                     reviews: 189
                 },
                 {
+                    id: 'machu-picchu',
                     tipo: 'aventura',
                     titulo: 'Trekking al Machu Picchu',
                     descripcion: 'Camina por el famoso Camino Inca hasta la ciudadela perdida de los Incas.',
@@ -145,6 +149,7 @@
                     reviews: 567
                 },
                 {
+                    id: 'bali-yoga',
                     tipo: 'relax',
                     titulo: 'Retiro de yoga en Bali',
                     descripcion: 'Encuentra tu paz interior en un resort rodeado de arrozales y templos sagrados.',
@@ -155,6 +160,7 @@
                     reviews: 298
                 },
                 {
+                    id: 'islandia-auroras',
                     tipo: 'naturaleza',
                     titulo: 'Auroras boreales en Islandia',
                     descripcion: 'Observa las increíbles auroras boreales y explora cascadas, glaciares y géiseres.',
@@ -165,6 +171,7 @@
                     reviews: 342
                 },
                 {
+                    id: 'egipto-piramides',
                     tipo: 'cultura',
                     titulo: 'Tour por las pirámides de Egipto',
                     descripcion: 'Visita las pirámides de Giza, el Sphinx y navega por el Nilo en crucero.',
@@ -175,6 +182,7 @@
                     reviews: 445
                 },
                 {
+                    id: 'buceo-australia',
                     tipo: 'aventura',
                     titulo: 'Buceo en la Gran Barrera de Coral',
                     descripcion: 'Sumérgete en el arrecife de coral más grande del mundo y descubre su biodiversidad.',
@@ -185,6 +193,7 @@
                     reviews: 276
                 },
                 {
+                    id: 'toscana-vinos',
                     tipo: 'gastronomia',
                     titulo: 'Cata de vinos en La Toscana',
                     descripcion: 'Recorre viñedos históricos y degusta los mejores vinos italianos.',
@@ -195,6 +204,7 @@
                     reviews: 312
                 },
                 {
+                    id: 'budapest-spa',
                     tipo: 'relax',
                     titulo: 'Spa y termas en Budapest',
                     descripcion: 'Relájate en las famosas termas históricas de la capital húngara.',
@@ -205,6 +215,7 @@
                     reviews: 198
                 },
                 {
+                    id: 'alpes-suizos',
                     tipo: 'naturaleza',
                     titulo: 'Senderismo en los Alpes suizos',
                     descripcion: 'Camina por los senderos más espectaculares de Europa con vistas impresionantes.',
@@ -215,6 +226,7 @@
                     reviews: 389
                 },
                 {
+                    id: 'flamenco-sevilla',
                     tipo: 'cultura',
                     titulo: 'Flamenco auténtico en Sevilla',
                     descripcion: 'Vive la pasión del flamenco en tablaos tradicionales y aprende sus secretos.',
@@ -264,10 +276,42 @@
                                     <span class="reviews">(${exp.reviews})</span>
                                 </div>
                             </div>
-                            <button class="ver-mas">Reservar ahora</button>
+                            <button class="ver-mas" id="btn-reserva-${exp.id}">Reservar ahora</button>
                         </div>
                     `;
                     grid.appendChild(card);
+
+                    // Lógica de Reserva
+                    const btnReserva = card.querySelector(`#btn-reserva-${exp.id}`);
+                    btnReserva.addEventListener('click', () => {
+                        const user = localStorage.getItem('site_username') || sessionStorage.getItem('site_username');
+                        
+                        if (!user) {
+                            // Si no hay sesión, mostrar modal de login
+                            const modal = document.getElementById('login-modal');
+                            if (modal) modal.showModal();
+                        } else {
+                            // Preparar datos para la página de compra
+                            const purchaseData = {
+                                nombre: exp.titulo,
+                                precio: exp.precio + "€",
+                                imagen: exp.imagen,
+                                incluye: [
+                                    "Guía especializado en la actividad",
+                                    "Entradas y accesos necesarios",
+                                    `Duración completa: ${exp.duracion}`,
+                                    "Seguro de actividad incluido",
+                                    "Cancelación gratuita hasta 48h antes"
+                                ]
+                            };
+                            
+                            // Guardar en Session Storage para recuperarlo en compra.html
+                            sessionStorage.setItem('purchase_data', JSON.stringify(purchaseData));
+                            
+                            // Redirigir a compra con tipo experiencia
+                            window.location.href = 'compra.html?type=experience';
+                        }
+                    });
                 });
 
                 if (window.updateDynamicTranslations) {
@@ -330,5 +374,4 @@
         </div>
     </dialog>
 </body>
-
 </html>
