@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (savedUser) {
                 document.getElementById('username').value = savedUser;
-                document.getElementById("remember-me").checked = true;
+                document.getElementById("remember-me").checked = true; // Icono de las credenciales marcado
             }
             if (savedPass) {
                 document.getElementById('password').value = savedPass;
