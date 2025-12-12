@@ -1,6 +1,6 @@
 // Lógica para rellenar la plantilla de destino dinámicamente
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
     
     // Obtener ID de la URL
     const params = new URLSearchParams(window.location.search);
@@ -31,8 +31,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     try {
-        const response = await fetch('ciudades-del-mundo.json');
-        const data = await response.json();
+        const data = CIUDADES_DATA;
         
         let destinoData = null;
 

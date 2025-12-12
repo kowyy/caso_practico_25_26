@@ -1,6 +1,6 @@
 // Sistema de búsqueda de destinos
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
     const searchContainer = document.querySelector(".search-container");
     const searchInput = document.getElementById("search-input");
     const searchResults = document.getElementById("search-results");
@@ -31,8 +31,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Carga dinámica de datos
     try {
-        const response = await fetch('ciudades-del-mundo.json');
-        const data = await response.json();
+        const data = CIUDADES_DATA;
         
         data.continents.forEach(cont => {
             cont.countries.forEach(pais => {

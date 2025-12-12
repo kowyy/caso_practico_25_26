@@ -118,8 +118,7 @@
             let allDestinos = [];
 
             try {
-                const response = await fetch('ciudades-del-mundo.json');
-                const data = await response.json();
+                const data = CIUDADES_DATA;
                 
                 data.continents.forEach(cont => {
                     cont.countries.forEach(pais => {
@@ -230,6 +229,7 @@
             }
         });
     </script>
+    <script src="script/ciudades-del-mundo.js"></script>
     <script src="script/app.js"></script>
     <script src="script/idiomas.js"></script>
     <script src="script/buscador.js"></script>

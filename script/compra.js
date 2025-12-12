@@ -61,11 +61,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         data = destinosDataStatic[destinoId];
 
-        // Si no está en estático, buscar en JSON
+        // Si no está en estático, buscar en JS Global
         if (!data && destinoId) {
             try {
-                const response = await fetch('ciudades-del-mundo.json');
-                const jsonData = await response.json();
+                const jsonData = CIUDADES_DATA;
                 
                 let foundCity = null;
                 for (const cont of jsonData.continents) {

@@ -231,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadHomeContent();
 });
 
-async function loadHomeContent() {
+function loadHomeContent() {
     const carousel = document.getElementById('home-carousel');
     let destinosGrid = document.querySelector('.destinos-grid'); 
 
@@ -239,7 +239,6 @@ async function loadHomeContent() {
         destinosGrid = null;
     }
     
-    // 3. El resto sigue igual...
     if (!carousel && !destinosGrid) return;
 
     function createSlug(text) {
@@ -252,10 +251,7 @@ async function loadHomeContent() {
     }
 
     try {
-        const response = await fetch('ciudades-del-mundo.json');
-        if (!response.ok) throw new Error('Error al cargar ciudades-del-mundo.json');
-        
-        const data = await response.json();
+        const data = CIUDADES_DATA;
         let allDestinos = [];
         
         data.continents.forEach(cont => {
