@@ -50,6 +50,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const closeModal = document.getElementById('close-modal');
             const loginForm = document.getElementById('login-form');
 
+            // Autorellenar si hay credenciales recordadas
+            const savedUser = localStorage.getItem("remember_username");
+            const savedPass = localStorage.getItem("remember_password");
+
+            if (savedUser) {
+                document.getElementById('username').value = savedUser;
+                document.getElementById("remember-me").checked = true;
+            }
+            if (savedPass) {
+                document.getElementById('password').value = savedPass;
+            }
+
             // Abrimos el modal nativo del navegador
             loginBtn.addEventListener('click', () => modal.showModal());
             
@@ -74,6 +86,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Si las credenciales son correctas guardamos la sesión
                     if (remember) {
                         localStorage.setItem('site_username', validUser.username);
+                        localStorage.setItem("remember_username", usernameInput);
+                        localStorage.setItem("remember_password", passwordInput);
                     } else {
                         sessionStorage.setItem('site_username', validUser.username);
                     }
