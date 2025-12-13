@@ -161,33 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
             contact_info_hours_weekday: "Lunes a Viernes: 9:00 - 18:00",
             contact_info_hours_saturday: "Sábados: 10:00 - 14:00",
             contact_info_hours_sunday: "Domingos: Cerrado",
-            contact_info_social_title: "Síguenos",
-
-            // Experiencias (Contenido)
-            exp_safari_title: "Safari fotográfico en Tanzania",
-            exp_safari_desc: "Observa la gran migración y captura los momentos más increíbles de la fauna africana.",
-            exp_angkor_title: "Templos antiguos de Angkor Wat",
-            exp_angkor_desc: "Explora los majestuosos templos de Camboya al amanecer con guías expertos.",
-            exp_tokio_title: "Tour gastronómico por Tokio",
-            exp_tokio_desc: "Descubre la auténtica cocina japonesa en mercados locales y restaurantes tradicionales.",
-            exp_machu_title: "Trekking al Machu Picchu",
-            exp_machu_desc: "Camina por el famoso Camino Inca hasta la ciudadela perdida de los Incas.",
-            exp_bali_title: "Retiro de yoga en Bali",
-            exp_bali_desc: "Encuentra tu paz interior en un resort rodeado de arrozales y templos sagrados.",
-            exp_islandia_title: "Auroras boreales en Islandia",
-            exp_islandia_desc: "Observa las increíbles auroras boreales y explora cascadas, glaciares y géiseres.",
-            exp_egipto_title: "Tour por las pirámides de Egipto",
-            exp_egipto_desc: "Visita las pirámides de Giza, el Sphinx y navega por el Nilo en crucero.",
-            exp_coral_title: "Buceo en la Gran Barrera de Coral",
-            exp_coral_desc: "Sumérgete en el arrecife de coral más grande del mundo y descubre su biodiversidad.",
-            exp_toscana_title: "Cata de vinos en La Toscana",
-            exp_toscana_desc: "Recorre viñedos históricos y degusta los mejores vinos italianos.",
-            exp_budapest_title: "Spa y termas en Budapest",
-            exp_budapest_desc: "Relájate en las famosas termas históricas de la capital húngara.",
-            exp_alpes_title: "Senderismo en los Alpes suizos",
-            exp_alpes_desc: "Camina por los senderos más espectaculares de Europa con vistas impresionantes.",
-            exp_sevilla_title: "Flamenco auténtico en Sevilla",
-            exp_sevilla_desc: "Vive la pasión del flamenco en tablaos tradicionales y aprende sus secretos."
+            contact_info_social_title: "Síguenos"
         },
 
         en: {
@@ -330,33 +304,7 @@ document.addEventListener("DOMContentLoaded", () => {
             contact_info_hours_weekday: "Monday to Friday: 9:00 AM - 6:00 PM",
             contact_info_hours_saturday: "Saturdays: 10:00 AM - 2:00 PM",
             contact_info_hours_sunday: "Sundays: Closed",
-            contact_info_social_title: "Follow us",
-
-            // Experiencias (Contenido)
-            exp_safari_title: "Photographic Safari in Tanzania",
-            exp_safari_desc: "Observe the great migration and capture the most incredible moments of the African fauna.",
-            exp_angkor_title: "Ancient Temples of Angkor Wat",
-            exp_angkor_desc: "Explore the majestic temples of Cambodia at sunrise with expert guides.",
-            exp_tokio_title: "Gastronomic Tour in Tokyo",
-            exp_tokio_desc: "Discover authentic Japanese cuisine in local markets and traditional restaurants.",
-            exp_machu_title: "Trekking to Machu Picchu",
-            exp_machu_desc: "Walk the famous Inca Trail to the lost citadel of the Incas.",
-            exp_bali_title: "Yoga Retreat in Bali",
-            exp_bali_desc: "Find your inner peace in a resort surrounded by rice fields and sacred temples.",
-            exp_islandia_title: "Northern Lights in Iceland",
-            exp_islandia_desc: "Observe the incredible northern lights and explore waterfalls, glaciers, and geysers.",
-            exp_egipto_title: "Pyramids of Egypt Tour",
-            exp_egipto_desc: "Visit the Giza pyramids, the Sphinx and sail the Nile on a cruise.",
-            exp_coral_title: "Diving in the Great Barrier Reef",
-            exp_coral_desc: "Dive into the world's largest coral reef and discover its biodiversity.",
-            exp_toscana_title: "Wine Tasting in Tuscany",
-            exp_toscana_desc: "Tour historic vineyards and taste the best Italian wines.",
-            exp_budapest_title: "Spa and Thermal Baths in Budapest",
-            exp_budapest_desc: "Relax in the famous historic thermal baths of the Hungarian capital.",
-            exp_alpes_title: "Hiking in the Swiss Alps",
-            exp_alpes_desc: "Walk through the most spectacular trails in Europe with impressive views.",
-            exp_sevilla_title: "Authentic Flamenco in Seville",
-            exp_sevilla_desc: "Experience the passion of flamenco in traditional tablaos and learn its secrets."
+            contact_info_social_title: "Follow us"
         }
     };
 
