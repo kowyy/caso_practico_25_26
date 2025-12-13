@@ -105,7 +105,7 @@
             // Base de datos de experiencias
             const experiencias = [
                 {
-                    id: 'safari-tanzania',
+                    id: 'safari',
                     tipo: 'aventura',
                     titulo: 'Safari fotográfico en Tanzania',
                     descripcion: 'Observa la gran migración y captura los momentos más increíbles de la fauna africana.',
@@ -116,7 +116,7 @@
                     reviews: 234
                 },
                 {
-                    id: 'angkor-wat',
+                    id: 'angkor',
                     tipo: 'cultura',
                     titulo: 'Templos antiguos de Angkor Wat',
                     descripcion: 'Explora los majestuosos templos de Camboya al amanecer con guías expertos.',
@@ -127,7 +127,7 @@
                     reviews: 412
                 },
                 {
-                    id: 'tokio-food',
+                    id: 'tokio',
                     tipo: 'gastronomia',
                     titulo: 'Tour gastronómico por Tokio',
                     descripcion: 'Descubre la auténtica cocina japonesa en mercados locales y restaurantes tradicionales.',
@@ -138,7 +138,7 @@
                     reviews: 189
                 },
                 {
-                    id: 'machu-picchu',
+                    id: 'machu',
                     tipo: 'aventura',
                     titulo: 'Trekking al Machu Picchu',
                     descripcion: 'Camina por el famoso Camino Inca hasta la ciudadela perdida de los Incas.',
@@ -149,7 +149,7 @@
                     reviews: 567
                 },
                 {
-                    id: 'bali-yoga',
+                    id: 'bali',
                     tipo: 'relax',
                     titulo: 'Retiro de yoga en Bali',
                     descripcion: 'Encuentra tu paz interior en un resort rodeado de arrozales y templos sagrados.',
@@ -160,7 +160,7 @@
                     reviews: 298
                 },
                 {
-                    id: 'islandia-auroras',
+                    id: 'islandia',
                     tipo: 'naturaleza',
                     titulo: 'Auroras boreales en Islandia',
                     descripcion: 'Observa las increíbles auroras boreales y explora cascadas, glaciares y géiseres.',
@@ -171,7 +171,7 @@
                     reviews: 342
                 },
                 {
-                    id: 'egipto-piramides',
+                    id: 'egipto',
                     tipo: 'cultura',
                     titulo: 'Tour por las pirámides de Egipto',
                     descripcion: 'Visita las pirámides de Giza, el Sphinx y navega por el Nilo en crucero.',
@@ -182,7 +182,7 @@
                     reviews: 445
                 },
                 {
-                    id: 'buceo-australia',
+                    id: 'coral',
                     tipo: 'aventura',
                     titulo: 'Buceo en la Gran Barrera de Coral',
                     descripcion: 'Sumérgete en el arrecife de coral más grande del mundo y descubre su biodiversidad.',
@@ -193,7 +193,7 @@
                     reviews: 276
                 },
                 {
-                    id: 'toscana-vinos',
+                    id: 'toscana',
                     tipo: 'gastronomia',
                     titulo: 'Cata de vinos en La Toscana',
                     descripcion: 'Recorre viñedos históricos y degusta los mejores vinos italianos.',
@@ -204,7 +204,7 @@
                     reviews: 312
                 },
                 {
-                    id: 'budapest-spa',
+                    id: 'budapest',
                     tipo: 'relax',
                     titulo: 'Spa y termas en Budapest',
                     descripcion: 'Relájate en las famosas termas históricas de la capital húngara.',
@@ -215,7 +215,7 @@
                     reviews: 198
                 },
                 {
-                    id: 'alpes-suizos',
+                    id: 'alpes',
                     tipo: 'naturaleza',
                     titulo: 'Senderismo en los Alpes suizos',
                     descripcion: 'Camina por los senderos más espectaculares de Europa con vistas impresionantes.',
@@ -226,7 +226,7 @@
                     reviews: 389
                 },
                 {
-                    id: 'flamenco-sevilla',
+                    id: 'sevilla',
                     tipo: 'cultura',
                     titulo: 'Flamenco auténtico en Sevilla',
                     descripcion: 'Vive la pasión del flamenco en tablaos tradicionales y aprende sus secretos.',
@@ -260,8 +260,8 @@
                             <div class="price-badge">${exp.precio}€</div>
                         </div>
                         <div class="exp-body">
-                            <h3>${exp.titulo}</h3>
-                            <p>${exp.descripcion}</p>
+                            <h3 data-i18n="exp_${exp.id}_title">${exp.titulo}</h3>
+                            <p data-i18n="exp_${exp.id}_desc">${exp.descripcion}</p>
                             <div class="exp-meta">
                                 <div class="duration">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
