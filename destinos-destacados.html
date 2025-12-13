@@ -14,7 +14,7 @@
             
             <div class="utilities-wrapper">
                 <div class="search-container">
-                    <input type="text" id="search-input" placeholder="Buscar destinos..." data-i18n="search_placeholder" autocomplete="off">
+                    <input type="text" id="search-input" aria-label="Buscar destinos" placeholder="Buscar destinos..." data-i18n="search_placeholder" autocomplete="off">
                     <svg class="icon-search" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -58,7 +58,7 @@
             <p data-i18n="dest_hero_sub">Descubre los lugares más increíbles del mundo seleccionados especialmente para ti</p>
         </section>
 
-        <section class="filters-section">
+        <div class="filters-section">
             <div class="filters-container">
                 <button class="filter-btn" data-continent="Europa">Europa</button>
                 <button class="filter-btn" data-continent="Asia">Asia</button>
@@ -67,12 +67,12 @@
                 <button class="filter-btn" data-continent="África">África</button>
                 <button class="filter-btn" data-continent="Oceanía">Oceanía</button>
             </div>
-        </section>
+        </div>
 
-        <section class="featured-destinos">
+        <div class="featured-destinos">
             <div class="destinos-grid" id="featured-grid">
                 </div>
-        </section>
+        </div>
     </main>
 
     <footer class="site-footer">
@@ -112,7 +112,10 @@
 
             function getStars(value) {
                 const rating = Math.round(value);
-                return "★".repeat(rating) + "☆".repeat(5 - rating);
+                const filled = '<span class="star-filled">★</span>'.repeat(rating);
+                const empty = '<span class="star-empty">☆</span>'.repeat(5 - rating);
+                
+                return filled + empty;
             }
 
             let allDestinos = [];
