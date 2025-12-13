@@ -1,8 +1,13 @@
-// Lógica para rellenar la plantilla de destino dinámicamente
+// Utilidades para cookies
+const CookieAuth = {
+    get(name) {
+        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        return match ? decodeURIComponent(match[2]) : null;
+    }
+};
 
 document.addEventListener("DOMContentLoaded", () => {
     
-    // Obtener ID de la URL
     const params = new URLSearchParams(window.location.search);
     const destinoId = params.get('id');
 
@@ -11,7 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    // Slug helper
     function createSlug(text) {
         return text.toString().toLowerCase()
             .replace(/\s+/g, '-')
@@ -21,7 +25,6 @@ document.addEventListener("DOMContentLoaded", () => {
             .replace(/-+$/, '');
     }
 
-    // Helper para asegurar alta resolución si la URL es de Unsplash
     function ensureHighRes(url) {
         if (!url) return "";
         if (url.includes("images.unsplash.com")) {
@@ -35,7 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
         
         let destinoData = null;
 
-        // Buscar el destino en el JSON aplanando al vuelo
         for (const cont of data.continents) {
             for (const pais of cont.countries) {
                 const found = pais.cities.find(c => createSlug(c.name) === destinoId);
@@ -52,7 +54,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (destinoData) {
-            // Inyectar datos en el DOM
             document.title = `${destinoData.name} - Viajes y Experiencias`;
             document.body.setAttribute("data-destino", destinoId);
             
@@ -70,7 +71,6 @@ document.addEventListener("DOMContentLoaded", () => {
                  imgsHTML += `<img src="${highResUrl}" alt="${destinoData.name} imagen ${index + 1}">`;
             });
 
-            // Inyectamos el HTML de las imágenes
             carruselTrack.innerHTML = imgsHTML;
 
             if (window.initCarrusel) {
@@ -83,7 +83,6 @@ document.addEventListener("DOMContentLoaded", () => {
             
             document.getElementById("page-price").textContent = precioBase + "€";
 
-            // Inclusiones genéricas
             const includes = [
                 "Vuelo ida y vuelta",
                 `Alojamiento en hotel céntrico (${Math.floor(Math.random() * 3) + 3} noches)`,
@@ -94,21 +93,16 @@ document.addEventListener("DOMContentLoaded", () => {
             const ulIncludes = document.getElementById("page-includes");
             ulIncludes.innerHTML = includes.map(i => `<li>${i}</li>`).join("");
 
-            // Configurar botón de reserva
             document.getElementById("btn-reservar").onclick = () => {
-                // Verificar si el usuario está logueado
-                const username = localStorage.getItem('site_username') || sessionStorage.getItem('site_username');
+                const username = CookieAuth.get('site_username');
                 
                 if (!username) {
-                    // No está logueado - mostrar modal
                     mostrarModalLogin();
                 } else {
-                    // Está logueado - ir a compra
                     location.href = `compra.html?destino=${destinoId}`;
                 }
             };
 
-            // Modal de login cuando no estás autenticado
             function mostrarModalLogin() {
                 const overlay = document.createElement('div');
                 overlay.style.position = 'fixed';

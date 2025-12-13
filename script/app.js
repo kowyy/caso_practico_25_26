@@ -1,21 +1,44 @@
+// Utilidades para manejar cookies
+const CookieAuth = {
+    set(name, value, days = 30) {
+        const expires = new Date();
+        expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+        document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires.toUTCString()};path=/`;
+    },
+    
+    get(name) {
+        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        return match ? decodeURIComponent(match[2]) : null;
+    },
+    
+    delete(name) {
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
+    },
+    
+    getUsers() {
+        const data = this.get('database_users');
+        return data ? JSON.parse(data) : [];
+    },
+    
+    saveUsers(users) {
+        this.set('database_users', JSON.stringify(users));
+    }
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     
-    // Controlamos qué mostrar en el header si el usuario tiene sesión activa o no
     const headerRight = document.querySelector('.header-right');
-    const activeSessionUser = localStorage.getItem('site_username') || sessionStorage.getItem('site_username');
+    const activeSessionUser = CookieAuth.get('site_username');
     
-    // Recuperamos los datos de este usuario específico desde nuestra base de datos simulada
-    const usersDB = JSON.parse(localStorage.getItem('database_users') || '[]');
+    const usersDB = CookieAuth.getUsers();
     const currentUserData = usersDB.find(u => u.username === activeSessionUser);
 
     if (activeSessionUser && headerRight) {
         
-        // Si el usuario tiene avatar guardado usamos ese y si no generamos uno por defecto
         const avatarSrc = (currentUserData && currentUserData.avatar) 
             ? currentUserData.avatar 
             : `https://ui-avatars.com/api/?name=${activeSessionUser}&background=0D8ABC&color=fff`;
 
-        // Inyectamos el HTML del usuario logueado en la cabecera
         headerRight.innerHTML = `
             <a href="#" class="nav-link" data-i18n="faq">FAQ</a>
             <a href="#" class="nav-link" data-i18n="help">Ayuda</a>
@@ -29,96 +52,79 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
 
-        // Asignamos el evento para destruir la sesión local y de sesión
         document.getElementById('btn-logout-header').addEventListener('click', () => {
-            localStorage.removeItem('site_username');
-            sessionStorage.removeItem('site_username');
+            CookieAuth.delete('site_username');
             window.location.reload(); 
         });
     } else {
-        // Si no hay usuario activo inicializamos la lógica del modal de login
         initLoginModal();
     }
 
-    // Función que gestiona la apertura y el envío del formulario de login
     function initLoginModal() {
         const loginBtn = document.getElementById('btn-login');
         const modal = document.getElementById('login-modal');
         
-        // Verificamos que los elementos existan en el DOM antes de asignar eventos
         if (loginBtn && modal) {
             const closeModal = document.getElementById('close-modal');
             const loginForm = document.getElementById('login-form');
 
-            // Autorellenar si hay credenciales recordadas
-            const savedUser = localStorage.getItem("remember_username");
-            const savedPass = localStorage.getItem("remember_password");
+            const savedUser = CookieAuth.get("remember_username");
+            const savedPass = CookieAuth.get("remember_password");
 
             if (savedUser) {
                 document.getElementById('username').value = savedUser;
-                document.getElementById("remember-me").checked = true; // Icono de las credenciales marcado
+                document.getElementById("remember-me").checked = true;
             }
             if (savedPass) {
                 document.getElementById('password').value = savedPass;
             }
 
-            // Abrimos el modal nativo del navegador
             loginBtn.addEventListener('click', () => modal.showModal());
             
             if (closeModal) {
                 closeModal.addEventListener('click', () => modal.close());
             }
 
-            // Aquí procesamos el intento de inicio de sesión
             loginForm.addEventListener('submit', (e) => {
-                // Evitamos que el formulario recargue la página por defecto para manejarlo nosotros
                 const usernameInput = document.getElementById('username').value;
                 const passwordInput = document.getElementById('password').value;
                 const remember = document.getElementById('remember-me').checked;
 
-                // Leemos nuestra base de datos de usuarios registrados del almacenamiento local
-                const currentUsers = JSON.parse(localStorage.getItem('database_users') || '[]');
+                const currentUsers = CookieAuth.getUsers();
 
-                // Buscamos si existe un usuario que coincida exactamente en nombre y contraseña
                 const validUser = currentUsers.find(user => user.username === usernameInput && user.password === passwordInput);
 
                 if (validUser) {
-                    // Si las credenciales son correctas guardamos la sesión
                     if (remember) {
-                        localStorage.setItem('site_username', validUser.username);
-                        localStorage.setItem("remember_username", usernameInput);
-                        localStorage.setItem("remember_password", passwordInput);
+                        CookieAuth.set('site_username', validUser.username, 365);
+                        CookieAuth.set("remember_username", usernameInput, 365);
+                        CookieAuth.set("remember_password", passwordInput, 365);
                     } else {
-                        sessionStorage.setItem('site_username', validUser.username);
+                        CookieAuth.set('site_username', validUser.username, 1);
                     }
                     window.location.reload();
                 } else {
-                    // Si no encontramos al usuario detenemos el evento y mostramos error
                     e.preventDefault();
                     alert('Usuario o contraseña incorrectos. Por favor regístrate si no tienes cuenta.');
-                    modal.close(); // Cerramos el modal para que pueda intentarlo de nuevo o ir a registro
+                    modal.close();
                 }
             });
         }
     }
 
-    // Intentamos inicializar el modal por si acaso estamos en una página que lo carga dinámicamente
     initLoginModal();
 
-    // Lógica para el formulario de registro en signup.html
     const signupForm = document.getElementById('signup-form');
     if (signupForm) {
         const avatarInput = document.getElementById('reg-avatar');
         const avatarPreview = document.getElementById('avatar-preview');
         const avatarFeedback = document.getElementById('avatar-feedback');
         
-        // Vista previa de la imagen cuando el usuario selecciona un archivo
         if (avatarInput) {
             avatarInput.addEventListener('change', (e) => {
                 const file = e.target.files[0];
                 
                 if (file) {
-                    // Validamos que el archivo no sea excesivamente pesado para localStorage
                     if (file.size > 2 * 1024 * 1024) {
                         avatarFeedback.textContent = 'La imagen es muy grande (máx 2MB)';
                         avatarFeedback.classList.remove('success');
@@ -139,7 +145,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
         
-        // Manejamos el envío del formulario de registro
         signupForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const username = document.getElementById('reg-username').value;
@@ -148,7 +153,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const confirmPassword = document.getElementById('reg-confirm').value;
             const fileInput = document.getElementById('reg-avatar');
 
-            // Validación para un email real mediante una expresión regular
             const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
             if (!emailRegex.test(email)) {
@@ -156,7 +160,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Validación de una contraseña segura mediante una expresión regular
             const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*\-_])[A-Za-z\d!@#\$%\^&\*\-_]{8,}$/;
 
             if (!passwordRegex.test(password)) {
@@ -171,46 +174,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Validaciones básicas antes de procesar
             if (password !== confirmPassword) {
                 alert('Las contraseñas no coinciden');
                 return;
             }
 
-            // Recuperamos los usuarios existentes para evitar duplicados
-            const currentUsers = JSON.parse(localStorage.getItem('database_users') || '[]');
+            const currentUsers = CookieAuth.getUsers();
             
-            // Comprobamos si el nombre de usuario ya está cogido
             const userExists = currentUsers.some(u => u.username === username);
             if (userExists) {
                 alert('El nombre de usuario ya existe. Por favor elige otro.');
                 return;
             }
 
-            // Función auxiliar para guardar el usuario y redirigir
             const saveAndRedirect = (avatarData) => {
                 const newUser = {
                     username: username,
                     email: email,
-                    password: password, // En un entorno real esto debería ir hasheado
+                    password: password,
                     avatar: avatarData || null,
                     createdAt: new Date().toISOString()
                 };
 
-                // Añadimos el nuevo usuario al array y guardamos en localStorage
                 currentUsers.push(newUser);
-                localStorage.setItem('database_users', JSON.stringify(currentUsers));
-                localStorage.setItem('site_username', username);
-                localStorage.setItem('site_user_avatar', avatarData);
+                CookieAuth.saveUsers(currentUsers);
+                CookieAuth.set('site_username', username);
                 if (avatarData) {
-                    localStorage.setItem('site_user_avatar', avatarData);
+                    CookieAuth.set('site_user_avatar', avatarData);
                 }
 
                 alert('¡Registro completado! Bienvenido.');
                 window.location.href = 'index.html';
             };
 
-            // Procesamos la imagen si existe antes de guardar
             if (fileInput.files && fileInput.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(evt) {

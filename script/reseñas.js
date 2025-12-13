@@ -1,6 +1,19 @@
+// Utilidades para cookies
+const CookieAuth = {
+    set(name, value, days = 30) {
+        const expires = new Date();
+        expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+        document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires.toUTCString()};path=/`;
+    },
+    
+    get(name) {
+        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        return match ? decodeURIComponent(match[2]) : null;
+    }
+};
+
 document.addEventListener("DOMContentLoaded", () => {
 
-    // Esperamos a que cargue el ID del destino
     const waitForDestinoID = () => {
         const pageID = document.body.getAttribute("data-destino");
         if (pageID) {
@@ -16,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const reviewsContainer = document.getElementById("reviews");
         const form = document.getElementById("review-form");
         
-        const username = localStorage.getItem('site_username') || sessionStorage.getItem('site_username');
+        const username = CookieAuth.get('site_username');
         const userLabel = document.getElementById('reviewing-as');
         const userDisplay = document.getElementById('reviewer-username');
 
@@ -25,7 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
             userLabel.style.display = 'block';
         }
 
-        // Ajustar altura del textarea al escribir
         const autoTextareas = document.querySelectorAll("textarea");
         autoTextareas.forEach(area => {
             area.addEventListener("input", () => {
@@ -46,7 +58,6 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
-        // Reseñas de ejemplo fijas
         const legacyReviews = {
             "petra": [
                 { name: "Laura G.", text: "Una experiencia increíble. El amanecer en el Tesoro es inolvidable. 📸", rating: 5 },
@@ -58,7 +69,6 @@ document.addEventListener("DOMContentLoaded", () => {
             ]
         };
 
-        // Generar reseñas falsas para ciudades nuevas
         function generateMockReviews(cityId) {
             const names = ["Alex M.", "Sarah J.", "Carlos D.", "Yuki T.", "Emma W.", "Priya K.", "Lars U."];
             const templates = [
@@ -84,8 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return mockReviews;
         }
 
-        // Cargar reseñas guardadas
-        let reviews = JSON.parse(localStorage.getItem("reviews_" + id));
+        let reviews = JSON.parse(CookieAuth.get("reviews_" + id));
 
         if (!reviews) {
             if (legacyReviews[id]) {
@@ -93,10 +102,9 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 reviews = generateMockReviews(id);
             }
-            localStorage.setItem("reviews_" + id, JSON.stringify(reviews));
+            CookieAuth.set("reviews_" + id, JSON.stringify(reviews));
         }
 
-        // Actualizar resumen en cabecera
         function updateHeaderSummary() {
             const summaryStars = document.getElementById("summary-stars");
             const summaryScore = document.getElementById("summary-score");
@@ -143,13 +151,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         renderReviews();
 
-        // Enviar nueva reseña
         if (form) {
             form.addEventListener("submit", e => {
                 e.preventDefault();
 
-                // Obtenemos el usuario activo en el momento del envío
-                const activeUser = localStorage.getItem('site_username') || sessionStorage.getItem('site_username');
+                const activeUser = CookieAuth.get('site_username');
                 
                 if (!activeUser) {
                     alert('Debes iniciar sesión para escribir una reseña');
@@ -169,22 +175,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 reviews.push(newReview);
                 
-                // Guardar en el navegador (Local)
-                localStorage.setItem("reviews_" + id, JSON.stringify(reviews));
+                CookieAuth.set("reviews_" + id, JSON.stringify(reviews));
 
-                // Guardar en el historial personal del usuario
-                const userReviews = JSON.parse(localStorage.getItem(`user_reviews_${activeUser}`) || '[]');
+                const userReviews = JSON.parse(CookieAuth.get(`user_reviews_${activeUser}`) || '[]');
                 userReviews.push({
                     ...newReview,
                     destinoNombre: document.getElementById("page-title").textContent,
                     destinoPais: document.getElementById("page-country").textContent
                 });
-                localStorage.setItem(`user_reviews_${activeUser}`, JSON.stringify(userReviews));
+                CookieAuth.set(`user_reviews_${activeUser}`, JSON.stringify(userReviews));
 
                 renderReviews(); 
                 form.reset();
                 
-                // Mostrar alerta personalizada
                 mostrarAlerta("¡Gracias por tu reseña!");
             });
         }
