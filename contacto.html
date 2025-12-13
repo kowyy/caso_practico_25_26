@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto - Viajes y Experiencias</title>
+    <link rel="stylesheet" href="style/main.css">
+    <style>
+        .contact-page {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .contact-hero {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .contact-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+        }
+
+        .contact-hero p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .contact-form-section {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #e5e5e5;
+        }
+
+        .contact-form-section h2 {
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .contact-info-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .contact-card {
+            background: white;
+            padding: 1.75rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #e5e5e5;
+            display: flex;
+            gap: 1.25rem;
+            align-items: flex-start;
+            transition: box-shadow 0.2s;
+        }
+
+        .contact-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .contact-icon {
+            width: 45px;
+            height: 45px;
+            background: var(--btn-black);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .contact-card-content h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .contact-card-content p {
+            margin: 0;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .contact-card-content a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+
+        .contact-card-content a:hover {
+            opacity: 0.7;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .success-message {
+            display: none;
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            border: 1px solid #c3e6cb;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .contact-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="header-left">
+            <a href="index.html" class="logo-text">TRAVELLING</a>
+            
+            <div class="utilities-wrapper">
+                <div class="separator"></div>
+                <div class="lang-wrapper">
+                    <span id="lang-selected">ES</span>
+                    <svg id="lang-toggle" class="icon-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 6 15 12 9 18"></polyline>
+                    </svg>
+                    <ul id="lang-menu" class="lang-dropdown">
+                        <li data-lang="es">ES</li>
+                        <li data-lang="en">EN</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <nav class="header-center">
+            <ul>
+                <li><a href="destinos-destacados.html" data-i18n="menu_destinos">Destinos destacados</a></li>
+                <li><a href="experiencias.html" data-i18n="menu_experiencias">Experiencias recomendadas</a></li>
+            </ul>
+        </nav>
+
+        <div class="header-right">
+            <a href="faq.html" class="nav-link" data-i18n="faq">FAQ</a>
+            <a href="contacto.html" class="nav-link" data-i18n="contact">Contacto</a>
+            <button id="btn-login" class="btn-text" data-i18n="login">Inicia sesión</button>
+            <a href="signup.html" class="btn-primary" data-i18n="signup">Regístrate</a>
+        </div>
+    </header>
+
+    <main class="contact-page">
+        <div class="contact-hero">
+            <h1 data-i18n="contact_title">Contáctanos</h1>
+            <p data-i18n="contact_subtitle">Estamos aquí para ayudarte con cualquier pregunta o consulta</p>
+        </div>
+
+        <div class="contact-container">
+            <div class="contact-form-section">
+                <h2 data-i18n="contact_form_title">Envíanos un mensaje</h2>
+                
+                <div id="success-message" class="success-message" data-i18n="contact_success">
+                    ✓ Tu mensaje ha sido enviado correctamente. Te responderemos pronto.
+                </div>
+
+                <form id="contact-form" class="styled-form">
+                    <div class="form-group">
+                        <label for="contact-name" data-i18n="contact_name_label">Nombre completo *</label>
+                        <input type="text" id="contact-name" placeholder="Tu nombre" data-i18n-placeholder="contact_name_placeholder" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contact-email" data-i18n="contact_email_label">Correo electrónico *</label>
+                        <input type="email" id="contact-email" placeholder="tu@email.com" data-i18n-placeholder="contact_email_placeholder" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contact-subject" data-i18n="contact_subject_label">Asunto *</label>
+                        <select id="contact-subject" required>
+                            <option value="" data-i18n="contact_subject_default">Selecciona un tema</option>
+                            <option value="reserva" data-i18n="contact_subject_booking">Consulta sobre reserva</option>
+                            <option value="destino" data-i18n="contact_subject_destination">Información de destinos</option>
+                            <option value="pago" data-i18n="contact_subject_payment">Problemas con pagos</option>
+                            <option value="cancelacion" data-i18n="contact_subject_cancel">Cancelación o modificación</option>
+                            <option value="cuenta" data-i18n="contact_subject_account">Problemas con mi cuenta</option>
+                            <option value="sugerencia" data-i18n="contact_subject_suggestion">Sugerencias</option>
+                            <option value="otro" data-i18n="contact_subject_other">Otro</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contact-message" data-i18n="contact_message_label">Mensaje *</label>
+                        <textarea id="contact-message" placeholder="Cuéntanos en qué podemos ayudarte..." data-i18n-placeholder="contact_message_placeholder" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary btn-large full-width" data-i18n="contact_submit">
+                        Enviar mensaje
+                    </button>
+                </form>
+            </div>
+
+            <div class="contact-info-section">
+                <div class="contact-card">
+                    <div class="contact-icon">📧</div>
+                    <div class="contact-card-content">
+                        <h3 data-i18n="contact_info_email_title">Email</h3>
+                        <p data-i18n="contact_info_email_desc">Respuesta en 24-48 horas</p>
+                        <a href="mailto:info@travelling.com">info@travelling.com</a>
+                    </div>
+                </div>
+
+                <div class="contact-card">
+                    <div class="contact-icon">💬</div>
+                    <div class="contact-card-content">
+                        <h3 data-i18n="contact_info_chat_title">Chat en vivo</h3>
+                        <p data-i18n="contact_info_chat_hours">Lunes a Viernes: 9:00 - 18:00</p>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;" data-i18n="contact_info_chat_soon">
+                            Próximamente disponible
+                        </p>
+                    </div>
+                </div>
+
+                <div class="contact-card">
+                    <div class="contact-icon">📍</div>
+                    <div class="contact-card-content">
+                        <h3 data-i18n="contact_info_office_title">Oficinas</h3>
+                        <p data-i18n="contact_info_office_address">Calle Ejemplo, 123<br>28001 Madrid, España</p>
+                    </div>
+                </div>
+
+                <div class="contact-card">
+                    <div class="contact-icon">⏰</div>
+                    <div class="contact-card-content">
+                        <h3 data-i18n="contact_info_hours_title">Horario de atención</h3>
+                        <p data-i18n="contact_info_hours_weekday">Lunes a Viernes: 9:00 - 18:00</p>
+                        <p data-i18n="contact_info_hours_saturday">Sábados: 10:00 - 14:00</p>
+                        <p data-i18n="contact_info_hours_sunday">Domingos: Cerrado</p>
+                    </div>
+                </div>
+
+                <div class="contact-card">
+                    <div class="contact-icon">🔗</div>
+                    <div class="contact-card-content">
+                        <h3 data-i18n="contact_info_social_title">Síguenos</h3>
+                        <p>
+                            <a href="#">Facebook</a> · 
+                            <a href="#">Instagram</a> · 
+                            <a href="#">Twitter</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-col left">
+                <a href="faq.html" data-i18n="faq">FAQ</a>
+                <a href="contacto.html" data-i18n="footer_contact">Contacto</a>
+                <a href="mi-perfil.html" data-i18n="footer_profile">Mi Perfil</a>
+            </div>
+            <div class="footer-col center">
+                <strong>TRAVELLING</strong>
+            </div>
+            <div class="footer-col right">
+                <a href="#" data-i18n="footer_about">About</a>
+                <a href="#" data-i18n="footer_blog">Blog</a>
+                <a href="#" data-i18n="footer_support">Support</a>
+            </div>
+        </div>
+        <div class="legal">
+            <p>&copy; 2010 - 2025 Privacy - Terms</p>
+        </div>
+    </footer>
+
+    <script src="script/app.js"></script>
+    <script src="script/idiomas.js"></script>
+    <script>
+        // Utilidades para cookies
+        const CookieAuth = {
+            get(name) {
+                const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+                return match ? decodeURIComponent(match[2]) : null;
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const contactForm = document.getElementById('contact-form');
+            const successMessage = document.getElementById('success-message');
+            const nameInput = document.getElementById('contact-name');
+            const emailInput = document.getElementById('contact-email');
+
+            // Autocompletar con datos del usuario si está logueado
+            const username = CookieAuth.get('site_username');
+            if (username) {
+                nameInput.value = username;
+                
+                // Intentar obtener el email
+                const usersData = CookieAuth.get('database_users');
+                if (usersData) {
+                    const users = JSON.parse(usersData);
+                    const currentUser = users.find(u => u.username === username);
+                    if (currentUser && currentUser.email) {
+                        emailInput.value = currentUser.email;
+                    }
+                }
+            }
+
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                // Validaciones
+                const name = document.getElementById('contact-name').value.trim();
+                const email = document.getElementById('contact-email').value.trim();
+                const subject = document.getElementById('contact-subject').value;
+                const message = document.getElementById('contact-message').value.trim();
+
+                if (!name || !email || !subject || !message) {
+                    alert('Por favor completa todos los campos obligatorios');
+                    return;
+                }
+
+                const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+                if (!emailRegex.test(email)) {
+                    alert('Por favor introduce un correo electrónico válido');
+                    return;
+                }
+
+                // Mostrar mensaje de éxito
+                successMessage.classList.add('show');
+                contactForm.reset();
+
+                // Scroll suave al mensaje de éxito
+                successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                // Ocultar mensaje después de 5 segundos
+                setTimeout(() => {
+                    successMessage.classList.remove('show');
+                }, 5000);
+
+                // Aquí normalmente enviarías los datos a un servidor
+                console.log('Mensaje enviado:', {
+                    name,
+                    email,
+                    subject,
+                    message,
+                    timestamp: new Date().toISOString()
+                });
+            });
+        });
+    </script>
+
+    <dialog id="login-modal" class="custom-modal">
+        <div class="auth-container modal-content">
+            <h2>Iniciar Sesión</h2>
+            <p class="subtitle">Hola de nuevo</p>
+
+            <form method="dialog" id="login-form" class="styled-form">
+                <div class="form-group">
+                    <label for="username">Usuario</label>
+                    <input type="text" id="username" name="username" placeholder="Tu nombre de usuario" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" name="password" placeholder="Tu contraseña" required>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="remember-me"> 
+                        <span class="text-sm">Recordar credenciales</span>
+                    </label>
+                </div>
+
+                <div class="form-actions vertical">
+                    <button type="submit" id="confirm-login" class="btn-primary full-width">Entrar</button>
+                    <button type="button" id="close-modal" class="btn-text full-width">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </dialog>
+</body>
+</html>

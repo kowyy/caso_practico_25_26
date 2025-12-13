@@ -1,4 +1,4 @@
-// Utilidades para cookies (compartidas)
+// Helper estático para gestión CRUD de cookies y almacenamiento local simulado
 const CookieAuth = {
     set(name, value, days = 30) {
         const expires = new Date();
@@ -15,6 +15,7 @@ const CookieAuth = {
         document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
     },
     
+    // Simula una base de datos de usuarios almacenada en una sola cookie JSON
     getUsers() {
         const data = this.get('database_users');
         return data ? JSON.parse(data) : [];
@@ -27,6 +28,7 @@ const CookieAuth = {
 
 document.addEventListener("DOMContentLoaded", () => {
     
+    // Verificación de sesión: redirige al login si no hay cookie de usuario
     const username = CookieAuth.get("site_username");
     
     if (!username) {
@@ -37,6 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const usersDB = CookieAuth.getUsers();
     const currentUser = usersDB.find(u => u.username === username);
 
+    // Referencias a elementos del DOM para manipulación directa
     const nameDisplay = document.getElementById("profile-name");
     const emailDisplay = document.getElementById("user-email-display");
     const picDisplay = document.getElementById("profile-pic");
@@ -52,6 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     nameDisplay.textContent = username;
     
+    // Carga de avatar: Prioriza datos del usuario, luego cookie específica, finalmente fallback a API externa
     let avatarSrc;
     if (currentUser && currentUser.avatar) {
         avatarSrc = currentUser.avatar;
@@ -61,6 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     picDisplay.src = avatarSrc;
 
+    // Gestión del email con fallback algorítmico si no existe en la DB
     let userEmail = "";
     if (currentUser && currentUser.email) {
         userEmail = currentUser.email;
@@ -72,6 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
     emailInput.value = userEmail;
     emailDisplay.textContent = userEmail;
 
+    // Recuperación de preferencias de usuario guardadas previamente
     const savedFullname = CookieAuth.get("site_user_fullname_" + username);
     const savedPhone = CookieAuth.get("site_user_phone_" + username);
     const savedCountry = CookieAuth.get("site_user_country_" + username);
@@ -80,6 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (savedPhone) phoneInput.value = savedPhone;
     if (savedCountry) countrySelect.value = savedCountry;
 
+    // Validación en tiempo real con Regex para nombre completo
     fullnameInput.addEventListener("input", () => {
         const fullnameRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ]{2,}(?:[- ][A-Za-zÁÉÍÓÚáéíóúÑñ]{2,}){2,}$/;
 
@@ -91,6 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
     
+    // Validación de formato telefónico español
     phoneInput.addEventListener("input", () => {
         const phoneRegex = /^(?:\+34\s?)?[6789]\d{8}$/;
 
@@ -106,10 +114,12 @@ document.addEventListener("DOMContentLoaded", () => {
         CookieAuth.set("site_user_country_" + username, countrySelect.value);
     });
 
+    // Bridge para activar el input file oculto desde un botón estilizado
     changeAvatarBtn.addEventListener("click", () => {
         avatarInput.click();
     });
 
+    // Procesamiento de imagen en el cliente usando FileReader (Base64)
     avatarInput.addEventListener("change", (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -119,6 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const newImageBase64 = event.target.result;
                 picDisplay.src = newImageBase64;
                 
+                // Actualización atómica del usuario en la estructura JSON simulada
                 try {
                     if (currentUser) {
                         currentUser.avatar = newImageBase64;
@@ -144,6 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "index.html";
     });
 
+    // Sistema simple de pestañas (Tabs) para navegación interna
     const navItems = document.querySelectorAll('.nav-item');
     const tabContents = document.querySelectorAll('.tab-content');
 
@@ -161,6 +173,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // Permite abrir una pestaña específica vía URL param
     const urlParams = new URLSearchParams(window.location.search);
     const tabParam = urlParams.get('tab');
     if (tabParam) {
@@ -170,6 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // Renderizado dinámico del historial de reservas desde JSON en cookies
     function cargarReservas() {
         const reservasContainer = document.getElementById('reservas-container');
         const reservas = JSON.parse(CookieAuth.get(`reservas_${username}`) || '[]');
@@ -185,6 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const card = document.createElement('div');
             card.className = 'reserva-card';
             
+            // Inyección de HTML seguro ya que los datos vienen de inputs sanitizados o internos
             card.innerHTML = `
                 <img src="${reserva.imagen}" alt="${reserva.destino}">
                 <div class="reserva-info">
@@ -205,6 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
             reservasContainer.appendChild(card);
         });
 
+        // Event listeners para botones generados dinámicamente
         document.querySelectorAll('.btn-cancel-reserva').forEach(btn => {
             btn.addEventListener('click', () => {
                 const id = parseInt(btn.dataset.id);
@@ -217,6 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Renderizado del historial de reseñas del usuario
     function cargarReseñas() {
         const reseñasContainer = document.getElementById('reseñas-container');
         const reseñas = JSON.parse(CookieAuth.get(`user_reviews_${username}`) || '[]');

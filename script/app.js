@@ -1,4 +1,4 @@
-// Utilidades para manejar cookies
+// Utilidad de cookies replicada (debería refactorizarse a un módulo común)
 const CookieAuth = {
     set(name, value, days = 30) {
         const expires = new Date();
@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const usersDB = CookieAuth.getUsers();
     const currentUserData = usersDB.find(u => u.username === activeSessionUser);
 
+    // Renderizado condicional del Header: Muestra perfil si hay sesión, o login si no
     if (activeSessionUser && headerRight) {
         
         const avatarSrc = (currentUserData && currentUserData.avatar) 
@@ -40,8 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
             : `https://ui-avatars.com/api/?name=${activeSessionUser}&background=0D8ABC&color=fff`;
 
         headerRight.innerHTML = `
-            <a href="#" class="nav-link" data-i18n="faq">FAQ</a>
-            <a href="#" class="nav-link" data-i18n="help">Ayuda</a>
+            <a href="faq.html" class="nav-link" data-i18n="faq">FAQ</a>
+            <a href="contacto.html" class="nav-link" data-i18n="help">Contacto</a>
             
             <div class="user-menu-item" style="display: flex; align-items: center; gap: 10px; margin-left: 10px;">
                 <a href="mi-perfil.html" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
@@ -60,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
         initLoginModal();
     }
 
+    // Inicialización del modal nativo de Login usando <dialog> o overlay custom
     function initLoginModal() {
         const loginBtn = document.getElementById('btn-login');
         const modal = document.getElementById('login-modal');
@@ -68,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const closeModal = document.getElementById('close-modal');
             const loginForm = document.getElementById('login-form');
 
+            // Autocompletado desde cookies "remember me"
             const savedUser = CookieAuth.get("remember_username");
             const savedPass = CookieAuth.get("remember_password");
 
@@ -92,6 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const currentUsers = CookieAuth.getUsers();
 
+                // Validación simple contra array de usuarios en memoria
                 const validUser = currentUsers.find(user => user.username === usernameInput && user.password === passwordInput);
 
                 if (validUser) {
@@ -114,6 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initLoginModal();
 
+    // Lógica del formulario de registro, incluyendo validaciones y preview de imagen
     const signupForm = document.getElementById('signup-form');
     if (signupForm) {
         const avatarInput = document.getElementById('reg-avatar');
@@ -124,6 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
             avatarInput.addEventListener('change', (e) => {
                 const file = e.target.files[0];
                 
+                // Validación de tamaño del lado del cliente antes de procesar
                 if (file) {
                     if (file.size > 2 * 1024 * 1024) {
                         avatarFeedback.textContent = 'La imagen es muy grande (máx 2MB)';
@@ -160,6 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            // Política de contraseñas fuertes forzada mediante Regex
             const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*\-_])[A-Za-z\d!@#\$%\^&\*\-_]{8,}$/;
 
             if (!passwordRegex.test(password)) {
@@ -187,6 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            // Función auxiliar para finalizar el registro y guardar en cookies
             const saveAndRedirect = (avatarData) => {
                 const newUser = {
                     username: username,
@@ -207,6 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.location.href = 'index.html';
             };
 
+            // Manejo asíncrono de la lectura del archivo antes de guardar
             if (fileInput.files && fileInput.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(evt) {
@@ -227,6 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadHomeContent();
 });
 
+// Generador de contenido dinámico para el carrusel y el grid de destinos
 function loadHomeContent() {
     const carousel = document.getElementById('home-carousel');
     let destinosGrid = document.querySelector('.destinos-grid'); 
@@ -247,12 +257,14 @@ function loadHomeContent() {
     }
 
     try {
-        const data = CIUDADES_DATA;
+        const data = CIUDADES_DATA; // Se asume que esta constante global existe
         let allDestinos = [];
         
+        // Aplanamiento de la estructura jerárquica (Continente -> País -> Ciudad)
         data.continents.forEach(cont => {
             cont.countries.forEach(pais => {
                 pais.cities.forEach(ciudad => {
+                    // Generación determinista de precio/rating basado en hash del nombre
                     let hash = 0;
                     for (let i = 0; i < ciudad.name.length; i++) hash = ciudad.name.charCodeAt(i) + ((hash << 5) - hash);
                     const precio = 500 + (Math.abs(hash) % 1500);
@@ -274,8 +286,10 @@ function loadHomeContent() {
             });
         });
 
+        // Aleatorización para dar variedad a la UI
         allDestinos.sort(() => Math.random() - 0.5);
 
+        // Renderizado del Carrusel
         if (carousel) {
             const carouselDestinos = allDestinos.slice(0, 10);
             carousel.innerHTML = ''; 
@@ -308,6 +322,7 @@ function loadHomeContent() {
             }
         }
 
+        // Renderizado del Grid
         if (destinosGrid) {
             const gridDestinos = allDestinos.slice(10, 16);
             destinosGrid.innerHTML = "";

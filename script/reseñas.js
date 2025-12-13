@@ -1,4 +1,3 @@
-// Utilidades para cookies
 const CookieAuth = {
     set(name, value, days = 30) {
         const expires = new Date();
@@ -14,6 +13,7 @@ const CookieAuth = {
 
 document.addEventListener("DOMContentLoaded", () => {
 
+    // Polling para esperar a que el atributo data-destino esté disponible en el DOM
     const waitForDestinoID = () => {
         const pageID = document.body.getAttribute("data-destino");
         if (pageID) {
@@ -38,6 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
             userLabel.style.display = 'block';
         }
 
+        // Auto-resize de textareas para UX
         const autoTextareas = document.querySelectorAll("textarea");
         autoTextareas.forEach(area => {
             area.addEventListener("input", () => {
@@ -69,6 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ]
         };
 
+        // Generador de datos Mock aleatorios para poblar destinos vacíos
         function generateMockReviews(cityId) {
             const names = ["Alex M.", "Sarah J.", "Carlos D.", "Yuki T.", "Emma W.", "Priya K.", "Lars U."];
             const templates = [
@@ -94,6 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return mockReviews;
         }
 
+        // Carga inicial: Cookie -> Legacy hardcoded -> Mock generados
         let reviews = JSON.parse(CookieAuth.get("reviews_" + id));
 
         if (!reviews) {
@@ -173,10 +176,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     destino: id
                 };
                 
+                // Actualización del estado local y persistencia
                 reviews.push(newReview);
                 
                 CookieAuth.set("reviews_" + id, JSON.stringify(reviews));
 
+                // Doble escritura: Guarda la reseña en el destino Y en el perfil del usuario
                 const userReviews = JSON.parse(CookieAuth.get(`user_reviews_${activeUser}`) || '[]');
                 userReviews.push({
                     ...newReview,

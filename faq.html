@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preguntas Frecuentes - Viajes y Experiencias</title>
+    <link rel="stylesheet" href="style/main.css">
+    <style>
+        .faq-page {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .faq-hero {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .faq-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+        }
+
+        .faq-hero p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .faq-category {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #e5e5e5;
+        }
+
+        .faq-category h2 {
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            color: var(--text-primary);
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 0.75rem;
+            font-weight: 700;
+        }
+
+        .faq-item {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .faq-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .faq-question {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            transition: color 0.2s;
+        }
+
+        .faq-question:hover {
+            color: #555;
+        }
+
+        .faq-question::after {
+            content: '▼';
+            font-size: 0.7rem;
+            color: #999;
+            transition: transform 0.3s;
+        }
+
+        .faq-question.active::after {
+            transform: rotate(180deg);
+            color: var(--text-primary);
+        }
+
+        .faq-answer {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-top: 0.75rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-answer.active {
+            max-height: 500px;
+        }
+
+        .faq-cta {
+            background: var(--bg-light);
+            border: 2px solid #e5e5e5;
+            padding: 3rem 2rem;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .faq-cta h3 {
+            margin-top: 0;
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        .faq-cta p {
+            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="header-left">
+            <a href="index.html" class="logo-text">TRAVELLING</a>
+            
+            <div class="utilities-wrapper">
+                <div class="separator"></div>
+                <div class="lang-wrapper">
+                    <span id="lang-selected">ES</span>
+                    <svg id="lang-toggle" class="icon-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 6 15 12 9 18"></polyline>
+                    </svg>
+                    <ul id="lang-menu" class="lang-dropdown">
+                        <li data-lang="es">ES</li>
+                        <li data-lang="en">EN</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <nav class="header-center">
+            <ul>
+                <li><a href="destinos-destacados.html" data-i18n="menu_destinos">Destinos destacados</a></li>
+                <li><a href="experiencias.html" data-i18n="menu_experiencias">Experiencias recomendadas</a></li>
+            </ul>
+        </nav>
+
+        <div class="header-right">
+            <a href="faq.html" class="nav-link" data-i18n="faq">FAQ</a>
+            <a href="contacto.html" class="nav-link" data-i18n="contact">Contacto</a>
+            <button id="btn-login" class="btn-text" data-i18n="login">Inicia sesión</button>
+            <a href="signup.html" class="btn-primary" data-i18n="signup">Regístrate</a>
+        </div>
+    </header>
+
+    <main class="faq-page">
+        <div class="faq-hero">
+            <h1 data-i18n="faq_title">Preguntas Frecuentes</h1>
+            <p data-i18n="faq_subtitle">Encuentra respuestas a las dudas más comunes sobre nuestros servicios</p>
+        </div>
+
+        <div class="faq-category">
+            <h2 data-i18n="faq_cat_bookings">💳 Reservas y Pagos</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question" data-i18n="faq_q1">¿Cómo puedo hacer una reserva?</div>
+                <div class="faq-answer" data-i18n="faq_a1">
+                    Para hacer una reserva, simplemente navega por nuestros destinos destacados o experiencias recomendadas, selecciona el que más te guste y haz clic en "Reservar ahora". Deberás estar registrado para completar la reserva. El proceso es sencillo y te guiaremos paso a paso.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" data-i18n="faq_q2">¿Qué métodos de pago aceptan?</div>
+                <div class="faq-answer" data-i18n="faq_a2">
+                    Aceptamos las principales tarjetas de crédito y débito: Visa, Mastercard y American Express. Todos los pagos se procesan de forma segura a través de nuestro sistema encriptado.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" data-i18n="faq_q3">¿Puedo cancelar mi reserva?</div>
+                <div class="faq-answer" data-i18n="faq_a3">
+                    Sí, puedes cancelar tu reserva desde tu perfil en la sección "Mis Reservas". Las condiciones de cancelación varían según el destino y el momento de la cancelación. Generalmente, ofrecemos cancelación gratuita hasta 48 horas antes de la salida.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" data-i18n="faq_q4">¿Cuándo recibiré la confirmación de mi reserva?</div>
+                <div class="faq-answer" data-i18n="faq_a4">
+                    Recibirás un correo electrónico de confirmación inmediatamente después de completar tu reserva. Si no lo recibes en los próximos 10 minutos, revisa tu carpeta de spam o ponte en contacto con nosotros.
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-category">
+            <h2 data-i18n="faq_cat_travel">✈️ Viajes y Destinos</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question" data-i18n="faq_q5">¿Qué incluye el precio del viaje?</div>
+                <div class="faq-answer" data-i18n="faq_a5">
+                    Cada destino tiene diferentes inclusiones. Generalmente, nuestros paquetes incluyen vuelo ida y vuelta, alojamiento, desayunos y seguro de viaje básico. Los detalles específicos se muestran en la página de cada destino antes de realizar la reserva.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" data-i18n="faq_q6">¿Puedo viajar con mascotas?</div>
+                <div class="faq-answer" data-i18n="faq_a6">
+                    Sí, algunos de nuestros destinos aceptan mascotas. Durante el proceso de reserva podrás indicar si viajas con mascota y te informaremos sobre las políticas específicas, costes adicionales y requisitos de documentación necesarios.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" data-i18n="faq_q7">¿Necesito seguro de viaje?</div>
+                <div class="faq-answer" data-i18n="faq_a7">
+                    Todos nuestros paquetes incluyen un seguro de viaje básico. Sin embargo, recomendamos contratar una cobertura adicional si deseas mayor protección, especialmente para actividades de aventura o destinos remotos.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" data-i18n="faq_q8">¿Puedo añadir acompañantes después de hacer la reserva?</div>
+                <div class="faq-answer" data-i18n="faq_a8">
+                    Sí, puedes modificar tu reserva y añadir hasta 7 acompañantes (máximo 8 personas en total). Ponte en contacto con nuestro equipo de atención al cliente para gestionar los cambios. Ten en cuenta que pueden aplicarse cargos adicionales.
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-category">
+            <h2 data-i18n="faq_cat_account">👤 Cuenta y Perfil</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question" data-i18n="faq_q9">¿Cómo creo una cuenta?</div>
+                <div class="faq-answer" data-i18n="faq_a9">
+                    Haz clic en "Regístrate" en la parte superior derecha de cualquier página. Solo necesitas proporcionar un nombre de usuario, correo electrónico y contraseña segura. Opcionalmente, puedes añadir una foto de perfil.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" data-i18n="faq_q10">¿Olvidé mi contraseña, qué hago?</div>
+                <div class="faq-answer" data-i18n="faq_a10">
+                    Por el momento, esta funcionalidad está en desarrollo. Si tienes problemas para acceder a tu cuenta, contacta con nuestro equipo de soporte a través del formulario de contacto y te ayudaremos a recuperar el acceso.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" data-i18n="faq_q11">¿Puedo cambiar mi información personal?</div>
+                <div class="faq-answer" data-i18n="faq_a11">
+                    Sí, puedes editar tu información personal en cualquier momento desde tu perfil. Ve a "Mi Perfil" y actualiza tus datos personales, teléfono, país y foto de perfil. Los cambios se guardan automáticamente.
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-category">
+            <h2 data-i18n="faq_cat_support">📧 Soporte y Ayuda</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question" data-i18n="faq_q12">¿Cómo puedo contactar con atención al cliente?</div>
+                <div class="faq-answer" data-i18n="faq_a12">
+                    Puedes contactarnos a través de nuestro formulario de contacto, disponible en la sección "Contacto" del menú principal. Nuestro equipo responde generalmente en un plazo de 24-48 horas laborables.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" data-i18n="faq_q13">¿Tienen atención telefónica?</div>
+                <div class="faq-answer" data-i18n="faq_a13">
+                    Por el momento, ofrecemos atención principalmente a través de nuestro formulario de contacto y correo electrónico. Estamos trabajando en implementar un servicio de atención telefónica próximamente.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" data-i18n="faq_q14">¿Puedo dejar una reseña de mi experiencia?</div>
+                <div class="faq-answer" data-i18n="faq_a14">
+                    ¡Por supuesto! Una vez que hayas realizado tu viaje, te animamos a dejar una reseña en la página del destino. Tu opinión ayuda a otros viajeros a tomar decisiones informadas. Puedes incluir texto y una calificación de 1 a 5 estrellas.
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-cta">
+            <h3 data-i18n="faq_cta_title">¿No encuentras lo que buscas?</h3>
+            <p data-i18n="faq_cta_text">Nuestro equipo está aquí para ayudarte con cualquier pregunta o duda</p>
+            <a href="contacto.html" class="btn-primary btn-large" data-i18n="faq_cta_btn">Contáctanos</a>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-col left">
+                <a href="faq.html" data-i18n="faq">FAQ</a>
+                <a href="contacto.html" data-i18n="footer_contact">Contacto</a>
+                <a href="mi-perfil.html" data-i18n="footer_profile">Mi Perfil</a>
+            </div>
+            <div class="footer-col center">
+                <strong>TRAVELLING</strong>
+            </div>
+            <div class="footer-col right">
+                <a href="#" data-i18n="footer_about">About</a>
+                <a href="#" data-i18n="footer_blog">Blog</a>
+                <a href="#" data-i18n="footer_support">Support</a>
+            </div>
+        </div>
+        <div class="legal">
+            <p>&copy; 2010 - 2025 Privacy - Terms</p>
+        </div>
+    </footer>
+
+    <script src="script/app.js"></script>
+    <script src="script/idiomas.js"></script>
+    <script>
+        // Script para acordeón FAQ
+        document.addEventListener('DOMContentLoaded', () => {
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', () => {
+                    const answer = question.nextElementSibling;
+                    const isActive = answer.classList.contains('active');
+                    
+                    // Cerrar todas las respuestas
+                    document.querySelectorAll('.faq-answer').forEach(ans => {
+                        ans.classList.remove('active');
+                    });
+                    document.querySelectorAll('.faq-question').forEach(q => {
+                        q.classList.remove('active');
+                    });
+                    
+                    // Abrir la seleccionada si no estaba activa
+                    if (!isActive) {
+                        answer.classList.add('active');
+                        question.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+
+    <dialog id="login-modal" class="custom-modal">
+        <div class="auth-container modal-content">
+            <h2>Iniciar Sesión</h2>
+            <p class="subtitle">Hola de nuevo</p>
+
+            <form method="dialog" id="login-form" class="styled-form">
+                <div class="form-group">
+                    <label for="username">Usuario</label>
+                    <input type="text" id="username" name="username" placeholder="Tu nombre de usuario" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" name="password" placeholder="Tu contraseña" required>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="remember-me"> 
+                        <span class="text-sm">Recordar credenciales</span>
+                    </label>
+                </div>
+
+                <div class="form-actions vertical">
+                    <button type="submit" id="confirm-login" class="btn-primary full-width">Entrar</button>
+                    <button type="button" id="close-modal" class="btn-text full-width">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </dialog>
+</body>
+</html>

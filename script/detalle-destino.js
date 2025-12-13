@@ -1,4 +1,3 @@
-// Utilidades para cookies
 const CookieAuth = {
     get(name) {
         const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
@@ -8,6 +7,7 @@ const CookieAuth = {
 
 document.addEventListener("DOMContentLoaded", () => {
     
+    // Extracción del ID del destino desde la query string (ej: ?id=paris)
     const params = new URLSearchParams(window.location.search);
     const destinoId = params.get('id');
 
@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .replace(/-+$/, '');
     }
 
+    // Mejora de calidad de imagen para fuentes de Unsplash
     function ensureHighRes(url) {
         if (!url) return "";
         if (url.includes("images.unsplash.com")) {
@@ -38,6 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         let destinoData = null;
 
+        // Búsqueda secuencial del destino en la estructura anidada de datos
         for (const cont of data.continents) {
             for (const pais of cont.countries) {
                 const found = pais.cities.find(c => createSlug(c.name) === destinoId);
@@ -54,6 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (destinoData) {
+            // Actualización del DOM con los datos encontrados
             document.title = `${destinoData.name} - Viajes y Experiencias`;
             document.body.setAttribute("data-destino", destinoId);
             
@@ -73,10 +76,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
             carruselTrack.innerHTML = imgsHTML;
 
+            // Inicialización tardía del carrusel visual si existe script externo
             if (window.initCarrusel) {
                 setTimeout(() => window.initCarrusel(), 50);
             }
 
+            // Cálculo de precio determinista basado en caracteres ASCII para consistencia visual
             let hash = 0;
             for (let i = 0; i < destinoData.name.length; i++) hash = destinoData.name.charCodeAt(i) + ((hash << 5) - hash);
             const precioBase = 500 + (Math.abs(hash) % 1500);
@@ -93,6 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const ulIncludes = document.getElementById("page-includes");
             ulIncludes.innerHTML = includes.map(i => `<li>${i}</li>`).join("");
 
+            // Intercepción del botón de reserva para verificar autenticación
             document.getElementById("btn-reservar").onclick = () => {
                 const username = CookieAuth.get('site_username');
                 
@@ -103,6 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             };
 
+            // Creación dinámica de modal de bloqueo si el usuario no está logueado
             function mostrarModalLogin() {
                 const overlay = document.createElement('div');
                 overlay.style.position = 'fixed';
@@ -117,6 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 overlay.style.zIndex = '10000';
 
                 const modal = document.createElement('div');
+                // Estilos inline para el modal generado dinámicamente
                 modal.style.backgroundColor = 'white';
                 modal.style.padding = '2.5rem';
                 modal.style.borderRadius = '12px';

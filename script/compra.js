@@ -1,4 +1,3 @@
-// Utilidades para cookies
 const CookieAuth = {
     set(name, value, days = 30) {
         const expires = new Date();
@@ -21,6 +20,7 @@ const destinosDataStatic = {};
 
 document.addEventListener("DOMContentLoaded", async () => {
     
+    // Pre-llenado del formulario si el usuario está logueado y bloqueo de email
     const activeUser = CookieAuth.get('site_username');
     
     if (activeUser) {
@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             emailInput.value = savedEmail;
             
+            // UX: Email en modo solo lectura para usuarios registrados
             emailInput.readOnly = true;
             emailInput.style.backgroundColor = "#f9f9f9";
             emailInput.style.cursor = "not-allowed";
@@ -55,6 +56,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let data = null;
 
+    // Lógica para separar compra de Experiencias vs Destinos normales
     if (purchaseType === 'experience') {
         const storedData = CookieAuth.get('purchase_data');
         if (storedData) {
@@ -70,6 +72,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         data = destinosDataStatic[destinoId];
 
+        // Fetch dinámico de datos de la ciudad si no está en caché estático
         if (!data && destinoId) {
             try {
                 const jsonData = CIUDADES_DATA;
@@ -106,6 +109,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
+    // Renderizado del resumen de compra
     if (data) {
         document.getElementById("destino-nombre").textContent = data.nombre;
         document.getElementById("destino-precio").textContent = data.precio;
@@ -134,6 +138,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
+// Manejo dinámico de campos para acompañantes (DOM Injection)
 const companionsList = document.getElementById("companions-list");
 const addCompanionBtn = document.getElementById("add-companion");
 
@@ -184,6 +189,7 @@ function actualizarNumerosAcompañantes() {
     companionCount = boxes.length;
 }
 
+// Toggles visuales para secciones opcionales (mascotas/alergias)
 const mascotaToggle = document.getElementById("mascota-toggle");
 if(mascotaToggle) {
     mascotaToggle.addEventListener("change", function() {
@@ -207,11 +213,13 @@ if (allergyToggle) {
     });
 }
 
+// Validación y procesamiento final del formulario de compra
 const buyForm = document.getElementById("buy-form");
 if(buyForm) {
     buyForm.addEventListener("submit", function(e) {
         e.preventDefault();
 
+        // Regex estrictas para validación financiera y de datos personales
         const fullNameRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ]{2,}(?:[-\s][A-Za-zÁÉÍÓÚáéíóúÑñ]{2,}){2,}$/;
         const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
         const cardNumberRegex = /^\d{16}$/;
@@ -283,6 +291,7 @@ if(buyForm) {
             return;
         }
 
+        // Construcción del objeto de reserva
         const titular = {
             nombre: document.getElementById("fullname").value,
             email: document.getElementById("email").value
@@ -319,6 +328,7 @@ if(buyForm) {
             estado: 'Confirmada'
         };
 
+        // Persistencia en cookie serializada (simulación de DB)
         const reservasExistentes = JSON.parse(CookieAuth.get(`reservas_${username}`) || '[]');
         reservasExistentes.push(reserva);
         CookieAuth.set(`reservas_${username}`, JSON.stringify(reservasExistentes));
@@ -369,6 +379,7 @@ function mostrarConfirmacionReserva(reserva) {
     };
 }
 
+// Formateador visual para números de tarjeta (grupos de 4)
 const cardInput = document.getElementById("card-number");
 if(cardInput) {
     cardInput.addEventListener("input", function(e) {
