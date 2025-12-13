@@ -285,7 +285,7 @@ if(buyForm) {
         const username = localStorage.getItem('site_username') || sessionStorage.getItem('site_username');
         
         if (!username) {
-            // Si por alguna razón llega aquí sin sesión (ej: borró cookies mientras navegaba)
+            // Si por alguna razón llega aquí sin sesión
             alert('Tu sesión ha expirado. Por favor inicia sesión de nuevo.');
             window.location.href = 'index.html';
             return;
