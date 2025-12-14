@@ -1,3 +1,5 @@
+// Sistema de autenticación centralizado en signup.html
+
 // Servicio de autenticación y almacenamiento local
 const AuthService = {
     getUsers: function() {
@@ -16,7 +18,7 @@ const AuthService = {
     logout: function() {
         sessionStorage.setItem("login_valido", "false");
         sessionStorage.removeItem("usuario_activo");
-        window.location.href = "index.html";
+        window.location.href = "signup.html";
     }
 };
 
@@ -54,38 +56,88 @@ document.addEventListener('DOMContentLoaded', () => {
             AuthService.logout();
         });
     } else {
-        initLoginModal();
+        initLoginRedirect();
     }
 
-    // Inicialización del modal de Login
-    function initLoginModal() {
+    function initLoginRedirect() {
         const loginBtn = document.getElementById('btn-login');
-        const modal = document.getElementById('login-modal');
+        const signupBtn = document.querySelector('a[href="signup.html"]');
         
-        if (loginBtn && modal) {
+        // Si estamos en signup.html, inicializar el sistema de login/registro
+        if (window.location.pathname.includes('signup.html')) {
+            initSignupPageAuth();
+        } else {
+            // En cualquier otra página, redirigir a signup.html
+            if (loginBtn) {
+                loginBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    // Guardar página de origen para volver después
+                    sessionStorage.setItem("return_to", window.location.href);
+                    window.location.href = "signup.html?mode=login";
+                });
+            }
+            
+            if (signupBtn) {
+                signupBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    sessionStorage.setItem("return_to", window.location.href);
+                    window.location.href = "signup.html?mode=register";
+                });
+            }
+        }
+    }
+
+    // Sistema de autenticación para signup.html
+    function initSignupPageAuth() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const mode = urlParams.get('mode') || 'register';
+        
+        // Mostrar formulario de login o registro según el parámetro
+        const registerSection = document.querySelector('.auth-container');
+        const loginModal = document.getElementById('login-modal');
+
+        const headerLoginBtn = document.getElementById('btn-login');
+        
+        if (headerLoginBtn && loginModal) {
+            headerLoginBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                loginModal.showModal();
+            });
+        }
+        
+        if (mode === 'login' && loginModal) {
+            loginModal.showModal();
+        }
+        
+        // Lógica del modal de Login (solo en signup.html)
+        if (loginModal) {
             const closeModal = document.getElementById('close-modal');
             const loginForm = document.getElementById('login-form');
 
-            // Autocompletado si existiera en localStorage (opcional)
+            // Autocompletado si existiera
             const savedUser = localStorage.getItem("remember_username");
             if (savedUser) {
                 document.getElementById('username').value = savedUser;
                 document.getElementById("remember-me").checked = true;
             }
 
-            loginBtn.addEventListener('click', () => modal.showModal());
-            
             if (closeModal) {
-                closeModal.addEventListener('click', () => modal.close());
+                closeModal.addEventListener('click', () => {
+                    loginModal.close();
+                    // Limpiar parámetro de URL
+                    window.history.replaceState({}, '', 'signup.html');
+                });
             }
 
-            // Lógica de Login solicitada
+            // Lógica de Login
             loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
                 // recuperar estructura de usuarios
                 let usuarios = AuthService.getUsers();
                 
                 // recuperar datos de inicio sesión
-                let loginL = document.getElementById('username').value;
+                let loginL = document.getElementById('username').value.trim();
                 let passwordL = document.getElementById('password').value;
                 const remember = document.getElementById('remember-me').checked;
 
@@ -93,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 let encontrado = false;
                 
                 // Algoritmo de búsqueda secuencial
-                if (usuarios != null) {
+                if (usuarios != null && usuarios.length > 0) {
                     while ((i < usuarios.length) && (!encontrado)) {
                         if ((usuarios[i].username == loginL) && (usuarios[i].password == passwordL)){
                             encontrado = true;    
@@ -113,101 +165,107 @@ document.addEventListener('DOMContentLoaded', () => {
                         localStorage.removeItem("remember_username");
                     }
 
-                    window.location.reload();    
-                } else {                
-                    e.preventDefault(); 
+                    // Volver a la página de origen
+                    const returnTo = sessionStorage.getItem("return_to") || "index.html";
+                    sessionStorage.removeItem("return_to");
+                    window.location.href = returnTo;
+                } else {
                     alert("Credenciales erróneas");
                     document.getElementById('username').value = "";
                     document.getElementById('password').value = "";
                 }
             });
         }
-    }
 
-    // Lógica del formulario de registro
-    const signupForm = document.getElementById('signup-form');
-    if (signupForm) {
-        const avatarInput = document.getElementById('reg-avatar');
-        const avatarPreview = document.getElementById('avatar-preview');
-        
-        // Preview de imagen
-        if (avatarInput) {
-            avatarInput.addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        avatarPreview.innerHTML = `<img src="${event.target.result}" alt="Preview">`;
-                        avatarPreview.classList.add('has-image');
+        // Lógica del formulario de registro
+        const signupForm = document.getElementById('signup-form');
+        if (signupForm) {
+            const avatarInput = document.getElementById('reg-avatar');
+            const avatarPreview = document.getElementById('avatar-preview');
+            
+            // Preview de imagen
+            if (avatarInput) {
+                avatarInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            avatarPreview.innerHTML = `<img src="${event.target.result}" alt="Preview">`;
+                            avatarPreview.classList.add('has-image');
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+            
+            signupForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                // Recuperar valores
+                const username = document.getElementById('reg-username').value.trim();
+                const email = document.getElementById('reg-email').value.trim();
+                const password = document.getElementById('reg-password').value;
+                const confirmPassword = document.getElementById('reg-confirm').value;
+                const fileInput = document.getElementById('reg-avatar');
+
+                // Validaciones básicas de formato
+                if (password !== confirmPassword) {
+                    alert('Las contraseñas no coinciden');
+                    return;
+                }
+
+                // recuperar estructura de usuarios
+                let usuarios = AuthService.getUsers();
+                
+                // Verificar duplicados
+                const userExists = usuarios.some(u => u.username === username);
+                if (userExists) {
+                    alert('El usuario ya existe.');
+                    return;
+                }
+
+                const completarRegistro = (avatarData) => {
+                    // crear objeto usuario
+                    let usuario = {
+                        username: username,
+                        password: password,
+                        email: email,
+                        avatar: avatarData || null,
+                        createdAt: new Date().toISOString()
                     };
-                    reader.readAsDataURL(file);
+
+                    // almacenar objeto
+                    usuarios.push(usuario);
+                    AuthService.saveUsers(usuarios);
+
+                    // validar sesión y derivar
+                    sessionStorage.setItem("login_valido", "true");
+                    sessionStorage.setItem("usuario_activo", username);
+
+                    alert('¡Registro completado!');
+                    
+                    // Volver a la página de origen o ir al inicio
+                    const returnTo = sessionStorage.getItem("return_to") || "index.html";
+                    sessionStorage.removeItem("return_to");
+                    window.location.href = returnTo;
+                };
+
+                // Lectura de avatar si existe
+                if (fileInput.files && fileInput.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = (evt) => completarRegistro(evt.target.result);
+                    reader.readAsDataURL(fileInput.files[0]);
+                } else {
+                    completarRegistro(null);
                 }
             });
         }
-        
-        signupForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            // Recuperar valores
-            const username = document.getElementById('reg-username').value;
-            const email = document.getElementById('reg-email').value;
-            const password = document.getElementById('reg-password').value;
-            const confirmPassword = document.getElementById('reg-confirm').value;
-            const fileInput = document.getElementById('reg-avatar');
-
-            // Validaciones básicas de formato
-            if (password !== confirmPassword) {
-                alert('Las contraseñas no coinciden');
-                return;
-            }
-
-            // recuperar estructura de usuarios
-            let usuarios = AuthService.getUsers();
-            
-            // Verificar duplicados
-            const userExists = usuarios.some(u => u.username === username);
-            if (userExists) {
-                alert('El usuario ya existe.');
-                return;
-            }
-
-            const completarRegistro = (avatarData) => {
-                // crear objeto usuario
-                let usuario = {
-                    username: username,
-                    password: password,
-                    email: email,
-                    avatar: avatarData || null,
-                    createdAt: new Date().toISOString()
-                };
-
-                // almacenar objeto
-                usuarios.push(usuario);
-                AuthService.saveUsers(usuarios);
-
-                // validar sesión y derivar
-                sessionStorage.setItem("login_valido", "true");
-                sessionStorage.setItem("usuario_activo", username);
-
-                alert('¡Registro completado!');
-                window.location.href = 'index.html';
-            };
-
-            // Lectura de avatar si existe
-            if (fileInput.files && fileInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (evt) => completarRegistro(evt.target.result);
-                reader.readAsDataURL(fileInput.files[0]);
-            } else {
-                completarRegistro(null);
-            }
-        });
     }
 
     loadHomeContent();
 });
 
-// Función original para cargar contenido (sin cambios en la lógica visual)
+// Función para cargar contenido
 function loadHomeContent() {
     const carousel = document.getElementById('home-carousel');
     let destinosGrid = document.querySelector('.destinos-grid'); 

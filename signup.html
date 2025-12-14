@@ -12,6 +12,7 @@
             <div class="header-left">
                 <a href="index.html" class="logo-text">TRAVELLING</a>
             </div>
+            <button id="btn-login" class="btn-text">¿Ya tienes cuenta? Inicia sesión</button>
         </header>
 
         <main id="main-content">
@@ -72,6 +73,36 @@
             </section>
         </main>
 
+        <dialog id="login-modal" class="custom-modal">
+            <div class="auth-container modal-content">
+                <h2>Iniciar Sesión</h2>
+                <p class="subtitle">¿Ya tienes cuenta?</p>
+
+                <form method="dialog" id="login-form" class="styled-form">
+                    <div class="form-group">
+                        <label for="username">Usuario</label>
+                        <input type="text" id="username" name="username" placeholder="Tu nombre de usuario" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Contraseña</label>
+                        <input type="password" id="password" name="password" placeholder="Tu contraseña" required>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="remember-me"> 
+                            <span class="text-sm">Recordar credenciales</span>
+                        </label>
+                    </div>
+
+                    <div class="form-actions vertical">
+                        <button type="submit" id="confirm-login" class="btn-primary full-width">Entrar</button>
+                        <button type="button" id="close-modal" class="btn-text full-width">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </dialog>
         <script src="script/app.js"></script>
     </body>
 </html>

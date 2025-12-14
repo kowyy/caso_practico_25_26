@@ -284,33 +284,31 @@
                     // Lógica de Reserva
                     const btnReserva = card.querySelector(`#btn-reserva-${exp.id}`);
                     btnReserva.addEventListener('click', () => {
-                        const user = localStorage.getItem('site_username') || sessionStorage.getItem('site_username');
                         
-                        if (!user) {
-                            // Si no hay sesión, mostrar modal de login
-                            const modal = document.getElementById('login-modal');
-                            if (modal) modal.showModal();
-                        } else {
-                            // Preparar datos para la página de compra
-                            const purchaseData = {
-                                nombre: exp.titulo,
-                                precio: exp.precio + "€",
-                                imagen: exp.imagen,
-                                incluye: [
-                                    "Guía especializado en la actividad",
-                                    "Entradas y accesos necesarios",
-                                    `Duración completa: ${exp.duracion}`,
-                                    "Seguro de actividad incluido",
-                                    "Cancelación gratuita hasta 48h antes"
-                                ]
-                            };
-                            
-                            // Guardar en Session Storage para recuperarlo en compra.html
-                            sessionStorage.setItem('purchase_data', JSON.stringify(purchaseData));
-                            
-                            // Redirigir a compra con tipo experiencia
-                            window.location.href = 'compra.html?type=experience';
+                        if (!AuthService.checkSession()) {
+                            // Guardamos la url actual para volver aquí después del login
+                            sessionStorage.setItem("return_to", window.location.href);
+                            // Redirigir al signup en modo login
+                            window.location.href = "signup.html?mode=login";
+                            return;
                         }
+
+                        // Preparar datos para la página de compra
+                        const purchaseData = {
+                            nombre: exp.titulo,
+                            precio: exp.precio + "€",
+                            imagen: exp.imagen,
+                            incluye: [
+                                "Guía especializado en la actividad",
+                                "Entradas y accesos necesarios",
+                                `Duración completa: ${exp.duracion}`,
+                                "Seguro de actividad incluido",
+                                "Cancelación gratuita hasta 48h antes"
+                            ]
+                        };
+                        
+                        sessionStorage.setItem('purchase_data', JSON.stringify(purchaseData));
+                        window.location.href = 'compra.html?type=experience';
                     });
                 });
 

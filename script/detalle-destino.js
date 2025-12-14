@@ -1,99 +1,99 @@
-const destinosDataStatic = {};
-
 document.addEventListener("DOMContentLoaded", async () => {
     
-    // Validar sesión antes de permitir comprar usando AuthService de app.js
-    const activeUser = AuthService.getCurrentUser();
-    
-    if (activeUser && AuthService.checkSession()) {
-        const nameInput = document.getElementById("fullname");
-        const emailInput = document.getElementById("email");
+    // Primero miramos la URL para averiguar qué destino quiere ver el usuario
+    const urlParams = new URLSearchParams(window.location.search);
+    const destinoId = urlParams.get("id");
 
-        if (nameInput && emailInput) {
-            const usersDB = AuthService.getUsers();
-            const currentUser = usersDB.find(u => u.username === activeUser);
-            
-            // Usamos AuthService.getData en lugar de localStorage directo para consistencia
-            const savedName = localStorage.getItem("user_fullname_" + activeUser);
-            nameInput.value = savedName || activeUser;
-
-            let savedEmail = "";
-            if (currentUser && currentUser.email) {
-                savedEmail = currentUser.email;
-            } else {
-                savedEmail = `${activeUser.toLowerCase()}@example.com`;
-            }
-            emailInput.value = savedEmail;
-            
-            emailInput.readOnly = true;
-            emailInput.style.backgroundColor = "#f9f9f9";
-        }
-    } else {
-        alert("Debes iniciar sesión para realizar una reserva.");
-        window.location.href = "index.html";
+    if (!destinoId) {
+        console.error("No se ha especificado un ID de destino");
+        return;
     }
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const purchaseType = urlParams.get("type");
-    const destinoId = urlParams.get("destino");
+    // Pequeña utilidad para limpiar textos y poder comparar nombres sin problemas de acentos o espacios
+    function createSlug(text) {
+        return text.toString().toLowerCase()
+            .replace(/\s+/g, '-')
+            .replace(/[^\w\-]+/g, '')
+            .replace(/^-+/, '')
+            .replace(/-+$/, '');
+    }
 
     let data = null;
 
-    if (purchaseType === 'experience') {
-        const storedData = sessionStorage.getItem('purchase_data');
-        if (storedData) {
-            data = JSON.parse(storedData);
-        }
-    } else {
-        function createSlug(text) {
-            return text.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '').replace(/^-+/, '').replace(/-+$/, '');
-        }
+    try {
+        // Accedemos a la "base de datos" de ciudades que tenemos cargada en memoria
+        const jsonData = CIUDADES_DATA;
+        let foundCity = null;
+        let foundCountry = null;
 
-        data = destinosDataStatic[destinoId];
-
-        if (!data && destinoId) {
-            try {
-                const jsonData = CIUDADES_DATA;
-                let foundCity = null;
-                for (const cont of jsonData.continents) {
-                    for (const pais of cont.countries) {
-                        const found = pais.cities.find(c => createSlug(c.name) === destinoId);
-                        if (found) { foundCity = found; break; }
-                    }
-                    if (foundCity) break;
+        // Recorremos toda la estructura de continentes y países hasta encontrar la ciudad correcta
+        for (const cont of jsonData.continents) {
+            for (const pais of cont.countries) {
+                const found = pais.cities.find(c => createSlug(c.name) === destinoId);
+                if (found) { 
+                    foundCity = found; 
+                    foundCountry = pais.name;
+                    break; 
                 }
-
-                if (foundCity) {
-                    let hash = 0;
-                    for (let i = 0; i < foundCity.name.length; i++) hash = foundCity.name.charCodeAt(i) + ((hash << 5) - hash);
-                    const precioCalc = 500 + (Math.abs(hash) % 1500);
-
-                    data = {
-                        nombre: foundCity.name,
-                        precio: precioCalc + "€",
-                        imagen: foundCity.image.url,
-                        incluye: ["Vuelo ida y vuelta", "Alojamiento céntrico", "Seguro de viaje"]
-                    };
-                }
-            } catch (e) {
-                console.error("Error data", e);
             }
+            if (foundCity) break;
         }
+
+        if (foundCity) {
+            // Como no tenemos backend real, calculamos el precio y las valoraciones basándonos en el nombre para que siempre salga lo mismo
+            let hash = 0;
+            for (let i = 0; i < foundCity.name.length; i++) hash = foundCity.name.charCodeAt(i) + ((hash << 5) - hash);
+            const precioCalc = 500 + (Math.abs(hash) % 1500);
+            const ratingCalc = (3 + (Math.abs(hash) % 21) / 10).toFixed(1);
+            const reviewsCalc = 50 + (Math.abs(hash) % 450);
+
+            data = {
+                nombre: foundCity.name,
+                pais: foundCountry,
+                descripcion: foundCity.description,
+                precio: precioCalc,
+                imagen: foundCity.image.url,
+                rating: ratingCalc,
+                reviews: reviewsCalc,
+                incluye: ["Vuelo ida y vuelta", "Alojamiento céntrico 4★", "Seguro de viaje básico", "Traslados aeropuerto"],
+                imagenes: foundCity.carousel_images || [foundCity.image.url] // Usamos sus fotos o la principal si no tiene más
+            };
+        }
+    } catch (e) {
+        console.error("Error buscando datos del destino:", e);
     }
 
+    // Si hemos encontrado datos, empezamos a rellenar la página
     if (data) {
-        const nombreEl = document.getElementById("destino-nombre");
-        if(nombreEl) nombreEl.textContent = data.nombre;
+        // Actualizamos título de la pestaña, nombre, país, descripción y precio
+        document.title = `${data.nombre} - Viajes y Experiencias`;
         
-        const precioEl = document.getElementById("destino-precio");
-        if(precioEl) precioEl.textContent = data.precio;
+        const titleEl = document.getElementById("page-title");
+        if(titleEl) titleEl.textContent = data.nombre;
         
-        const img = document.getElementById("destino-img");
-        if(img) {
-            img.src = data.imagen.includes("images.unsplash.com") ? data.imagen.replace("w=500", "w=800") : data.imagen;
-        }
+        const countryEl = document.getElementById("page-country");
+        if(countryEl) countryEl.textContent = data.pais;
+        
+        const descEl = document.getElementById("page-description");
+        if(descEl) descEl.textContent = data.descripcion;
 
-        const listaIncluye = document.getElementById("destino-incluye");
+        const priceEl = document.getElementById("page-price");
+        if(priceEl) priceEl.textContent = `${data.precio}€`;
+
+        // Pintamos las estrellitas y el número de reseñas
+        const starsEl = document.getElementById("summary-stars");
+        const scoreEl = document.getElementById("summary-score");
+        const countEl = document.getElementById("summary-count");
+        
+        if (starsEl) {
+            const ratingNum = Math.round(data.rating);
+            starsEl.textContent = "★".repeat(ratingNum) + "☆".repeat(5 - ratingNum);
+        }
+        if (scoreEl) scoreEl.textContent = data.rating;
+        if (countEl) countEl.textContent = `(${data.reviews} reseñas)`;
+
+        // Generamos la lista de cosas que incluye el viaje
+        const listaIncluye = document.getElementById("page-includes");
         if(listaIncluye && data.incluye) {
             listaIncluye.innerHTML = "";
             data.incluye.forEach(item => {
@@ -102,84 +102,42 @@ document.addEventListener("DOMContentLoaded", async () => {
                 listaIncluye.appendChild(li);
             });
         }
+
+        // Montamos el carrusel de fotos dinámicamente
+        const carruselTrack = document.getElementById("dynamic-carrusel");
+        if (carruselTrack) {
+            carruselTrack.innerHTML = "";
+            // Si solo tenemos una foto, la repetimos para que el carrusel no se rompa
+            const imagenes = data.imagenes && data.imagenes.length > 0 ? data.imagenes : [data.imagen, data.imagen, data.imagen];
+            
+            imagenes.forEach(imgUrl => {
+                const img = document.createElement("img");
+                img.src = imgUrl;
+                img.alt = data.nombre;
+                carruselTrack.appendChild(img);
+            });
+
+            // Si el script del carrusel está cargado, lo inicializamos
+            if (window.initCarrusel) {
+                window.initCarrusel();
+            }
+        }
+    }
+
+    // Configuramos el botón de reservar para controlar si el usuario está logueado
+    const btnReservar = document.getElementById('btn-reservar');
+    if (btnReservar) {
+        btnReservar.addEventListener('click', () => {
+            // Comprobamos la sesión usando nuestro servicio
+            if (typeof AuthService !== 'undefined' && !AuthService.checkSession()) {
+                // Si no está logueado, guardamos dónde estaba para que vuelva aquí después
+                sessionStorage.setItem("return_to", window.location.href);
+                // Lo mandamos a la página de registro para que inicie sesión
+                window.location.href = "signup.html?mode=login";
+            } else {
+                // Si todo está bien, nos vamos al formulario de compra
+                window.location.href = `compra.html?destino=${createSlug(data.nombre)}`;
+            }
+        });
     }
 });
-
-// Manejo de acompañantes
-const companionsList = document.getElementById("companions-list");
-const addCompanionBtn = document.getElementById("add-companion");
-let companionCount = 0;
-
-if (addCompanionBtn) {
-    addCompanionBtn.addEventListener("click", () => {
-        if (companionCount >= 7) return;
-        companionCount++;
-        const box = document.createElement("div");
-        box.classList.add("companion-box");
-        box.innerHTML = `
-            <h4>Acompañante ${companionCount}</h4>
-            <div class="form-group"><input type="text" class="companion-name" placeholder="Nombre" required></div>
-            <div class="form-group"><input type="email" class="companion-email" placeholder="Email" required></div>
-            <button type="button" class="btn-remove">Eliminar</button>
-        `;
-        box.querySelector(".btn-remove").addEventListener("click", () => {
-            box.remove();
-            companionCount--;
-        });
-        companionsList.appendChild(box);
-    });
-}
-
-// Proceso de compra
-const buyForm = document.getElementById("buy-form");
-if(buyForm) {
-    buyForm.addEventListener("submit", function(e) {
-        e.preventDefault();
-
-        const username = AuthService.getCurrentUser();
-        if (!username || !AuthService.checkSession()) {
-            alert('Sesión expirada.');
-            window.location.href = 'index.html';
-            return;
-        }
-
-        const titular = {
-            nombre: document.getElementById("fullname").value,
-            email: document.getElementById("email").value
-        };
-
-        const acompañantes = [...document.querySelectorAll(".companion-box")].map(box => ({
-            nombre: box.querySelector(".companion-name").value,
-            email: box.querySelector(".companion-email").value
-        }));
-
-        const reserva = {
-            id: Date.now(),
-            fecha: new Date().toLocaleDateString('es-ES'),
-            destino: document.getElementById("destino-nombre").textContent,
-            precio: document.getElementById("destino-precio").textContent,
-            imagen: document.getElementById("destino-img").src,
-            titular: titular,
-            acompañantes: acompañantes,
-            estado: 'Confirmada'
-        };
-
-        // Persistencia en localStorage
-        const reservasData = localStorage.getItem(`reservas_${username}`);
-        const reservasExistentes = reservasData ? JSON.parse(reservasData) : [];
-        reservasExistentes.push(reserva);
-        localStorage.setItem(`reservas_${username}`, JSON.stringify(reservasExistentes));
-
-        alert("¡Reserva confirmada!");
-        window.location.href = "mi-perfil.html";
-    });
-}
-
-// Formato tarjeta
-const cardInput = document.getElementById("card-number");
-if(cardInput) {
-    cardInput.addEventListener("input", function(e) {
-        let value = e.target.value.replace(/\s/g, "").substring(0, 16);
-        e.target.value = value.match(/.{1,4}/g)?.join(" ") || value;
-    });
-}
