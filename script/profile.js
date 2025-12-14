@@ -154,7 +154,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // Cargar historial de reservas
     function cargarReservas() {
         const reservasContainer = document.getElementById('reservas-container');
-        const reservas = JSON.parse(AuthService.getData(`reservas_${username}`) || '[]');
+        const username = AuthService.getCurrentUser();
+        
+        console.log("Cargando reservas para:", username);
+        const reservas = CookieReservas.getReservas(username);
+        console.log("Reservas encontradas:", reservas);
+        
+        const countBadge = document.getElementById('reservas-count');
+        if (countBadge) countBadge.textContent = reservas.length;
         
         if (reservas.length === 0) {
             reservasContainer.innerHTML = '<p class="empty-state">No tienes reservas aún. <a href="destinos-destacados.html" style="color: #000; font-weight: 600;">Explora destinos</a></p>';
@@ -163,7 +170,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         reservasContainer.innerHTML = '';
         
-        reservas.reverse().forEach(reserva => {
+        [...reservas].reverse().forEach(reserva => {
             const card = document.createElement('div');
             card.className = 'reserva-card';
             
@@ -189,8 +196,7 @@ document.addEventListener("DOMContentLoaded", () => {
             btn.addEventListener('click', () => {
                 const id = parseInt(btn.dataset.id);
                 if (confirm('¿Estás seguro de que deseas cancelar esta reserva?')) {
-                    const reservasActualizadas = reservas.filter(r => r.id !== id);
-                    AuthService.saveData(`reservas_${username}`, JSON.stringify(reservasActualizadas));
+                    CookieReservas.deleteReserva(username, id);
                     cargarReservas();
                 }
             });
@@ -200,16 +206,20 @@ document.addEventListener("DOMContentLoaded", () => {
     // Cargar historial de reseñas
     function cargarReseñas() {
         const reseñasContainer = document.getElementById('reseñas-container');
-        const reseñas = JSON.parse(AuthService.getData(`user_reviews_${username}`) || '[]');
+        const username = AuthService.getCurrentUser();
+        const reseñas = JSON.parse(localStorage.getItem(`user_reviews_${username}`) || '[]');
+        
+        const countBadge = document.getElementById('reseñas-count');
+        if (countBadge) countBadge.textContent = reseñas.length;
         
         if (reseñas.length === 0) {
-            reseñasContainer.innerHTML = '<p class="empty-state">No has escrito reseñas aún.</p>';
+            reseñasContainer.innerHTML = '<p class="empty-state">No has escrito reseñas aún. <a href="destinos-destacados.html">Visita un destino</a></p>';
             return;
         }
         
         reseñasContainer.innerHTML = '';
         
-        reseñas.reverse().forEach((review, index) => {
+        [...reseñas].reverse().forEach((review, index) => {
             const card = document.createElement('div');
             card.className = 'reseña-card';
             
@@ -224,7 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <span class="reseña-stars">${stars}</span>
                 </div>
                 <p class="reseña-text">${review.text}</p>
-                <button class="btn-delete-review" data-index="${index}">Eliminar reseña</button>
+                <button class="btn-delete-review" data-index="${reseñas.length - 1 - index}">Eliminar reseña</button>
             `;
             
             reseñasContainer.appendChild(card);
@@ -234,8 +244,8 @@ document.addEventListener("DOMContentLoaded", () => {
             btn.addEventListener('click', () => {
                 const index = parseInt(btn.dataset.index);
                 if (confirm('¿Eliminar reseña?')) {
-                    reseñas.splice(reseñas.length - 1 - index, 1);
-                    AuthService.saveData(`user_reviews_${username}`, JSON.stringify(reseñas));
+                    reseñas.splice(index, 1);
+                    localStorage.setItem(`user_reviews_${username}`, JSON.stringify(reseñas));
                     cargarReseñas();
                 }
             });

@@ -1,4 +1,39 @@
 // Servicio de autenticación y almacenamiento local
+
+const CookieReservas = {
+    set(name, value, days = 365) {
+        const expires = new Date();
+        expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+        document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires.toUTCString()};path=/`;
+    },
+    
+    get(name) {
+        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        return match ? decodeURIComponent(match[2]) : null;
+    },
+    
+    getReservas(username) {
+        const reservas = this.get(`reservas_${username}`);
+        return reservas ? JSON.parse(reservas) : [];
+    },
+    
+    saveReservas(username, reservas) {
+        this.set(`reservas_${username}`, JSON.stringify(reservas));
+    },
+    
+    addReserva(username, reserva) {
+        const reservas = this.getReservas(username);
+        reservas.push(reserva);
+        this.saveReservas(username, reservas);
+    },
+    
+    deleteReserva(username, reservaId) {
+        const reservas = this.getReservas(username);
+        const updated = reservas.filter(r => r.id !== reservaId);
+        this.saveReservas(username, updated);
+    }
+};
+
 const AuthService = {
     getUsers: function() {
         const users = localStorage.getItem("usuarios");

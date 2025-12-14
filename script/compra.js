@@ -162,10 +162,10 @@ if(buyForm) {
             estado: 'Confirmada'
         };
 
-        // Persistencia en localStorage usando la nueva lógica
-        const reservasExistentes = JSON.parse(AuthService.getData(`reservas_${username}`) || '[]');
-        reservasExistentes.push(reserva);
-        AuthService.saveData(`reservas_${username}`, JSON.stringify(reservasExistentes));
+        // Guardar con cookies
+        console.log("Guardando reserva:", reserva);
+        CookieReservas.addReserva(username, reserva);
+        console.log("Reservas guardadas:", CookieReservas.getReservas(username));
 
         alert("¡Reserva confirmada!");
         window.location.href = "mi-perfil.html";
