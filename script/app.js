@@ -1,5 +1,3 @@
-// Sistema de autenticación centralizado en signup.html
-
 // Servicio de autenticación y almacenamiento local
 const AuthService = {
     getUsers: function() {
@@ -19,6 +17,12 @@ const AuthService = {
         sessionStorage.setItem("login_valido", "false");
         sessionStorage.removeItem("usuario_activo");
         window.location.href = "signup.html";
+    },
+    getData: function(key) {
+        return localStorage.getItem(key);
+    },
+    saveData: function(key, value) {
+        localStorage.setItem(key, value);
     }
 };
 
@@ -48,10 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <img src="${avatarSrc}" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid #ddd;">
                     <span style="font-weight: 600; color: var(--text-primary); font-size: 0.9rem;">${activeSessionUser}</span>
                 </a>
-                <button id="btn-logout-header" class="btn-text" style="color: #dc3545; font-size: 0.85rem; margin-left: 5px;" data-i18n="logout">Log Out</button>
+                <button id="btn-logout-header" class="btn-text" style="color: #a71d2a; font-size: 0.85rem; margin-left: 5px;" data-i18n="logout">Log Out</button>
             </div>
         `;
-
         document.getElementById('btn-logout-header').addEventListener('click', () => {
             AuthService.logout();
         });

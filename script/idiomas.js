@@ -197,8 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
             login: "Login",
             signup: "Sign up",
             faq: "FAQ",
-            help: "Help",
-            contact: "Contact",
+            help: "Contact",
             logout: "Log Out",
             
             // Home & Titles

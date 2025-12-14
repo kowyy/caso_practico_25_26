@@ -1,21 +1,3 @@
-const AuthService = {
-    checkSession: function() {
-        return sessionStorage.getItem("login_valido") === "true";
-    },
-    getCurrentUser: function() {
-        return sessionStorage.getItem("usuario_activo");
-    },
-    getData: function(key) {
-        return localStorage.getItem(key);
-    },
-    saveData: function(key, value) {
-        localStorage.setItem(key, value);
-    },
-    getUsers: function() {
-        const users = localStorage.getItem("usuarios");
-        return users ? JSON.parse(users) : [];
-    }
-};
 
 const destinosDataStatic = {};
 

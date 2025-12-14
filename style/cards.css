@@ -116,7 +116,8 @@
 }
 
 .star-empty {
-    opacity: 0.3;
+    opacity: 1;
+    color: #767676;
 }
 
 .reviews {
