@@ -1,3 +1,80 @@
+// Manejamos las reservas con cookies para que persistan aunque estemos en local
+const CookieReservas = {
+    set(name, value, days = 365) {
+        const expires = new Date();
+        expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+        document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires.toUTCString()};path=/`;
+    },
+    
+    get(name) {
+        const nameEQ = name + "=";
+        const ca = document.cookie.split(';');
+        for(let i=0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
+        }
+        return null;
+    },
+    
+    getReservas(username) {
+        const reservas = this.get(`reservas_${username}`);
+        return reservas ? JSON.parse(reservas) : [];
+    },
+    
+    saveReservas(username, reservas) {
+        this.set(`reservas_${username}`, JSON.stringify(reservas));
+    },
+    
+    addReserva(username, reserva) {
+        const reservas = this.getReservas(username);
+        reservas.push(reserva);
+        this.saveReservas(username, reservas);
+    },
+    
+    deleteReserva(username, reservaId) {
+        const reservas = this.getReservas(username);
+        const updated = reservas.filter(r => r.id !== reservaId);
+        this.saveReservas(username, updated);
+    }
+};
+
+// Lo mismo para las reseñas, así se ven reflejadas en el perfil
+const CookieReseñas = {
+    set(name, value, days = 365) {
+        const expires = new Date();
+        expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+        document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires.toUTCString()};path=/`;
+    },
+    
+    get(name) {
+        const nameEQ = name + "=";
+        const ca = document.cookie.split(';');
+        for(let i=0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
+        }
+        return null;
+    },
+    
+    getUserReviews(username) {
+        const reviews = this.get(`user_reviews_${username}`);
+        return reviews ? JSON.parse(reviews) : [];
+    },
+    
+    saveUserReviews(username, reviews) {
+        this.set(`user_reviews_${username}`, JSON.stringify(reviews));
+    },
+
+    deleteUserReview(username, index) {
+        const reviews = this.getUserReviews(username);
+        reviews.splice(index, 1);
+        this.saveUserReviews(username, reviews);
+    }
+};
+
+// Gestión básica de la sesión y usuarios usando localStorage
 const AuthService = {
     checkSession: function() {
         return sessionStorage.getItem("login_valido") === "true";
@@ -10,7 +87,6 @@ const AuthService = {
         sessionStorage.removeItem("usuario_activo");
         window.location.href = "index.html";
     },
-    // Métodos genéricos para datos en localStorage
     getData: function(key) {
         return localStorage.getItem(key);
     },
@@ -28,7 +104,7 @@ const AuthService = {
 
 document.addEventListener("DOMContentLoaded", () => {
     
-    // Validar sesión al entrar
+    // Si no hay sesión, mandamos al usuario fuera
     if (!AuthService.checkSession()) {
         window.location.href = "index.html";
         return;
@@ -38,7 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const usersDB = AuthService.getUsers();
     const currentUser = usersDB.find(u => u.username === username);
 
-    // Referencias a elementos del DOM
+    // Referencias a los elementos de la interfaz
     const nameDisplay = document.getElementById("profile-name");
     const emailDisplay = document.getElementById("user-email-display");
     const picDisplay = document.getElementById("profile-pic");
@@ -54,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     nameDisplay.textContent = username;
     
-    // Carga de avatar desde el objeto usuario
+    // Ponemos el avatar del usuario o uno generado por defecto
     let avatarSrc;
     if (currentUser && currentUser.avatar) {
         avatarSrc = currentUser.avatar;
@@ -63,7 +139,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     picDisplay.src = avatarSrc;
 
-    // Gestión del email
     let userEmail = "";
     if (currentUser && currentUser.email) {
         userEmail = currentUser.email;
@@ -74,7 +149,7 @@ document.addEventListener("DOMContentLoaded", () => {
     emailInput.value = userEmail;
     emailDisplay.textContent = userEmail;
 
-    // Recuperación de preferencias desde localStorage
+    // Rellenamos los campos con lo que tengamos guardado
     const savedFullname = AuthService.getData("user_fullname_" + username);
     const savedPhone = AuthService.getData("user_phone_" + username);
     const savedCountry = AuthService.getData("user_country_" + username);
@@ -83,7 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (savedPhone) phoneInput.value = savedPhone;
     if (savedCountry) countrySelect.value = savedCountry;
 
-    // Listeners para guardar cambios en tiempo real
+    // Guardamos automáticamente cualquier cambio en los inputs
     fullnameInput.addEventListener("input", () => {
         AuthService.saveData("user_fullname_" + username, fullnameInput.value);
     });
@@ -96,7 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
         AuthService.saveData("user_country_" + username, countrySelect.value);
     });
 
-    // Cambio de avatar
+    // Lógica para subir una nueva foto de perfil
     changeAvatarBtn.addEventListener("click", () => {
         avatarInput.click();
     });
@@ -110,8 +185,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 const newImageBase64 = event.target.result;
                 picDisplay.src = newImageBase64;
                 
-                // Actualizar usuario en la "base de datos" local
                 try {
+                    // Actualizamos el usuario en la "base de datos" local
                     if (currentUser) {
                         currentUser.avatar = newImageBase64;
                         const userIndex = usersDB.findIndex(u => u.username === username);
@@ -133,7 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
         AuthService.logout();
     });
 
-    // Navegación por pestañas (Tabs)
+    // Control de pestañas si las hubiera
     const navItems = document.querySelectorAll('.nav-item');
     const tabContents = document.querySelectorAll('.tab-content');
 
@@ -151,7 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Cargar historial de reservas
+    // Renderizamos las reservas guardadas en cookies
     function cargarReservas() {
         const reservasContainer = document.getElementById('reservas-container');
         const username = AuthService.getCurrentUser();
@@ -170,6 +245,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         reservasContainer.innerHTML = '';
         
+        // Creamos las tarjetas de reserva, las más nuevas primero
         [...reservas].reverse().forEach(reserva => {
             const card = document.createElement('div');
             card.className = 'reserva-card';
@@ -192,6 +268,7 @@ document.addEventListener("DOMContentLoaded", () => {
             reservasContainer.appendChild(card);
         });
 
+        // Eventos para cancelar reservas
         document.querySelectorAll('.btn-cancel-reserva').forEach(btn => {
             btn.addEventListener('click', () => {
                 const id = parseInt(btn.dataset.id);
@@ -203,11 +280,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Cargar historial de reseñas
+    // Renderizamos las reseñas del usuario guardadas en cookies
     function cargarReseñas() {
         const reseñasContainer = document.getElementById('reseñas-container');
         const username = AuthService.getCurrentUser();
-        const reseñas = JSON.parse(localStorage.getItem(`user_reviews_${username}`) || '[]');
+        
+        const reseñas = CookieReseñas.getUserReviews(username);
         
         const countBadge = document.getElementById('reseñas-count');
         if (countBadge) countBadge.textContent = reseñas.length;
@@ -219,7 +297,10 @@ document.addEventListener("DOMContentLoaded", () => {
         
         reseñasContainer.innerHTML = '';
         
-        [...reseñas].reverse().forEach((review, index) => {
+        // Mostramos las reseñas
+        [...reseñas].reverse().forEach((review, originalIndex) => {
+            const realIndex = reseñas.length - 1 - originalIndex;
+            
             const card = document.createElement('div');
             card.className = 'reseña-card';
             
@@ -234,18 +315,18 @@ document.addEventListener("DOMContentLoaded", () => {
                     <span class="reseña-stars">${stars}</span>
                 </div>
                 <p class="reseña-text">${review.text}</p>
-                <button class="btn-delete-review" data-index="${reseñas.length - 1 - index}">Eliminar reseña</button>
+                <button class="btn-delete-review" data-index="${realIndex}">Eliminar reseña</button>
             `;
             
             reseñasContainer.appendChild(card);
         });
 
+        // Eventos para eliminar reseñas
         document.querySelectorAll('.btn-delete-review').forEach(btn => {
             btn.addEventListener('click', () => {
                 const index = parseInt(btn.dataset.index);
                 if (confirm('¿Eliminar reseña?')) {
-                    reseñas.splice(index, 1);
-                    localStorage.setItem(`user_reviews_${username}`, JSON.stringify(reseñas));
+                    CookieReseñas.deleteUserReview(username, index);
                     cargarReseñas();
                 }
             });

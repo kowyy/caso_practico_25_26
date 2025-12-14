@@ -56,7 +56,7 @@ window.initCarrusel = function() {
     console.log("Carrusel inicializado correctamente con " + slides.length + " imágenes.");
 };
 
-// Intentar inicializar al cargar por si acaso (para contenido estático)
+// Intentar inicializar al cargar por si acaso
 document.addEventListener('DOMContentLoaded', () => {
      if(document.getElementById('dynamic-carrusel').children.length > 0) {
          window.initCarrusel();

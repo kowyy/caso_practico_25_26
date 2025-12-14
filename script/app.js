@@ -1,5 +1,4 @@
-// Servicio de autenticación y almacenamiento local
-
+// Objeto para manejar reservas con cookies, igual que en perfil
 const CookieReservas = {
     set(name, value, days = 365) {
         const expires = new Date();
@@ -8,8 +7,14 @@ const CookieReservas = {
     },
     
     get(name) {
-        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-        return match ? decodeURIComponent(match[2]) : null;
+        const nameEQ = name + "=";
+        const ca = document.cookie.split(';');
+        for(let i=0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
+        }
+        return null;
     },
     
     getReservas(username) {
@@ -34,6 +39,7 @@ const CookieReservas = {
     }
 };
 
+// Servicios de autenticación compartidos
 const AuthService = {
     getUsers: function() {
         const users = localStorage.getItem("usuarios");
@@ -63,21 +69,21 @@ const AuthService = {
 
 document.addEventListener('DOMContentLoaded', () => {
     
+    // Verificamos sesión para ajustar la cabecera
     const headerRight = document.querySelector('.header-right');
     const activeSessionUser = AuthService.getCurrentUser();
     const isSessionValid = AuthService.checkSession();
     
-    // Recuperamos datos para mostrar el avatar si existe
     const usersDB = AuthService.getUsers();
     const currentUserData = usersDB.find(u => u.username === activeSessionUser);
 
-    // Renderizado condicional del Header
     if (isSessionValid && activeSessionUser && headerRight) {
         
         const avatarSrc = (currentUserData && currentUserData.avatar) 
             ? currentUserData.avatar 
             : `https://ui-avatars.com/api/?name=${activeSessionUser}&background=0D8ABC&color=fff`;
 
+        // Si está logueado, mostramos su avatar y opción de logout
         headerRight.innerHTML = `
             <a href="faq.html" class="nav-link" data-i18n="faq">FAQ</a>
             <a href="contacto.html" class="nav-link" data-i18n="help">Contacto</a>
@@ -97,19 +103,17 @@ document.addEventListener('DOMContentLoaded', () => {
         initLoginRedirect();
     }
 
+    // Configura los redireccionamientos al login si no hay sesión
     function initLoginRedirect() {
         const loginBtn = document.getElementById('btn-login');
         const signupBtn = document.querySelector('a[href="signup.html"]');
         
-        // Si estamos en signup.html, inicializar el sistema de login/registro
         if (window.location.pathname.includes('signup.html')) {
             initSignupPageAuth();
         } else {
-            // En cualquier otra página, redirigir a signup.html
             if (loginBtn) {
                 loginBtn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    // Guardar página de origen para volver después
                     sessionStorage.setItem("return_to", window.location.href);
                     window.location.href = "signup.html?mode=login";
                 });
@@ -125,12 +129,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Sistema de autenticación para signup.html
+    // Lógica específica de la página de registro/login
     function initSignupPageAuth() {
         const urlParams = new URLSearchParams(window.location.search);
         const mode = urlParams.get('mode') || 'register';
         
-        // Mostrar formulario de login o registro según el parámetro
         const registerSection = document.querySelector('.auth-container');
         const loginModal = document.getElementById('login-modal');
 
@@ -147,12 +150,11 @@ document.addEventListener('DOMContentLoaded', () => {
             loginModal.showModal();
         }
         
-        // Lógica del modal de Login (solo en signup.html)
         if (loginModal) {
             const closeModal = document.getElementById('close-modal');
             const loginForm = document.getElementById('login-form');
 
-            // Autocompletado si existiera
+            // Autocompletado si el usuario marcó "recordar"
             const savedUser = localStorage.getItem("remember_username");
             if (savedUser) {
                 document.getElementById('username').value = savedUser;
@@ -162,19 +164,16 @@ document.addEventListener('DOMContentLoaded', () => {
             if (closeModal) {
                 closeModal.addEventListener('click', () => {
                     loginModal.close();
-                    // Limpiar parámetro de URL
                     window.history.replaceState({}, '', 'signup.html');
                 });
             }
 
-            // Lógica de Login
+            // Proceso de inicio de sesión
             loginForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 
-                // recuperar estructura de usuarios
                 let usuarios = AuthService.getUsers();
                 
-                // recuperar datos de inicio sesión
                 let loginL = document.getElementById('username').value.trim();
                 let passwordL = document.getElementById('password').value;
                 const remember = document.getElementById('remember-me').checked;
@@ -182,7 +181,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 let i = 0;
                 let encontrado = false;
                 
-                // Algoritmo de búsqueda secuencial
                 if (usuarios != null && usuarios.length > 0) {
                     while ((i < usuarios.length) && (!encontrado)) {
                         if ((usuarios[i].username == loginL) && (usuarios[i].password == passwordL)){
@@ -203,7 +201,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         localStorage.removeItem("remember_username");
                     }
 
-                    // Volver a la página de origen
                     const returnTo = sessionStorage.getItem("return_to") || "index.html";
                     sessionStorage.removeItem("return_to");
                     window.location.href = returnTo;
@@ -215,13 +212,12 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Lógica del formulario de registro
+        // Proceso de registro
         const signupForm = document.getElementById('signup-form');
         if (signupForm) {
             const avatarInput = document.getElementById('reg-avatar');
             const avatarPreview = document.getElementById('avatar-preview');
             
-            // Preview de imagen
             if (avatarInput) {
                 avatarInput.addEventListener('change', (e) => {
                     const file = e.target.files[0];
@@ -239,23 +235,19 @@ document.addEventListener('DOMContentLoaded', () => {
             signupForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 
-                // Recuperar valores
                 const username = document.getElementById('reg-username').value.trim();
                 const email = document.getElementById('reg-email').value.trim();
                 const password = document.getElementById('reg-password').value;
                 const confirmPassword = document.getElementById('reg-confirm').value;
                 const fileInput = document.getElementById('reg-avatar');
 
-                // Validaciones básicas de formato
                 if (password !== confirmPassword) {
                     alert('Las contraseñas no coinciden');
                     return;
                 }
 
-                // recuperar estructura de usuarios
                 let usuarios = AuthService.getUsers();
                 
-                // Verificar duplicados
                 const userExists = usuarios.some(u => u.username === username);
                 if (userExists) {
                     alert('El usuario ya existe.');
@@ -263,7 +255,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 const completarRegistro = (avatarData) => {
-                    // crear objeto usuario
                     let usuario = {
                         username: username,
                         password: password,
@@ -272,23 +263,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         createdAt: new Date().toISOString()
                     };
 
-                    // almacenar objeto
                     usuarios.push(usuario);
                     AuthService.saveUsers(usuarios);
 
-                    // validar sesión y derivar
                     sessionStorage.setItem("login_valido", "true");
                     sessionStorage.setItem("usuario_activo", username);
 
                     alert('¡Registro completado!');
                     
-                    // Volver a la página de origen o ir al inicio
                     const returnTo = sessionStorage.getItem("return_to") || "index.html";
                     sessionStorage.removeItem("return_to");
                     window.location.href = returnTo;
                 };
 
-                // Lectura de avatar si existe
                 if (fileInput.files && fileInput.files[0]) {
                     const reader = new FileReader();
                     reader.onload = (evt) => completarRegistro(evt.target.result);
@@ -303,11 +290,12 @@ document.addEventListener('DOMContentLoaded', () => {
     loadHomeContent();
 });
 
-// Función para cargar contenido
+// Carga dinámica del contenido del home (carrusel y grid)
 function loadHomeContent() {
     const carousel = document.getElementById('home-carousel');
     let destinosGrid = document.querySelector('.destinos-grid'); 
 
+    // Evitamos duplicar contenido si ya estamos en la página de destacados
     if (destinosGrid && destinosGrid.id === 'featured-grid') {
         destinosGrid = null;
     }
@@ -327,6 +315,7 @@ function loadHomeContent() {
         const data = CIUDADES_DATA;
         let allDestinos = [];
         
+        // Aplanamos la estructura de datos para facilitar el manejo
         data.continents.forEach(cont => {
             cont.countries.forEach(pais => {
                 pais.cities.forEach(ciudad => {
@@ -351,6 +340,7 @@ function loadHomeContent() {
             });
         });
 
+        // Mezclamos para dar variedad
         allDestinos.sort(() => Math.random() - 0.5);
 
         if (carousel) {
@@ -377,6 +367,7 @@ function loadHomeContent() {
                 carousel.appendChild(card);
             });
 
+            // Controles del carrusel
             const prevBtn = document.querySelector('.carousel-nav.prev');
             const nextBtn = document.querySelector('.carousel-nav.next');
             if (prevBtn && nextBtn) {
@@ -414,6 +405,7 @@ function loadHomeContent() {
             });
         }
 
+        // Si tenemos traducciones dinámicas, las aplicamos
         if (window.updateDynamicTranslations) {
             window.updateDynamicTranslations();
         }

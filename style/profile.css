@@ -95,7 +95,7 @@
     background: white;
     border: 2px solid #e5e5e5;
     border-radius: 8px;
-    color: #a71d2a;
+    color: #c62828;
     font-weight: 600;
     font-size: 0.9rem;
     cursor: pointer;
@@ -175,11 +175,12 @@
 .info-item input,
 .info-item select {
     padding: 12px;
-    border: 1px solid #e5e5e5;
+    border: 1px solid #767676; 
     border-radius: 8px;
     font-size: 0.95rem;
     font-family: inherit;
     transition: border-color 0.2s;
+    color: var(--text-primary);
 }
 
 .info-item input:focus,
@@ -240,7 +241,7 @@
 }
 
 .reserva-badge {
-    background: #4CAF50;
+    background: #2e7d32; 
     color: white;
     padding: 4px 12px;
     border-radius: 12px;
@@ -262,7 +263,7 @@
 }
 
 .btn-cancel-reserva {
-    background: #dc3545;
+    background: #c62828;
     color: white;
     border: none;
     padding: 8px 16px;
@@ -275,7 +276,7 @@
 }
 
 .btn-cancel-reserva:hover {
-    background: #c82333;
+    background: #b71c1c;
 }
 
 /* Reseñas */
@@ -307,11 +308,12 @@
 .reseña-location {
     margin: 0;
     font-size: 0.85rem;
-    color: #777;
+    color: #444; 
+    font-weight: 500;
 }
 
 .reseña-stars {
-    color: #f2b01e;
+    color: #a16207; 
     font-size: 1.2rem;
     letter-spacing: 2px;
 }
@@ -330,8 +332,8 @@
 
 .btn-delete-review {
     background: white;
-    color: #dc3545;
-    border: 1px solid #dc3545;
+    color: #c62828; 
+    border: 1px solid #c62828;
     padding: 6px 14px;
     border-radius: 6px;
     cursor: pointer;
@@ -341,7 +343,7 @@
 }
 
 .btn-delete-review:hover {
-    background: #dc3545;
+    background: #c62828;
     color: white;
 }
 
