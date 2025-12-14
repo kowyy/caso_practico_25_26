@@ -161,10 +161,24 @@ document.addEventListener("DOMContentLoaded", () => {
     // Guardamos automáticamente cualquier cambio en los inputs
     fullnameInput.addEventListener("input", () => {
         AuthService.saveData("user_fullname_" + username, fullnameInput.value);
+        const fullnameRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ]{2,}(?:[- ][A-Za-zÁÉÍÓÚáéíóúÑñ]{2,}){2,}$/;
+        if (!fullnameRegex.test(fullnameInput.value.trim())) {
+            fullnameInput.style.border = "2px solid red";
+        } else {
+            fullnameInput.style.border = "2px solid green";
+            localStorage.setItem("site_user_fullname_" + username, fullnameInput.value);
+        }
     });
     
     phoneInput.addEventListener("input", () => {
         AuthService.saveData("user_phone_" + username, phoneInput.value);
+        const phoneRegex = /^(?:\+34\s?)?[6789]\d{8}$/;
+        if (!phoneRegex.test(phoneInput.value.trim())) {
+            phoneInput.style.border = "2px solid red";
+        } else {
+            phoneInput.style.border = "2px solid green";
+            localStorage.setItem("site_user_phone_" + username, phoneInput.value);
+        }
     });
     
     countrySelect.addEventListener("change", () => {

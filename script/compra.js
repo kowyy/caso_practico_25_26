@@ -134,6 +134,87 @@ if(buyForm) {
     buyForm.addEventListener("submit", function(e) {
         e.preventDefault();
 
+        // Expresiones regulares para el firmulario de compra
+        const fullNameRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ]{2,}(?:[-\s][A-Za-zÁÉÍÓÚáéíóúÑñ]{2,}){2,}$/;
+        const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+        const cardNumberRegex = /^\d{16}$/;
+        const monthRegex = /^(0[1-9]|1[0-2])$/;
+        const cvvRegex = /^\d{3}$/;
+
+        // Inputs
+        const fullnameInput = document.getElementById("fullname");
+        const emailInput = document.getElementById("email");
+        const cardNumberInput = document.getElementById("card-number");
+        const expMonthInput = document.getElementById("exp-month");
+        const expYearInput = document.getElementById("exp-year");
+        const cvvInput = document.getElementById("cvv");
+
+        // Validación nombre del titular
+        if (!fullNameRegex.test(fullnameInput.value.trim())) {
+            alert("Introduce un nombre y dos apellidos válidos.");
+            fullnameInput.style.border = "2px solid red";
+            return;
+        }
+
+        // Validación email del titular
+        if (!emailRegex.test(emailInput.value.trim())) {
+            alert("Introduce un correo electrónico válido.");
+            emailInput.style.border = "2px solid red";
+            return;
+        }
+
+        // Validación acompañantes
+        const companions = document.querySelectorAll(".companion-box");
+        for (const comp of companions) {
+
+            const name = comp.querySelector(".companion-name");
+            const mail = comp.querySelector(".companion-email");
+
+            if (!fullNameRegex.test(name.value.trim())) {
+                alert("Nombre de acompañante inválido.");
+                name.style.border = "2px solid red";
+                return;
+            }
+
+            if (!emailRegex.test(mail.value.trim())) {
+                alert("Email de acompañante inválido.");
+                mail.style.border = "2px solid red";
+                return;
+            }
+        }
+
+        // Validación número tarjeta
+        const cleanCardNumber = cardNumberInput.value.replace(/\s/g, "");
+        if (!cardNumberRegex.test(cleanCardNumber)) {
+            alert("Número de tarjeta inválido. Deben ser 16 dígitos.");
+            cardNumberInput.style.border = "2px solid red";
+            return;
+        }
+
+        // Validar mes expiración
+        if (!monthRegex.test(expMonthInput.value.trim())) {
+            alert("Introduce un mes de expiración válido (01–12).");
+            expMonthInput.style.border = "2px solid red";
+            return;
+        }
+
+        // Validar año expiración
+        const currentYear = new Date().getFullYear() % 100;
+        const expYear = parseInt(expYearInput.value.trim());
+
+        if (isNaN(expYear) || expYear < currentYear) {
+            alert("La tarjeta está expirada o el año es inválido.");
+            expYearInput.style.border = "2px solid red";
+            return;
+        }
+
+        // Validación CVV
+        if (!cvvRegex.test(cvvInput.value.trim())) {
+            alert("CVV inválido. Debe tener 3 dígitos.");
+            cvvInput.style.border = "2px solid red";
+            return;
+        }
+
         const username = AuthService.getCurrentUser();
         if (!username || !AuthService.checkSession()) {
             alert('Sesión expirada.');
