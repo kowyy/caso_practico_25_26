@@ -1,40 +1,37 @@
-// Utilidad de cookies replicada (debería refactorizarse a un módulo común)
-const CookieAuth = {
-    set(name, value, days = 30) {
-        const expires = new Date();
-        expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-        document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires.toUTCString()};path=/`;
+// Servicio de autenticación y almacenamiento local
+const AuthService = {
+    getUsers: function() {
+        const users = localStorage.getItem("usuarios");
+        return users ? JSON.parse(users) : [];
     },
-    
-    get(name) {
-        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-        return match ? decodeURIComponent(match[2]) : null;
+    saveUsers: function(users) {
+        localStorage.setItem("usuarios", JSON.stringify(users));
     },
-    
-    delete(name) {
-        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
+    checkSession: function() {
+        return sessionStorage.getItem("login_valido") === "true";
     },
-    
-    getUsers() {
-        const data = this.get('database_users');
-        return data ? JSON.parse(data) : [];
+    getCurrentUser: function() {
+        return sessionStorage.getItem("usuario_activo");
     },
-    
-    saveUsers(users) {
-        this.set('database_users', JSON.stringify(users));
+    logout: function() {
+        sessionStorage.setItem("login_valido", "false");
+        sessionStorage.removeItem("usuario_activo");
+        window.location.href = "index.html";
     }
 };
 
 document.addEventListener('DOMContentLoaded', () => {
     
     const headerRight = document.querySelector('.header-right');
-    const activeSessionUser = CookieAuth.get('site_username');
+    const activeSessionUser = AuthService.getCurrentUser();
+    const isSessionValid = AuthService.checkSession();
     
-    const usersDB = CookieAuth.getUsers();
+    // Recuperamos datos para mostrar el avatar si existe
+    const usersDB = AuthService.getUsers();
     const currentUserData = usersDB.find(u => u.username === activeSessionUser);
 
-    // Renderizado condicional del Header: Muestra perfil si hay sesión, o login si no
-    if (activeSessionUser && headerRight) {
+    // Renderizado condicional del Header
+    if (isSessionValid && activeSessionUser && headerRight) {
         
         const avatarSrc = (currentUserData && currentUserData.avatar) 
             ? currentUserData.avatar 
@@ -54,14 +51,13 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
 
         document.getElementById('btn-logout-header').addEventListener('click', () => {
-            CookieAuth.delete('site_username');
-            window.location.reload(); 
+            AuthService.logout();
         });
     } else {
         initLoginModal();
     }
 
-    // Inicialización del modal nativo de Login usando <dialog> o overlay custom
+    // Inicialización del modal de Login
     function initLoginModal() {
         const loginBtn = document.getElementById('btn-login');
         const modal = document.getElementById('login-modal');
@@ -70,16 +66,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const closeModal = document.getElementById('close-modal');
             const loginForm = document.getElementById('login-form');
 
-            // Autocompletado desde cookies "remember me"
-            const savedUser = CookieAuth.get("remember_username");
-            const savedPass = CookieAuth.get("remember_password");
-
+            // Autocompletado si existiera en localStorage (opcional)
+            const savedUser = localStorage.getItem("remember_username");
             if (savedUser) {
                 document.getElementById('username').value = savedUser;
                 document.getElementById("remember-me").checked = true;
-            }
-            if (savedPass) {
-                document.getElementById('password').value = savedPass;
             }
 
             loginBtn.addEventListener('click', () => modal.showModal());
@@ -88,63 +79,66 @@ document.addEventListener('DOMContentLoaded', () => {
                 closeModal.addEventListener('click', () => modal.close());
             }
 
+            // Lógica de Login solicitada
             loginForm.addEventListener('submit', (e) => {
-                const usernameInput = document.getElementById('username').value;
-                const passwordInput = document.getElementById('password').value;
+                // recuperar estructura de usuarios
+                let usuarios = AuthService.getUsers();
+                
+                // recuperar datos de inicio sesión
+                let loginL = document.getElementById('username').value;
+                let passwordL = document.getElementById('password').value;
                 const remember = document.getElementById('remember-me').checked;
 
-                const currentUsers = CookieAuth.getUsers();
+                let i = 0;
+                let encontrado = false;
+                
+                // Algoritmo de búsqueda secuencial
+                if (usuarios != null) {
+                    while ((i < usuarios.length) && (!encontrado)) {
+                        if ((usuarios[i].username == loginL) && (usuarios[i].password == passwordL)){
+                            encontrado = true;    
+                            break;            
+                        }
+                        i++;
+                    }    
+                }
 
-                // Validación simple contra array de usuarios en memoria
-                const validUser = currentUsers.find(user => user.username === usernameInput && user.password === passwordInput);
-
-                if (validUser) {
+                if (encontrado) {
+                    sessionStorage.setItem("login_valido", "true");
+                    sessionStorage.setItem("usuario_activo", loginL);
+                    
                     if (remember) {
-                        CookieAuth.set('site_username', validUser.username, 365);
-                        CookieAuth.set("remember_username", usernameInput, 365);
-                        CookieAuth.set("remember_password", passwordInput, 365);
+                        localStorage.setItem("remember_username", loginL);
                     } else {
-                        CookieAuth.set('site_username', validUser.username, 1);
+                        localStorage.removeItem("remember_username");
                     }
-                    window.location.reload();
-                } else {
-                    e.preventDefault();
-                    alert('Usuario o contraseña incorrectos. Por favor regístrate si no tienes cuenta.');
-                    modal.close();
+
+                    window.location.reload();    
+                } else {                
+                    e.preventDefault(); 
+                    alert("Credenciales erróneas");
+                    document.getElementById('username').value = "";
+                    document.getElementById('password').value = "";
                 }
             });
         }
     }
 
-    initLoginModal();
-
-    // Lógica del formulario de registro, incluyendo validaciones y preview de imagen
+    // Lógica del formulario de registro
     const signupForm = document.getElementById('signup-form');
     if (signupForm) {
         const avatarInput = document.getElementById('reg-avatar');
         const avatarPreview = document.getElementById('avatar-preview');
-        const avatarFeedback = document.getElementById('avatar-feedback');
         
+        // Preview de imagen
         if (avatarInput) {
             avatarInput.addEventListener('change', (e) => {
                 const file = e.target.files[0];
-                
-                // Validación de tamaño del lado del cliente antes de procesar
                 if (file) {
-                    if (file.size > 2 * 1024 * 1024) {
-                        avatarFeedback.textContent = 'La imagen es muy grande (máx 2MB)';
-                        avatarFeedback.classList.remove('success');
-                        avatarFeedback.style.color = '#dc3545';
-                        avatarPreview.classList.remove('has-image');
-                        return;
-                    }
-                    
                     const reader = new FileReader();
                     reader.onload = function(event) {
                         avatarPreview.innerHTML = `<img src="${event.target.result}" alt="Preview">`;
                         avatarPreview.classList.add('has-image');
-                        avatarFeedback.textContent = '✓ Foto seleccionada correctamente';
-                        avatarFeedback.classList.add('success');
                     };
                     reader.readAsDataURL(file);
                 }
@@ -153,82 +147,59 @@ document.addEventListener('DOMContentLoaded', () => {
         
         signupForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            
+            // Recuperar valores
             const username = document.getElementById('reg-username').value;
             const email = document.getElementById('reg-email').value;
             const password = document.getElementById('reg-password').value;
             const confirmPassword = document.getElementById('reg-confirm').value;
             const fileInput = document.getElementById('reg-avatar');
 
-            const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-
-            if (!emailRegex.test(email)) {
-                alert("Por favor introduce un correo electrónico válido.");
-                return;
-            }
-
-            // Política de contraseñas fuertes forzada mediante Regex
-            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*\-_])[A-Za-z\d!@#\$%\^&\*\-_]{8,}$/;
-
-            if (!passwordRegex.test(password)) {
-                alert(
-                    "La contraseña debe incluir:\n" +
-                    "• Mínimo 8 caracteres\n" +
-                    "• Al menos 1 letra mayúscula\n" +
-                    "• Al menos 1 letra minúscula\n" +
-                    "• Al menos 1 número\n" +
-                    "• Al menos 1 símbolo (!@#$%^&*-_)\n"
-                );
-                return;
-            }
-
+            // Validaciones básicas de formato
             if (password !== confirmPassword) {
                 alert('Las contraseñas no coinciden');
                 return;
             }
 
-            const currentUsers = CookieAuth.getUsers();
+            // recuperar estructura de usuarios
+            let usuarios = AuthService.getUsers();
             
-            const userExists = currentUsers.some(u => u.username === username);
+            // Verificar duplicados
+            const userExists = usuarios.some(u => u.username === username);
             if (userExists) {
-                alert('El nombre de usuario ya existe. Por favor elige otro.');
+                alert('El usuario ya existe.');
                 return;
             }
 
-            // Función auxiliar para finalizar el registro y guardar en cookies
-            const saveAndRedirect = (avatarData) => {
-                const newUser = {
+            const completarRegistro = (avatarData) => {
+                // crear objeto usuario
+                let usuario = {
                     username: username,
-                    email: email,
                     password: password,
+                    email: email,
                     avatar: avatarData || null,
                     createdAt: new Date().toISOString()
                 };
 
-                currentUsers.push(newUser);
-                CookieAuth.saveUsers(currentUsers);
-                CookieAuth.set('site_username', username);
-                if (avatarData) {
-                    CookieAuth.set('site_user_avatar', avatarData);
-                }
+                // almacenar objeto
+                usuarios.push(usuario);
+                AuthService.saveUsers(usuarios);
 
-                alert('¡Registro completado! Bienvenido.');
+                // validar sesión y derivar
+                sessionStorage.setItem("login_valido", "true");
+                sessionStorage.setItem("usuario_activo", username);
+
+                alert('¡Registro completado!');
                 window.location.href = 'index.html';
             };
 
-            // Manejo asíncrono de la lectura del archivo antes de guardar
+            // Lectura de avatar si existe
             if (fileInput.files && fileInput.files[0]) {
                 const reader = new FileReader();
-                reader.onload = function(evt) {
-                    try {
-                        saveAndRedirect(evt.target.result);
-                    } catch (error) {
-                        alert("La imagen es demasiado grande para guardarla. Se guardará el usuario sin foto.");
-                        saveAndRedirect(null);
-                    }
-                };
+                reader.onload = (evt) => completarRegistro(evt.target.result);
                 reader.readAsDataURL(fileInput.files[0]);
             } else {
-                saveAndRedirect(null);
+                completarRegistro(null);
             }
         });
     }
@@ -236,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadHomeContent();
 });
 
-// Generador de contenido dinámico para el carrusel y el grid de destinos
+// Función original para cargar contenido (sin cambios en la lógica visual)
 function loadHomeContent() {
     const carousel = document.getElementById('home-carousel');
     let destinosGrid = document.querySelector('.destinos-grid'); 
@@ -257,14 +228,12 @@ function loadHomeContent() {
     }
 
     try {
-        const data = CIUDADES_DATA; // Se asume que esta constante global existe
+        const data = CIUDADES_DATA;
         let allDestinos = [];
         
-        // Aplanamiento de la estructura jerárquica (Continente -> País -> Ciudad)
         data.continents.forEach(cont => {
             cont.countries.forEach(pais => {
                 pais.cities.forEach(ciudad => {
-                    // Generación determinista de precio/rating basado en hash del nombre
                     let hash = 0;
                     for (let i = 0; i < ciudad.name.length; i++) hash = ciudad.name.charCodeAt(i) + ((hash << 5) - hash);
                     const precio = 500 + (Math.abs(hash) % 1500);
@@ -286,10 +255,8 @@ function loadHomeContent() {
             });
         });
 
-        // Aleatorización para dar variedad a la UI
         allDestinos.sort(() => Math.random() - 0.5);
 
-        // Renderizado del Carrusel
         if (carousel) {
             const carouselDestinos = allDestinos.slice(0, 10);
             carousel.innerHTML = ''; 
@@ -322,7 +289,6 @@ function loadHomeContent() {
             }
         }
 
-        // Renderizado del Grid
         if (destinosGrid) {
             const gridDestinos = allDestinos.slice(10, 16);
             destinosGrid.innerHTML = "";
@@ -358,7 +324,5 @@ function loadHomeContent() {
         
     } catch (error) {
         console.error("Error cargando destinos:", error);
-        if (carousel) carousel.innerHTML = "<p style='padding: 2rem; text-align: center;'>Error al cargar destinos</p>";
-        if (destinosGrid) destinosGrid.innerHTML = "<p style='padding: 2rem; text-align: center;'>Error al cargar destinos</p>";
     }
 }

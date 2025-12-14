@@ -1,45 +1,44 @@
-// Helper estático para gestión CRUD de cookies y almacenamiento local simulado
-const CookieAuth = {
-    set(name, value, days = 30) {
-        const expires = new Date();
-        expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-        document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires.toUTCString()};path=/`;
+const AuthService = {
+    checkSession: function() {
+        return sessionStorage.getItem("login_valido") === "true";
     },
-    
-    get(name) {
-        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-        return match ? decodeURIComponent(match[2]) : null;
+    getCurrentUser: function() {
+        return sessionStorage.getItem("usuario_activo");
     },
-    
-    delete(name) {
-        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
+    logout: function() {
+        sessionStorage.setItem("login_valido", "false");
+        sessionStorage.removeItem("usuario_activo");
+        window.location.href = "index.html";
     },
-    
-    // Simula una base de datos de usuarios almacenada en una sola cookie JSON
-    getUsers() {
-        const data = this.get('database_users');
-        return data ? JSON.parse(data) : [];
+    // Métodos genéricos para datos en localStorage
+    getData: function(key) {
+        return localStorage.getItem(key);
     },
-    
-    saveUsers(users) {
-        this.set('database_users', JSON.stringify(users));
+    saveData: function(key, value) {
+        localStorage.setItem(key, value);
+    },
+    getUsers: function() {
+        const users = localStorage.getItem("usuarios");
+        return users ? JSON.parse(users) : [];
+    },
+    saveUsers: function(users) {
+        localStorage.setItem("usuarios", JSON.stringify(users));
     }
 };
 
 document.addEventListener("DOMContentLoaded", () => {
     
-    // Verificación de sesión: redirige al login si no hay cookie de usuario
-    const username = CookieAuth.get("site_username");
-    
-    if (!username) {
-        window.location.href = "signup.html";
+    // Validar sesión al entrar
+    if (!AuthService.checkSession()) {
+        window.location.href = "index.html";
         return;
     }
 
-    const usersDB = CookieAuth.getUsers();
+    const username = AuthService.getCurrentUser();
+    const usersDB = AuthService.getUsers();
     const currentUser = usersDB.find(u => u.username === username);
 
-    // Referencias a elementos del DOM para manipulación directa
+    // Referencias a elementos del DOM
     const nameDisplay = document.getElementById("profile-name");
     const emailDisplay = document.getElementById("user-email-display");
     const picDisplay = document.getElementById("profile-pic");
@@ -55,71 +54,53 @@ document.addEventListener("DOMContentLoaded", () => {
 
     nameDisplay.textContent = username;
     
-    // Carga de avatar: Prioriza datos del usuario, luego cookie específica, finalmente fallback a API externa
+    // Carga de avatar desde el objeto usuario
     let avatarSrc;
     if (currentUser && currentUser.avatar) {
         avatarSrc = currentUser.avatar;
     } else {
-        avatarSrc = CookieAuth.get("site_user_avatar") || 
-                   `https://ui-avatars.com/api/?name=${username}&background=0D8ABC&color=fff`;
+        avatarSrc = `https://ui-avatars.com/api/?name=${username}&background=0D8ABC&color=fff`;
     }
     picDisplay.src = avatarSrc;
 
-    // Gestión del email con fallback algorítmico si no existe en la DB
+    // Gestión del email
     let userEmail = "";
     if (currentUser && currentUser.email) {
         userEmail = currentUser.email;
     } else {
-        userEmail = CookieAuth.get("site_user_email_" + username) || 
-                    `${username.toLowerCase().replace(/\s/g, '')}@example.com`;
+        userEmail = `${username.toLowerCase().replace(/\s/g, '')}@example.com`;
     }
     
     emailInput.value = userEmail;
     emailDisplay.textContent = userEmail;
 
-    // Recuperación de preferencias de usuario guardadas previamente
-    const savedFullname = CookieAuth.get("site_user_fullname_" + username);
-    const savedPhone = CookieAuth.get("site_user_phone_" + username);
-    const savedCountry = CookieAuth.get("site_user_country_" + username);
+    // Recuperación de preferencias desde localStorage
+    const savedFullname = AuthService.getData("user_fullname_" + username);
+    const savedPhone = AuthService.getData("user_phone_" + username);
+    const savedCountry = AuthService.getData("user_country_" + username);
 
     if (savedFullname) fullnameInput.value = savedFullname;
     if (savedPhone) phoneInput.value = savedPhone;
     if (savedCountry) countrySelect.value = savedCountry;
 
-    // Validación en tiempo real con Regex para nombre completo
+    // Listeners para guardar cambios en tiempo real
     fullnameInput.addEventListener("input", () => {
-        const fullnameRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ]{2,}(?:[- ][A-Za-zÁÉÍÓÚáéíóúÑñ]{2,}){2,}$/;
-
-        if (!fullnameRegex.test(fullnameInput.value.trim())) {
-            fullnameInput.style.border = "2px solid red";
-        } else {
-            fullnameInput.style.border = "2px solid green";
-            CookieAuth.set("site_user_fullname_" + username, fullnameInput.value);
-        }
+        AuthService.saveData("user_fullname_" + username, fullnameInput.value);
     });
     
-    // Validación de formato telefónico español
     phoneInput.addEventListener("input", () => {
-        const phoneRegex = /^(?:\+34\s?)?[6789]\d{8}$/;
-
-        if (!phoneRegex.test(phoneInput.value.trim())) {
-            phoneInput.style.border = "2px solid red";
-        } else {
-            phoneInput.style.border = "2px solid green";
-            CookieAuth.set("site_user_phone_" + username, phoneInput.value);
-        }
+        AuthService.saveData("user_phone_" + username, phoneInput.value);
     });
     
     countrySelect.addEventListener("change", () => {
-        CookieAuth.set("site_user_country_" + username, countrySelect.value);
+        AuthService.saveData("user_country_" + username, countrySelect.value);
     });
 
-    // Bridge para activar el input file oculto desde un botón estilizado
+    // Cambio de avatar
     changeAvatarBtn.addEventListener("click", () => {
         avatarInput.click();
     });
 
-    // Procesamiento de imagen en el cliente usando FileReader (Base64)
     avatarInput.addEventListener("change", (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -129,17 +110,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 const newImageBase64 = event.target.result;
                 picDisplay.src = newImageBase64;
                 
-                // Actualización atómica del usuario en la estructura JSON simulada
+                // Actualizar usuario en la "base de datos" local
                 try {
                     if (currentUser) {
                         currentUser.avatar = newImageBase64;
                         const userIndex = usersDB.findIndex(u => u.username === username);
                         if (userIndex !== -1) {
                             usersDB[userIndex] = currentUser;
-                            CookieAuth.saveUsers(usersDB);
+                            AuthService.saveUsers(usersDB);
                         }
                     }
-                    CookieAuth.set("site_user_avatar", newImageBase64);
                 } catch (error) {
                     alert("La imagen es muy grande, intenta con una más pequeña.");
                 }
@@ -150,12 +130,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     logoutBtn.addEventListener("click", () => {
-        CookieAuth.delete("site_username");
-        CookieAuth.delete("site_user_avatar");
-        window.location.href = "index.html";
+        AuthService.logout();
     });
 
-    // Sistema simple de pestañas (Tabs) para navegación interna
+    // Navegación por pestañas (Tabs)
     const navItems = document.querySelectorAll('.nav-item');
     const tabContents = document.querySelectorAll('.tab-content');
 
@@ -173,20 +151,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Permite abrir una pestaña específica vía URL param
-    const urlParams = new URLSearchParams(window.location.search);
-    const tabParam = urlParams.get('tab');
-    if (tabParam) {
-        const targetNav = document.querySelector(`[data-tab="${tabParam}"]`);
-        if (targetNav) {
-            targetNav.click();
-        }
-    }
-
-    // Renderizado dinámico del historial de reservas desde JSON en cookies
+    // Cargar historial de reservas
     function cargarReservas() {
         const reservasContainer = document.getElementById('reservas-container');
-        const reservas = JSON.parse(CookieAuth.get(`reservas_${username}`) || '[]');
+        const reservas = JSON.parse(AuthService.getData(`reservas_${username}`) || '[]');
         
         if (reservas.length === 0) {
             reservasContainer.innerHTML = '<p class="empty-state">No tienes reservas aún. <a href="destinos-destacados.html" style="color: #000; font-weight: 600;">Explora destinos</a></p>';
@@ -199,7 +167,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const card = document.createElement('div');
             card.className = 'reserva-card';
             
-            // Inyección de HTML seguro ya que los datos vienen de inputs sanitizados o internos
             card.innerHTML = `
                 <img src="${reserva.imagen}" alt="${reserva.destino}">
                 <div class="reserva-info">
@@ -209,9 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
                     <p><strong>Fecha de reserva:</strong> ${reserva.fecha}</p>
                     <p><strong>Titular:</strong> ${reserva.titular.nombre}</p>
-                    <p><strong>Email:</strong> ${reserva.titular.email}</p>
                     <p><strong>Acompañantes:</strong> ${reserva.acompañantes.length}</p>
-                    ${reserva.mascota ? `<p><strong>Mascota:</strong> ${reserva.mascota.tipo} (${reserva.mascota.tamaño})</p>` : ''}
                     <p class="reserva-precio">${reserva.precio}</p>
                     <button class="btn-cancel-reserva" data-id="${reserva.id}">Cancelar reserva</button>
                 </div>
@@ -220,26 +185,25 @@ document.addEventListener("DOMContentLoaded", () => {
             reservasContainer.appendChild(card);
         });
 
-        // Event listeners para botones generados dinámicamente
         document.querySelectorAll('.btn-cancel-reserva').forEach(btn => {
             btn.addEventListener('click', () => {
                 const id = parseInt(btn.dataset.id);
                 if (confirm('¿Estás seguro de que deseas cancelar esta reserva?')) {
                     const reservasActualizadas = reservas.filter(r => r.id !== id);
-                    CookieAuth.set(`reservas_${username}`, JSON.stringify(reservasActualizadas));
+                    AuthService.saveData(`reservas_${username}`, JSON.stringify(reservasActualizadas));
                     cargarReservas();
                 }
             });
         });
     }
 
-    // Renderizado del historial de reseñas del usuario
+    // Cargar historial de reseñas
     function cargarReseñas() {
         const reseñasContainer = document.getElementById('reseñas-container');
-        const reseñas = JSON.parse(CookieAuth.get(`user_reviews_${username}`) || '[]');
+        const reseñas = JSON.parse(AuthService.getData(`user_reviews_${username}`) || '[]');
         
         if (reseñas.length === 0) {
-            reseñasContainer.innerHTML = '<p class="empty-state">No has escrito reseñas aún. <a href="destinos-destacados.html" style="color: #000; font-weight: 600;">Visita un destino</a></p>';
+            reseñasContainer.innerHTML = '<p class="empty-state">No has escrito reseñas aún.</p>';
             return;
         }
         
@@ -260,7 +224,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     <span class="reseña-stars">${stars}</span>
                 </div>
                 <p class="reseña-text">${review.text}</p>
-                <p class="reseña-date">Escrita el ${review.fecha}</p>
                 <button class="btn-delete-review" data-index="${index}">Eliminar reseña</button>
             `;
             
@@ -270,9 +233,9 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll('.btn-delete-review').forEach(btn => {
             btn.addEventListener('click', () => {
                 const index = parseInt(btn.dataset.index);
-                if (confirm('¿Estás seguro de que deseas eliminar esta reseña?')) {
+                if (confirm('¿Eliminar reseña?')) {
                     reseñas.splice(reseñas.length - 1 - index, 1);
-                    CookieAuth.set(`user_reviews_${username}`, JSON.stringify(reseñas));
+                    AuthService.saveData(`user_reviews_${username}`, JSON.stringify(reseñas));
                     cargarReseñas();
                 }
             });
