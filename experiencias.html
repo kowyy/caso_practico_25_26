@@ -291,15 +291,11 @@
                         const exp = experiencias.find(e => e.id === expId);
                         
                         if (!exp) {
-                            console.error("Experiencia no encontrada:", expId);
                             return;
                         }
                         
-                        console.log("Reservando experiencia:", exp.titulo);
-                        
                         // Verificar sesión
                         if (typeof SessionManager === 'undefined' || !SessionManager.isLoggedIn()) {
-                            console.log("Usuario no logueado, redirigiendo...");
                             if (typeof CookieAuth !== 'undefined') {
                                 CookieAuth.set('return_url', window.location.href, 1);
                             } else {

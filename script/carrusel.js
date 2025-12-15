@@ -6,7 +6,6 @@ window.initCarrusel = function() {
     
     // Si no hay track o no tiene imágenes, no hacemos nada
     if (!track || track.children.length === 0) {
-        console.log("Carrusel no inicializado: faltan elementos.");
         return;
     }
 
@@ -53,7 +52,6 @@ window.initCarrusel = function() {
         updateSlidePosition();
     });
 
-    console.log("Carrusel inicializado correctamente con " + slides.length + " imágenes.");
 };
 
 // Intentar inicializar al cargar por si acaso

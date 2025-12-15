@@ -16,7 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const form = document.getElementById("review-form");
         
         if (!reviewsContainer || !form) {
-            console.error("No se encontraron elementos de reseñas");
             return;
         }
         
@@ -34,7 +33,6 @@ document.addEventListener("DOMContentLoaded", () => {
         
         // Si no hay reseñas, crear las de ejemplo
         if (!reviews || reviews.length === 0) {
-            console.log("No hay reseñas para este destino, creando ejemplos...");
             reviews = [
                 { 
                     name: "María González", 

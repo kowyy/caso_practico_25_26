@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const destinoId = urlParams.get("id");
 
     if (!destinoId) {
-        console.error("No se ha especificado un ID de destino");
         document.getElementById("page-title").textContent = "Error: No se encontró el destino";
         return;
     }
@@ -65,7 +64,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             };
         }
     } catch (e) {
-        console.error("Error buscando datos del destino:", e);
+
     }
 
     if (data) {

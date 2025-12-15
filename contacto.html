@@ -338,7 +338,7 @@
                         return;
                     }
 
-                    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+                    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
                     if (!emailRegex.test(email)) {
                         alert('Por favor introduce un correo electrónico válido.');
                         return;
@@ -356,13 +356,6 @@
                         successMessage.classList.remove('show');
                     }, 5000);
 
-                    console.log('Mensaje enviado:', {
-                        name,
-                        email,
-                        subject,
-                        message,
-                        timestamp: new Date().toISOString()
-                    });
                 });
             }
         });

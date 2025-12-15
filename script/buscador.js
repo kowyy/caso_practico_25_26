@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let destinosGrid = document.querySelector(".destinos-grid");
 
     if (destinosGrid && destinosGrid.id === "featured-grid") {
-        console.log("Detectada página de Destacados: El buscador no modificará el grid.");
         destinosGrid = null; 
     }
 
@@ -50,7 +49,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
     } catch (error) {
-        console.error("Error cargando los destinos:", error);
         if(destinosGrid) {
             destinosGrid.innerHTML = "<p>Error cargando destinos. Por favor intenta más tarde.</p>";
         }

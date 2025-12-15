@@ -190,7 +190,6 @@ const ReviewsManager = {
                     allReviews.push(...userReviews);
                 } catch (e) {
                     // Cookie corrupta, ignorar
-                    console.warn('Cookie corrupta:', name);
                 }
             }
         });
@@ -243,11 +242,11 @@ function updateHeader() {
             <a href="contacto.html" class="nav-link" data-i18n="help">Contacto</a>
             
             <div class="user-menu-item" style="display: flex; align-items: center; gap: 10px; margin-left: 10px;">
-                <a href="mi-perfil.html" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
-                    <img src="${avatarSrc}" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid #ddd;">
+                <a href="mi-perfil.html" style="text-decoration: none; display: flex; align-items: center; gap: 8px;" aria-label="Ir a mi perfil">
+                    <img src="${avatarSrc}" alt="Avatar de ${username}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid #ddd;">
                     <span style="font-weight: 600; color: var(--text-primary); font-size: 0.9rem;">${username}</span>
                 </a>
-                <button id="btn-logout-header" class="btn-text" style="color: #a71d2a; font-size: 0.85rem; margin-left: 5px;" data-i18n="logout">Log Out</button>
+                <button id="btn-logout-header" class="btn-text" style="color: #a71d2a; font-size: 0.85rem; margin-left: 5px;" data-i18n="logout" aria-label="Cerrar sesión">Log Out</button>
             </div>
         `;
         
@@ -390,7 +389,7 @@ function setupSignupForm() {
         const confirmPassword = document.getElementById('reg-confirm').value;
         
         // Validar email
-        const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         if (!emailRegex.test(email)) {
             alert("Por favor introduce un correo electrónico válido.");
             return;
@@ -517,7 +516,7 @@ function loadHomeContent() {
                 card.onclick = () => location.href = d.url;
                 
                 card.innerHTML = `
-                    <img src="${d.imagen}" alt="${d.nombre}" class="carousel-img">
+                    <img src="${d.imagen}" alt="${d.nombre}" class="carousel-img" loading="lazy">
                     <div class="carousel-info">
                         <h3>${d.nombre}</h3>
                         <p class="carousel-location">${d.pais}</p>
@@ -573,7 +572,6 @@ function loadHomeContent() {
         }
         
     } catch (error) {
-        console.error("Error cargando destinos:", error);
     }
 }
 
