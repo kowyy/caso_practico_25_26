@@ -93,24 +93,61 @@ document.addEventListener("DOMContentLoaded", () => {
         
         avatarInput.addEventListener("change", (e) => {
             const file = e.target.files[0];
-            if (file) {
-                // Verificar tamaño (máx 500KB)
-                if (file.size > 500000) {
-                    alert("La imagen es muy grande. Por favor usa una imagen menor a 500KB.");
-                    return;
-                }
-                
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    const newAvatar = event.target.result;
-                    picDisplay.src = newAvatar;
-                    UserManager.updateUser(username, { avatar: newAvatar });
-                };
-                reader.readAsDataURL(file);
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                alert("Por favor selecciona un archivo de imagen válido.");
+                return;
             }
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+
+                    const MAX_SIZE = 60; 
+                    
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_SIZE) {
+                            height *= MAX_SIZE / width;
+                            width = MAX_SIZE;
+                        }
+                    } else {
+                        if (height > MAX_SIZE) {
+                            width *= MAX_SIZE / height;
+                            height = MAX_SIZE;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    const lowResAvatar = canvas.toDataURL('image/jpeg', 0.6);
+
+                    if (lowResAvatar.length > 3800) {
+                        alert("La imagen sigue siendo demasiado compleja para guardarse en cookies. Intenta con una imagen más simple.");
+                        return;
+                    }
+
+                    picDisplay.src = lowResAvatar;
+                    const success = UserManager.updateUser(username, { avatar: lowResAvatar });
+                    
+                    if (success) {
+                        alert("Foto de perfil actualizada correctamente (versión comprimida).");
+                    }
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
         });
-    }
-    
+    }    
+
     // Logout
     if (logoutBtn) {
         logoutBtn.addEventListener("click", () => {

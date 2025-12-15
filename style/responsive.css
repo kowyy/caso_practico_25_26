@@ -1,5 +1,6 @@
 html, body {
-    overflow-x: hidden; /* Evita el desplazamiento horizontal cuando algo se sale del contenedor */
+    /* Evita el desplazamiento horizontal cuando algo se sale del contenedor */
+    overflow-x: hidden;
     width: 100%;
     margin: 0;
     padding: 0;
@@ -11,14 +12,16 @@ html, body {
 }
 
 img {
-    max-width: 100%; /* Las imágenes se ajustan al tamaño disponible */
+    /* Las imágenes se ajustan al tamaño disponible */
+    max-width: 100%;
     height: auto;
 }
 
 @media (max-width: 1200px) {
 
     .site-header {
-        display: flex; /* Cambiamos a una estructura vertical para evitar que los elementos se monten */
+        /* Cambiamos a una estructura vertical para evitar que los elementos se monten */
+        display: flex;
         flex-direction: column;
         align-items: center;
         padding: 1rem;
@@ -29,37 +32,43 @@ img {
     .header-left, 
     .header-center, 
     .header-right {
-        width: 100%; /* Que cada bloque del header aproveche el ancho completo */
+        /* Que cada bloque del header aproveche el ancho completo */
+        width: 100%;
         justify-content: center;
         margin: 0;
     }
 
     .header-left {
-        flex-wrap: wrap; /* Permite que el logo y el buscador bajen en línea si hace falta */
+        /* Permite que el logo y el buscador bajen en línea si hace falta */
+        flex-wrap: wrap;
         gap: 15px;
         text-align: center;
     }
 
     .search-container {
-        flex: 1; /* Se expande lo necesario sin deformarse */
+        /* Se expande lo necesario sin deformarse */
+        flex: 1;
         min-width: 200px;
         max-width: 400px;
     }
 
     .header-center {
-        padding: 10px 0; /* Mantiene los enlaces ordenados y centrados */
+        /* Mantiene los enlaces ordenados y centrados */
+        padding: 10px 0;
         border-top: 1px solid rgba(0,0,0,0.05);
         border-bottom: 1px solid rgba(0,0,0,0.05);
     }
     
     .header-center ul {
-        justify-content: center; /* Centra los enlaces de navegación */
+        /* Centra los enlaces de navegación */
+        justify-content: center;
         gap: 20px;
         flex-wrap: wrap;
     }
 
     .header-right {
-        gap: 15px; /* Espaciado más cómodo entre iconos */
+        /* Espaciado más cómodo entre iconos */
+        gap: 15px;
     }
 
     .featured-destinations-carousel {
@@ -69,32 +78,39 @@ img {
     }
 
     .featured-destinations-carousel h2 {
-        text-align: center; /* Centra el título del carrusel */
+        /* Centra el título del carrusel */
+        text-align: center;
         width: 100%;
         padding: 0 10px;
     }
 
     .carousel-wrapper {
         width: 100%;
-        padding: 0; /* Evita desbordamientos indeseados */
+        /* Evita desbordamientos indeseados */
+        padding: 0;
     }
 
     .destinations-carousel {
-        padding: 20px 5px; /* Ajuste cómodo en pantallas táctiles */
+        /* Ajuste cómodo en pantallas táctiles */
+        padding: 20px 5px;
         scroll-padding-left: 20px;
     }
 
     .carousel-destination-card {
-        flex: 0 0 280px; /* Tarjetas un poco más flexibles */ 
-        max-width: 85vw; /* Nunca mayores que la vista */
+        /* Tarjetas un poco más flexibles */
+        flex: 0 0 280px; 
+        /* Nunca mayores que la vista */
+        max-width: 85vw;
     }
 
     .carousel-nav {
-        display: none; /* En pantallas pequeñas es más fácil usar scroll natural */
+        /* En pantallas pequeñas es más fácil usar scroll natural */
+        display: none;
     }
     
     .categories-grid {
-        grid-template-columns: repeat(2, 1fr); /* Dos columnas para una vista más clara */
+        /* Dos columnas para una vista más clara */
+        grid-template-columns: repeat(2, 1fr);
         gap: 15px;
     }
 }
@@ -102,45 +118,54 @@ img {
 @media (max-width: 768px) {
 
     .hero {
-        padding: 0 1rem; /* Hace que el contenido principal no toque los bordes */
+        /* Hace que el contenido principal no toque los bordes */
+        padding: 0 1rem;
     }
     
     .hero h1 {
-        font-size: 2rem; /* Texto más cómodo para pantallas medianas */
+        /* Texto más cómodo para pantallas medianas */
+        font-size: 2rem;
     }
 
     .destinos-grid,
     .experiencias-grid {
-        grid-template-columns: 1fr; /* Un solo bloque por fila para facilitar la lectura */
+        /* Un solo bloque por fila para facilitar la lectura */
+        grid-template-columns: 1fr;
         padding: 0 1rem;
     }
 
     .compra-container {
-        grid-template-columns: 1fr; /* Todo en una columna */
+        /* Todo en una columna */
+        grid-template-columns: 1fr;
         gap: 2rem;
     }
 
     .compra-resumen {
-        position: relative; /* Evita que se quede fijo mientras haces scroll */
+        /* Evita que se quede fijo mientras haces scroll */
+        position: relative;
         top: 0;
         order: -1;
     }
 
     .form-row {
-        grid-template-columns: 1fr; /* Formularios más legibles */
+        /* Formularios más legibles */
+        grid-template-columns: 1fr;
     }
 
     .profile-container-simple {
-        padding: 1rem; /* Espaciado más cómodo */
+        /* Espaciado más cómodo */
+        padding: 1rem;
     }
     
     .profile-header-card {
-        flex-direction: column; /* Diseño más vertical y claro */
+        /* Diseño más vertical y claro */
+        flex-direction: column;
         text-align: center;
     }
     
     .profile-avatar-section {
-        flex-direction: column; /* Alineación natural para pantallas pequeñas */
+        /* Alineación natural para pantallas pequeñas */
+        flex-direction: column;
     }
 
     .profile-info-grid {
@@ -148,18 +173,21 @@ img {
     }
     
     .reserva-card {
-        flex-direction: column; /* Tarjetas más fáciles de leer */
+        /* Tarjetas más fáciles de leer */
+        flex-direction: column;
     }
     
     .reserva-card img {
         width: 100%;
-        height: 180px; /* Tamaño adaptado */
+        /* Tamaño adaptado */
+        height: 180px;
     }
 
     .footer-content {
         grid-template-columns: 1fr;
         gap: 2rem;
-        text-align: center; /* Orden más limpio en móvil */
+        /* Orden más limpio en móvil */
+        text-align: center;
     }
 
     .footer-col.left,
@@ -172,11 +200,13 @@ img {
 @media (max-width: 480px) {
     
     .site-header {
-        padding: 0.8rem; /* Ajuste más compacto */
+        /* Ajuste más compacto */
+        padding: 0.8rem;
     }
 
     .logo-text {
-        font-size: 1.2rem; /* Logo más equilibrado */
+        /* Logo más equilibrado */
+        font-size: 1.2rem;
     }
 
     .utilities-wrapper {
@@ -185,29 +215,35 @@ img {
     }
     
     .search-container {
-        max-width: 100%; /* Deja que el buscador utilice todo el espacio posible */
+        /* Deja que el buscador utilice todo el espacio posible */
+        max-width: 100%;
     }
     
     #search-results {
         width: 100%;
-        left: 0; /* Evita que se salga hacia un costado */
-        max-height: 50vh; /* Evita que tome demasiada pantalla */
+        /* Evita que se salga hacia un costado */
+        left: 0;
+        /* Evita que tome demasiada pantalla */
+        max-height: 50vh;
     }
 
     .categories-grid {
-        grid-template-columns: 1fr; /* Una columna para mayor claridad */
+        /* Una columna para mayor claridad */
+        grid-template-columns: 1fr;
     }
 
     .carrusel {
-        height: 250px; /* Reduce un poco la altura para pantallas muy pequeñas */
+        /* Reduce un poco la altura para pantallas muy pequeñas */
+        height: 250px;
     }
     
     .destino-title {
-        font-size: 1.8rem; /* Mejor adaptación del título */
+        /* Mejor adaptación del título */
+        font-size: 1.8rem;
     }
 
     .auth-container {
-        padding: 1.5rem; /* Espaciado cómodo para modales */
+        /* Espaciado cómodo para modales */
+        padding: 1.5rem;
     }
 }
-

@@ -3,7 +3,21 @@ const CookieAuth = {
     set(name, value, days = 365) {
         const expires = new Date();
         expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-        document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires.toUTCString()};path=/`;
+        
+        const cookieString = `${name}=${encodeURIComponent(value)};expires=${expires.toUTCString()};path=/`;
+        
+        // Validar tamaño máximo para cookies
+        if (new Blob([cookieString]).size > 4000) {
+            return false;
+        }
+
+        document.cookie = cookieString;
+        
+        if (!this.get(name) && value) {
+             return false;
+        }
+        
+        return true;
     },
     
     get(name) {
@@ -32,7 +46,7 @@ const UserManager = {
     
     // Guardar todos los usuarios
     saveUsers(users) {
-        CookieAuth.set('database_users', JSON.stringify(users));
+        return CookieAuth.set('database_users', JSON.stringify(users));
     },
     
     // Obtener datos de un usuario específico
@@ -47,8 +61,7 @@ const UserManager = {
         const userIndex = users.findIndex(u => u.username === username);
         if (userIndex !== -1) {
             users[userIndex] = { ...users[userIndex], ...updates };
-            this.saveUsers(users);
-            return true;
+            return this.saveUsers(users);
         }
         return false;
     },
@@ -66,7 +79,7 @@ const UserManager = {
             avatar: userData.avatar || null,
             createdAt: new Date().toISOString()
         });
-        this.saveUsers(users);
+        return this.saveUsers(users);
     },
     
     // Verificar si existe un usuario
@@ -242,11 +255,11 @@ function updateHeader() {
             <a href="contacto.html" class="nav-link" data-i18n="help">Contacto</a>
             
             <div class="user-menu-item" style="display: flex; align-items: center; gap: 10px; margin-left: 10px;">
-                <a href="mi-perfil.html" style="text-decoration: none; display: flex; align-items: center; gap: 8px;" aria-label="Ir a mi perfil">
+                <a href="mi-perfil.html" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
                     <img src="${avatarSrc}" alt="Avatar de ${username}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid #ddd;">
                     <span style="font-weight: 600; color: var(--text-primary); font-size: 0.9rem;">${username}</span>
                 </a>
-                <button id="btn-logout-header" class="btn-text" style="color: #a71d2a; font-size: 0.85rem; margin-left: 5px;" data-i18n="logout" aria-label="Cerrar sesión">Log Out</button>
+                <button id="btn-logout-header" class="btn-text" style="color: #a71d2a; font-size: 0.85rem; margin-left: 5px;" data-i18n="logout">Log Out</button>
             </div>
         `;
         
@@ -421,7 +434,7 @@ function setupSignupForm() {
         
         // Función para completar registro
         const completeRegistration = (avatarData) => {
-            UserManager.createUser({
+            const success = UserManager.createUser({
                 username: username,
                 password: password,
                 email: email,
@@ -429,20 +442,54 @@ function setupSignupForm() {
                 avatar: avatarData
             });
             
-            SessionManager.login(username, false);
-            
-            alert('¡Registro completado!');
-            
-            const returnUrl = CookieAuth.get('return_url') || 'index.html';
-            CookieAuth.delete('return_url');
-            window.location.href = returnUrl;
+            if (success) {
+                SessionManager.login(username, false);
+                alert('¡Registro completado!');
+                const returnUrl = CookieAuth.get('return_url') || 'index.html';
+                CookieAuth.delete('return_url');
+                window.location.href = returnUrl;
+            } else {
+                alert("No se pudo completar el registro. Verifica el tamaño de los datos.");
+            }
         };
         
         // Procesar avatar si existe
         if (avatarInput.files && avatarInput.files[0]) {
+            const file = avatarInput.files[0];
             const reader = new FileReader();
-            reader.onload = (evt) => completeRegistration(evt.target.result);
-            reader.readAsDataURL(avatarInput.files[0]);
+            
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    const MAX_SIZE = 60; 
+                    let width = img.width;
+                    let height = img.height;
+                    
+                    if (width > height) {
+                        if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; }
+                    } else {
+                        if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; }
+                    }
+                    
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    const compressedAvatar = canvas.toDataURL('image/jpeg', 0.5);
+                    
+                    if (compressedAvatar.length > 3500) {
+                        alert("La imagen es demasiado grande. Se registrará sin imagen.");
+                        completeRegistration(null);
+                    } else {
+                        completeRegistration(compressedAvatar);
+                    }
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
         } else {
             completeRegistration(null);
         }
