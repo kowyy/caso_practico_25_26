@@ -307,69 +307,64 @@
             const nameInput = document.getElementById('contact-name');
             const emailInput = document.getElementById('contact-email');
 
-            // Autocompletar con datos del usuario si está logueado
-            const username = CookieAuth.get('site_username');
-            if (username) {
-                nameInput.value = username;
+            // Autocompletar si está logueado
+            if (SessionManager.isLoggedIn()) {
+                const username = SessionManager.getCurrentUser();
+                const userData = UserManager.getUserData(username);
                 
-                // Intentar obtener el email
-                const usersData = CookieAuth.get('database_users');
-                if (usersData) {
-                    const users = JSON.parse(usersData);
-                    const currentUser = users.find(u => u.username === username);
-                    if (currentUser && currentUser.email) {
-                        emailInput.value = currentUser.email;
-                    }
+                if (userData) {
+                    if (nameInput) nameInput.value = userData.fullname || username;
+                    if (emailInput) emailInput.value = userData.email || '';
                 }
             }
 
-            contactForm.addEventListener('submit', (e) => {
-                e.preventDefault();
+            if (contactForm) {
+                contactForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
 
-                // Validaciones
-                const name = document.getElementById('contact-name').value.trim();
-                const email = document.getElementById('contact-email').value.trim();
-                const subject = document.getElementById('contact-subject').value;
-                const message = document.getElementById('contact-message').value.trim();
+                    const name = document.getElementById('contact-name').value.trim();
+                    const email = document.getElementById('contact-email').value.trim();
+                    const subject = document.getElementById('contact-subject').value;
+                    const message = document.getElementById('contact-message').value.trim();
 
-                if (!name || !email || !subject || !message) {
-                    alert('Por favor completa todos los campos obligatorios');
-                    return;
-                }
+                    if (!name || !email || !subject || !message) {
+                        alert('Por favor completa todos los campos obligatorios');
+                        return;
+                    }
 
-                const fullNameRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ]{2,}(?:[-\s][A-Za-zÁÉÍÓÚáéíóúÑñ]{2,}){2,}$/;
-                if (!fullNameRegex.test(name)) {
-                    alert('Introduce un nombre y dos apellidos válidos.');
-                    return;
-                }
+                    const fullNameRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ]{2,}(?:[-\s][A-Za-zÁÉÍÓÚáéíóúÑñ]{2,}){2,}$/;
+                    if (!fullNameRegex.test(name)) {
+                        alert('Introduce un nombre y dos apellidos válidos.');
+                        return;
+                    }
 
-                const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-                if (!emailRegex.test(email)) {
-                    alert('Por favor introduce un correo electrónico válido.');
-                    return;
-                }
+                    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+                    if (!emailRegex.test(email)) {
+                        alert('Por favor introduce un correo electrónico válido.');
+                        return;
+                    }
 
-                // Mostrar mensaje de éxito
-                successMessage.classList.add('show');
-                contactForm.reset();
+                    // Mostrar mensaje de éxito
+                    successMessage.classList.add('show');
+                    contactForm.reset();
 
-                // Scroll suave al mensaje de éxito
-                successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    // Scroll al mensaje
+                    successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-                // Ocultar mensaje después de 5 segundos
-                setTimeout(() => {
-                    successMessage.classList.remove('show');
-                }, 5000);
+                    // Ocultar después de 5 segundos
+                    setTimeout(() => {
+                        successMessage.classList.remove('show');
+                    }, 5000);
 
-                // Aquí normalmente enviarías los datos a un servidor
-                console.log('Mensaje enviado:', {
-                    name,
-                    email,
-                    subject,
-                    message,
-                    timestamp: new Date().toISOString()
+                    console.log('Mensaje enviado:', {
+                        name,
+                        email,
+                        subject,
+                        message,
+                        timestamp: new Date().toISOString()
+                    });
                 });
-            });
+            }
         });
     </script>
 

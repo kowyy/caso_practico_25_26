@@ -1,103 +1,117 @@
-
+// Esta variable es solo para esta página
 const destinosDataStatic = {};
 
 document.addEventListener("DOMContentLoaded", async () => {
     
-    // Validar sesión antes de permitir comprar
-    const activeUser = AuthService.getCurrentUser();
-    
-    if (activeUser && AuthService.checkSession()) {
-        const nameInput = document.getElementById("fullname");
-        const emailInput = document.getElementById("email");
-
-        if (nameInput && emailInput) {
-            const usersDB = AuthService.getUsers();
-            const currentUser = usersDB.find(u => u.username === activeUser);
-            
-            const savedName = AuthService.getData("user_fullname_" + activeUser);
-            nameInput.value = savedName || activeUser;
-
-            let savedEmail = "";
-            if (currentUser && currentUser.email) {
-                savedEmail = currentUser.email;
-            } else {
-                savedEmail = `${activeUser.toLowerCase()}@example.com`;
-            }
-            emailInput.value = savedEmail;
-            
-            emailInput.readOnly = true;
-            emailInput.style.backgroundColor = "#f9f9f9";
-        }
-    } else {
-        // Si no hay sesión, redirigimos al login o inicio
+    // Validar sesión
+    if (!SessionManager.isLoggedIn()) {
         alert("Debes iniciar sesión para realizar una reserva.");
-        window.location.href = "index.html";
+        CookieAuth.set('return_url', window.location.href, 1);
+        window.location.href = "signup.html?mode=login";
+        return;
     }
-
+    
+    const username = SessionManager.getCurrentUser();
+    const userData = UserManager.getUserData(username);
+    
+    // Autocompletar datos del usuario
+    const nameInput = document.getElementById("fullname");
+    const emailInput = document.getElementById("email");
+    
+    if (nameInput && emailInput && userData) {
+        nameInput.value = userData.fullname || username;
+        emailInput.value = userData.email || '';
+        emailInput.readOnly = true;
+        emailInput.style.backgroundColor = "#f9f9f9";
+    }
+    
     const urlParams = new URLSearchParams(window.location.search);
     const purchaseType = urlParams.get("type");
     const destinoId = urlParams.get("destino");
-
+    
     let data = null;
-
+    
+    // Determinar tipo de compra
     if (purchaseType === 'experience') {
-        // Para experiencias, leemos de sessionStorage temporal
+        // Para experiencias, leemos de sessionStorage
         const storedData = sessionStorage.getItem('purchase_data');
         if (storedData) {
             data = JSON.parse(storedData);
         }
     } else {
+        // Para destinos, buscamos en los datos
         function createSlug(text) {
-            return text.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '').replace(/^-+/, '').replace(/-+$/, '');
+            return text.toString().toLowerCase()
+                .replace(/\s+/g, '-')
+                .replace(/[^\w\-]+/g, '')
+                .replace(/^-+/, '')
+                .replace(/-+$/, '');
         }
-
+        
         data = destinosDataStatic[destinoId];
-
+        
         if (!data && destinoId) {
             try {
                 const jsonData = CIUDADES_DATA;
                 let foundCity = null;
+                
                 for (const cont of jsonData.continents) {
                     for (const pais of cont.countries) {
                         const found = pais.cities.find(c => createSlug(c.name) === destinoId);
-                        if (found) { foundCity = found; break; }
+                        if (found) {
+                            foundCity = found;
+                            break;
+                        }
                     }
                     if (foundCity) break;
                 }
-
+                
                 if (foundCity) {
                     let hash = 0;
-                    for (let i = 0; i < foundCity.name.length; i++) hash = foundCity.name.charCodeAt(i) + ((hash << 5) - hash);
+                    for (let i = 0; i < foundCity.name.length; i++) {
+                        hash = foundCity.name.charCodeAt(i) + ((hash << 5) - hash);
+                    }
                     const precioCalc = 500 + (Math.abs(hash) % 1500);
-
+                    
                     data = {
                         nombre: foundCity.name,
                         precio: precioCalc + "€",
                         imagen: foundCity.image.url,
-                        incluye: ["Vuelo ida y vuelta", "Alojamiento céntrico", "Seguro de viaje"]
+                        incluye: [
+                            "Vuelo ida y vuelta",
+                            "Alojamiento céntrico",
+                            "Seguro de viaje"
+                        ]
                     };
                 }
             } catch (e) {
-                console.error("Error data", e);
+                console.error("Error cargando datos del destino:", e);
             }
         }
     }
-
+    
+    // Mostrar datos del destino/experiencia
     if (data) {
-        document.getElementById("destino-nombre").textContent = data.nombre;
-        document.getElementById("destino-precio").textContent = data.precio;
-        const img = document.getElementById("destino-img");
-        if(img) {
-            img.src = data.imagen.includes("images.unsplash.com") ? data.imagen.replace("w=500", "w=800") : data.imagen;
+        const nombreEl = document.getElementById("destino-nombre");
+        const precioEl = document.getElementById("destino-precio");
+        const imgEl = document.getElementById("destino-img");
+        const incluyeEl = document.getElementById("destino-incluye");
+        
+        if (nombreEl) nombreEl.textContent = data.nombre;
+        if (precioEl) precioEl.textContent = data.precio;
+        
+        if (imgEl) {
+            imgEl.src = data.imagen.includes("images.unsplash.com") 
+                ? data.imagen.replace("w=500", "w=800") 
+                : data.imagen;
         }
-
-        const listaIncluye = document.getElementById("destino-incluye");
-        if(listaIncluye && data.incluye) {
-            listaIncluye.innerHTML = "";
+        
+        if (incluyeEl && data.incluye) {
+            incluyeEl.innerHTML = "";
             data.incluye.forEach(item => {
                 const li = document.createElement("li");
                 li.textContent = item;
-                listaIncluye.appendChild(li);
+                incluyeEl.appendChild(li);
             });
         }
     }
@@ -110,152 +124,160 @@ let companionCount = 0;
 
 if (addCompanionBtn) {
     addCompanionBtn.addEventListener("click", () => {
-        if (companionCount >= 7) return;
+        if (companionCount >= 7) {
+            alert("Máximo 7 acompañantes");
+            return;
+        }
         companionCount++;
+        
         const box = document.createElement("div");
         box.classList.add("companion-box");
         box.innerHTML = `
             <h4>Acompañante ${companionCount}</h4>
-            <div class="form-group"><input type="text" class="companion-name" placeholder="Nombre" required></div>
-            <div class="form-group"><input type="email" class="companion-email" placeholder="Email" required></div>
+            <div class="form-group">
+                <input type="text" class="companion-name" placeholder="Nombre completo" required>
+            </div>
+            <div class="form-group">
+                <input type="email" class="companion-email" placeholder="Email" required>
+            </div>
             <button type="button" class="btn-remove">Eliminar</button>
         `;
+        
         box.querySelector(".btn-remove").addEventListener("click", () => {
             box.remove();
             companionCount--;
         });
+        
         companionsList.appendChild(box);
     });
 }
 
 // Proceso de compra
 const buyForm = document.getElementById("buy-form");
-if(buyForm) {
+if (buyForm) {
     buyForm.addEventListener("submit", function(e) {
         e.preventDefault();
-
-        // Expresiones regulares para el firmulario de compra
-        const fullNameRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ]{2,}(?:[-\s][A-Za-zÁÉÍÓÚáéíóúÑñ]{2,}){2,}$/;
+        
+        // Validaciones
+        const fullnameRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ]{2,}(?:[-\s][A-Za-zÁÉÍÓÚáéíóúÑñ]{2,}){2,}$/;
         const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
         const cardNumberRegex = /^\d{16}$/;
         const monthRegex = /^(0[1-9]|1[0-2])$/;
         const cvvRegex = /^\d{3}$/;
-
-        // Inputs
+        
         const fullnameInput = document.getElementById("fullname");
         const emailInput = document.getElementById("email");
         const cardNumberInput = document.getElementById("card-number");
         const expMonthInput = document.getElementById("exp-month");
         const expYearInput = document.getElementById("exp-year");
         const cvvInput = document.getElementById("cvv");
-
-        // Validación nombre del titular
-        if (!fullNameRegex.test(fullnameInput.value.trim())) {
-            alert("Introduce un nombre y dos apellidos válidos.");
+        
+        // Validar titular
+        if (!fullnameRegex.test(fullnameInput.value.trim())) {
+            alert("Introduce nombre y dos apellidos válidos.");
             fullnameInput.style.border = "2px solid red";
             return;
         }
-
-        // Validación email del titular
+        fullnameInput.style.border = "";
+        
         if (!emailRegex.test(emailInput.value.trim())) {
-            alert("Introduce un correo electrónico válido.");
+            alert("Introduce un email válido.");
             emailInput.style.border = "2px solid red";
             return;
         }
-
-        // Validación acompañantes
+        emailInput.style.border = "";
+        
+        // Validar acompañantes
         const companions = document.querySelectorAll(".companion-box");
         for (const comp of companions) {
-
             const name = comp.querySelector(".companion-name");
             const mail = comp.querySelector(".companion-email");
-
-            if (!fullNameRegex.test(name.value.trim())) {
+            
+            if (!fullnameRegex.test(name.value.trim())) {
                 alert("Nombre de acompañante inválido.");
                 name.style.border = "2px solid red";
                 return;
             }
-
+            name.style.border = "";
+            
             if (!emailRegex.test(mail.value.trim())) {
                 alert("Email de acompañante inválido.");
                 mail.style.border = "2px solid red";
                 return;
             }
+            mail.style.border = "";
         }
-
-        // Validación número tarjeta
+        
+        // Validar tarjeta
         const cleanCardNumber = cardNumberInput.value.replace(/\s/g, "");
         if (!cardNumberRegex.test(cleanCardNumber)) {
-            alert("Número de tarjeta inválido. Deben ser 16 dígitos.");
+            alert("Número de tarjeta inválido (16 dígitos).");
             cardNumberInput.style.border = "2px solid red";
             return;
         }
-
-        // Validar mes expiración
+        cardNumberInput.style.border = "";
+        
         if (!monthRegex.test(expMonthInput.value.trim())) {
-            alert("Introduce un mes de expiración válido (01–12).");
+            alert("Mes de expiración inválido (01-12).");
             expMonthInput.style.border = "2px solid red";
             return;
         }
-
-        // Validar año expiración
+        expMonthInput.style.border = "";
+        
         const currentYear = new Date().getFullYear() % 100;
         const expYear = parseInt(expYearInput.value.trim());
-
         if (isNaN(expYear) || expYear < currentYear) {
-            alert("La tarjeta está expirada o el año es inválido.");
+            alert("Año de expiración inválido.");
             expYearInput.style.border = "2px solid red";
             return;
         }
-
-        // Validación CVV
+        expYearInput.style.border = "";
+        
         if (!cvvRegex.test(cvvInput.value.trim())) {
-            alert("CVV inválido. Debe tener 3 dígitos.");
+            alert("CVV inválido (3 dígitos).");
             cvvInput.style.border = "2px solid red";
             return;
         }
-
-        const username = AuthService.getCurrentUser();
-        if (!username || !AuthService.checkSession()) {
+        cvvInput.style.border = "";
+        
+        // Verificar sesión
+        const username = SessionManager.getCurrentUser();
+        if (!username || !SessionManager.isLoggedIn()) {
             alert('Sesión expirada.');
             window.location.href = 'index.html';
             return;
         }
-
+        
+        // Recopilar datos
         const titular = {
-            nombre: document.getElementById("fullname").value,
-            email: document.getElementById("email").value
+            nombre: fullnameInput.value.trim(),
+            email: emailInput.value.trim()
         };
-
-        const acompañantes = [...document.querySelectorAll(".companion-box")].map(box => ({
-            nombre: box.querySelector(".companion-name").value,
-            email: box.querySelector(".companion-email").value
+        
+        const acompañantes = [...companions].map(box => ({
+            nombre: box.querySelector(".companion-name").value.trim(),
+            email: box.querySelector(".companion-email").value.trim()
         }));
-
+        
         const reserva = {
-            id: Date.now(),
-            fecha: new Date().toLocaleDateString('es-ES'),
             destino: document.getElementById("destino-nombre").textContent,
             precio: document.getElementById("destino-precio").textContent,
             imagen: document.getElementById("destino-img").src,
             titular: titular,
-            acompañantes: acompañantes,
-            estado: 'Confirmada'
+            acompañantes: acompañantes
         };
-
-        // Guardar con cookies
-        console.log("Guardando reserva:", reserva);
-        CookieReservas.addReserva(username, reserva);
-        console.log("Reservas guardadas:", CookieReservas.getReservas(username));
-
+        
+        // Guardar reserva con cookies
+        ReservasManager.addReserva(username, reserva);
+        
         alert("¡Reserva confirmada!");
         window.location.href = "mi-perfil.html";
     });
 }
 
-// Formato tarjeta
+// Formato de tarjeta
 const cardInput = document.getElementById("card-number");
-if(cardInput) {
+if (cardInput) {
     cardInput.addEventListener("input", function(e) {
         let value = e.target.value.replace(/\s/g, "").substring(0, 16);
         e.target.value = value.match(/.{1,4}/g)?.join(" ") || value;

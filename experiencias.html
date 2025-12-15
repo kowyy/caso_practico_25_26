@@ -276,19 +276,35 @@
                                     <span class="reviews">(${exp.reviews})</span>
                                 </div>
                             </div>
-                            <button class="ver-mas" id="btn-reserva-${exp.id}">Reservar ahora</button>
+                            <button class="ver-mas btn-reserva-exp" data-exp-id="${exp.id}">Reservar ahora</button>
                         </div>
                     `;
                     grid.appendChild(card);
+                });
 
-                    // Lógica de Reserva
-                    const btnReserva = card.querySelector(`#btn-reserva-${exp.id}`);
-                    btnReserva.addEventListener('click', () => {
+                document.querySelectorAll('.btn-reserva-exp').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
                         
-                        if (!AuthService.checkSession()) {
-                            // Guardamos la url actual para volver aquí después del login
-                            sessionStorage.setItem("return_to", window.location.href);
-                            // Redirigir al signup en modo login
+                        const expId = btn.getAttribute('data-exp-id');
+                        const exp = experiencias.find(e => e.id === expId);
+                        
+                        if (!exp) {
+                            console.error("Experiencia no encontrada:", expId);
+                            return;
+                        }
+                        
+                        console.log("Reservando experiencia:", exp.titulo);
+                        
+                        // Verificar sesión
+                        if (typeof SessionManager === 'undefined' || !SessionManager.isLoggedIn()) {
+                            console.log("Usuario no logueado, redirigiendo...");
+                            if (typeof CookieAuth !== 'undefined') {
+                                CookieAuth.set('return_url', window.location.href, 1);
+                            } else {
+                                sessionStorage.setItem("return_to", window.location.href);
+                            }
                             window.location.href = "signup.html?mode=login";
                             return;
                         }
